@@ -16,16 +16,16 @@ namespace AspRecipeStorage.Models
     {
         public RecipeStep()
         {
-            this.Ingredient = new HashSet<Ingredient>();
+            this.Ingredients = new HashSet<Ingredient>();
         }
     
         public int Id { get; set; }
         public string Discription { get; set; }
         public string Time { get; set; }
-        public string StepNumber { get; set; }
+        public int StepNumber { get; set; }
         public int RecipeId { get; set; }
     
         public virtual Recipe Recipe { get; set; }
-        public virtual ICollection<Ingredient> Ingredient { get; set; }
+        public virtual ICollection<Ingredient> Ingredients { get; set; }
     }
 }

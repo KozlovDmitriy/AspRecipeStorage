@@ -2,7 +2,7 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, 2012 and Azure
 -- --------------------------------------------------
--- Date Created: 03/15/2015 13:08:20
+-- Date Created: 03/15/2015 14:38:58
 -- Generated from EDMX file: C:\Users\fifa\Documents\Visual Studio 2013\Projects\AspRecipeStorage\AspRecipeStorage\Models\EfModel.edmx
 -- --------------------------------------------------
 
@@ -29,6 +29,21 @@ GO
 IF OBJECT_ID(N'[dbo].[FK_UserUserRole_UserRole]', 'F') IS NOT NULL
     ALTER TABLE [dbo].[UserUserRole] DROP CONSTRAINT [FK_UserUserRole_UserRole];
 GO
+IF OBJECT_ID(N'[dbo].[FK_DishTypeRecipe]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[RecipeSet] DROP CONSTRAINT [FK_DishTypeRecipe];
+GO
+IF OBJECT_ID(N'[dbo].[FK_RecipeRecipeStep]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[RecipeStepSet] DROP CONSTRAINT [FK_RecipeRecipeStep];
+GO
+IF OBJECT_ID(N'[dbo].[FK_UserRecipe]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[RecipeSet] DROP CONSTRAINT [FK_UserRecipe];
+GO
+IF OBJECT_ID(N'[dbo].[FK_IngredientRecipeStep_Ingredient]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[IngredientRecipeStep] DROP CONSTRAINT [FK_IngredientRecipeStep_Ingredient];
+GO
+IF OBJECT_ID(N'[dbo].[FK_IngredientRecipeStep_RecipeStep]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[IngredientRecipeStep] DROP CONSTRAINT [FK_IngredientRecipeStep_RecipeStep];
+GO
 
 -- --------------------------------------------------
 -- Dropping existing tables
@@ -46,8 +61,23 @@ GO
 IF OBJECT_ID(N'[dbo].[UserRoles]', 'U') IS NOT NULL
     DROP TABLE [dbo].[UserRoles];
 GO
+IF OBJECT_ID(N'[dbo].[RecipeSet]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[RecipeSet];
+GO
+IF OBJECT_ID(N'[dbo].[DishTypeSet]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[DishTypeSet];
+GO
+IF OBJECT_ID(N'[dbo].[RecipeStepSet]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[RecipeStepSet];
+GO
+IF OBJECT_ID(N'[dbo].[IngredientSet1]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[IngredientSet1];
+GO
 IF OBJECT_ID(N'[dbo].[UserUserRole]', 'U') IS NOT NULL
     DROP TABLE [dbo].[UserUserRole];
+GO
+IF OBJECT_ID(N'[dbo].[IngredientRecipeStep]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[IngredientRecipeStep];
 GO
 
 -- --------------------------------------------------
@@ -95,8 +125,8 @@ CREATE TABLE [dbo].[UserRoles] (
 );
 GO
 
--- Creating table 'RecipeSet'
-CREATE TABLE [dbo].[RecipeSet] (
+-- Creating table 'Recipe'
+CREATE TABLE [dbo].[Recipe] (
     [Id] int IDENTITY(1,1) NOT NULL,
     [Name] nvarchar(max)  NOT NULL,
     [Description] nvarchar(max)  NOT NULL,
@@ -106,25 +136,25 @@ CREATE TABLE [dbo].[RecipeSet] (
 );
 GO
 
--- Creating table 'DishTypeSet'
-CREATE TABLE [dbo].[DishTypeSet] (
+-- Creating table 'DishType'
+CREATE TABLE [dbo].[DishType] (
     [Id] int IDENTITY(1,1) NOT NULL,
     [Name] nvarchar(max)  NOT NULL
 );
 GO
 
--- Creating table 'RecipeStepSet'
-CREATE TABLE [dbo].[RecipeStepSet] (
+-- Creating table 'RecipeStep'
+CREATE TABLE [dbo].[RecipeStep] (
     [Id] int IDENTITY(1,1) NOT NULL,
     [Discription] nvarchar(max)  NOT NULL,
     [Time] nvarchar(max)  NOT NULL,
-    [StepNumber] nvarchar(max)  NOT NULL,
+    [StepNumber] int  NOT NULL,
     [RecipeId] int  NOT NULL
 );
 GO
 
--- Creating table 'IngredientSet1'
-CREATE TABLE [dbo].[IngredientSet1] (
+-- Creating table 'Ingredient'
+CREATE TABLE [dbo].[Ingredient] (
     [Id] int IDENTITY(1,1) NOT NULL,
     [Name] nvarchar(max)  NOT NULL
 );
@@ -139,7 +169,7 @@ GO
 
 -- Creating table 'IngredientRecipeStep'
 CREATE TABLE [dbo].[IngredientRecipeStep] (
-    [Ingredient_Id] int  NOT NULL,
+    [Ingredients_Id] int  NOT NULL,
     [RecipeSteps_Id] int  NOT NULL
 );
 GO
@@ -172,27 +202,27 @@ ADD CONSTRAINT [PK_UserRoles]
     PRIMARY KEY CLUSTERED ([Id] ASC);
 GO
 
--- Creating primary key on [Id] in table 'RecipeSet'
-ALTER TABLE [dbo].[RecipeSet]
-ADD CONSTRAINT [PK_RecipeSet]
+-- Creating primary key on [Id] in table 'Recipe'
+ALTER TABLE [dbo].[Recipe]
+ADD CONSTRAINT [PK_Recipe]
     PRIMARY KEY CLUSTERED ([Id] ASC);
 GO
 
--- Creating primary key on [Id] in table 'DishTypeSet'
-ALTER TABLE [dbo].[DishTypeSet]
-ADD CONSTRAINT [PK_DishTypeSet]
+-- Creating primary key on [Id] in table 'DishType'
+ALTER TABLE [dbo].[DishType]
+ADD CONSTRAINT [PK_DishType]
     PRIMARY KEY CLUSTERED ([Id] ASC);
 GO
 
--- Creating primary key on [Id] in table 'RecipeStepSet'
-ALTER TABLE [dbo].[RecipeStepSet]
-ADD CONSTRAINT [PK_RecipeStepSet]
+-- Creating primary key on [Id] in table 'RecipeStep'
+ALTER TABLE [dbo].[RecipeStep]
+ADD CONSTRAINT [PK_RecipeStep]
     PRIMARY KEY CLUSTERED ([Id] ASC);
 GO
 
--- Creating primary key on [Id] in table 'IngredientSet1'
-ALTER TABLE [dbo].[IngredientSet1]
-ADD CONSTRAINT [PK_IngredientSet1]
+-- Creating primary key on [Id] in table 'Ingredient'
+ALTER TABLE [dbo].[Ingredient]
+ADD CONSTRAINT [PK_Ingredient]
     PRIMARY KEY CLUSTERED ([Id] ASC);
 GO
 
@@ -202,10 +232,10 @@ ADD CONSTRAINT [PK_UserUserRole]
     PRIMARY KEY CLUSTERED ([Users_Id], [Roles_Id] ASC);
 GO
 
--- Creating primary key on [Ingredient_Id], [RecipeSteps_Id] in table 'IngredientRecipeStep'
+-- Creating primary key on [Ingredients_Id], [RecipeSteps_Id] in table 'IngredientRecipeStep'
 ALTER TABLE [dbo].[IngredientRecipeStep]
 ADD CONSTRAINT [PK_IngredientRecipeStep]
-    PRIMARY KEY CLUSTERED ([Ingredient_Id], [RecipeSteps_Id] ASC);
+    PRIMARY KEY CLUSTERED ([Ingredients_Id], [RecipeSteps_Id] ASC);
 GO
 
 -- --------------------------------------------------
@@ -260,38 +290,38 @@ ON [dbo].[UserUserRole]
     ([Roles_Id]);
 GO
 
--- Creating foreign key on [DishTypeId] in table 'RecipeSet'
-ALTER TABLE [dbo].[RecipeSet]
+-- Creating foreign key on [DishTypeId] in table 'Recipe'
+ALTER TABLE [dbo].[Recipe]
 ADD CONSTRAINT [FK_DishTypeRecipe]
     FOREIGN KEY ([DishTypeId])
-    REFERENCES [dbo].[DishTypeSet]
+    REFERENCES [dbo].[DishType]
         ([Id])
     ON DELETE NO ACTION ON UPDATE NO ACTION;
 GO
 
 -- Creating non-clustered index for FOREIGN KEY 'FK_DishTypeRecipe'
 CREATE INDEX [IX_FK_DishTypeRecipe]
-ON [dbo].[RecipeSet]
+ON [dbo].[Recipe]
     ([DishTypeId]);
 GO
 
--- Creating foreign key on [RecipeId] in table 'RecipeStepSet'
-ALTER TABLE [dbo].[RecipeStepSet]
+-- Creating foreign key on [RecipeId] in table 'RecipeStep'
+ALTER TABLE [dbo].[RecipeStep]
 ADD CONSTRAINT [FK_RecipeRecipeStep]
     FOREIGN KEY ([RecipeId])
-    REFERENCES [dbo].[RecipeSet]
+    REFERENCES [dbo].[Recipe]
         ([Id])
     ON DELETE NO ACTION ON UPDATE NO ACTION;
 GO
 
 -- Creating non-clustered index for FOREIGN KEY 'FK_RecipeRecipeStep'
 CREATE INDEX [IX_FK_RecipeRecipeStep]
-ON [dbo].[RecipeStepSet]
+ON [dbo].[RecipeStep]
     ([RecipeId]);
 GO
 
--- Creating foreign key on [AuthorId] in table 'RecipeSet'
-ALTER TABLE [dbo].[RecipeSet]
+-- Creating foreign key on [AuthorId] in table 'Recipe'
+ALTER TABLE [dbo].[Recipe]
 ADD CONSTRAINT [FK_UserRecipe]
     FOREIGN KEY ([AuthorId])
     REFERENCES [dbo].[Users]
@@ -301,15 +331,15 @@ GO
 
 -- Creating non-clustered index for FOREIGN KEY 'FK_UserRecipe'
 CREATE INDEX [IX_FK_UserRecipe]
-ON [dbo].[RecipeSet]
+ON [dbo].[Recipe]
     ([AuthorId]);
 GO
 
--- Creating foreign key on [Ingredient_Id] in table 'IngredientRecipeStep'
+-- Creating foreign key on [Ingredients_Id] in table 'IngredientRecipeStep'
 ALTER TABLE [dbo].[IngredientRecipeStep]
 ADD CONSTRAINT [FK_IngredientRecipeStep_Ingredient]
-    FOREIGN KEY ([Ingredient_Id])
-    REFERENCES [dbo].[IngredientSet1]
+    FOREIGN KEY ([Ingredients_Id])
+    REFERENCES [dbo].[Ingredient]
         ([Id])
     ON DELETE NO ACTION ON UPDATE NO ACTION;
 GO
@@ -318,7 +348,7 @@ GO
 ALTER TABLE [dbo].[IngredientRecipeStep]
 ADD CONSTRAINT [FK_IngredientRecipeStep_RecipeStep]
     FOREIGN KEY ([RecipeSteps_Id])
-    REFERENCES [dbo].[RecipeStepSet]
+    REFERENCES [dbo].[RecipeStep]
         ([Id])
     ON DELETE NO ACTION ON UPDATE NO ACTION;
 GO

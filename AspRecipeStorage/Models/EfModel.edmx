@@ -10,10 +10,10 @@
     <EntitySet Name="UserClaims" EntityType="Model.Store.UserClaims" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="UserLogins" EntityType="Model.Store.UserLogins" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="UserRoles" EntityType="Model.Store.UserRoles" store:Type="Tables" Schema="dbo" />
-    <EntitySet Name="RecipeSet" EntityType="Model.Store.RecipeSet" store:Type="Tables" Schema="dbo" />
-    <EntitySet Name="DishTypeSet" EntityType="Model.Store.DishTypeSet" store:Type="Tables" Schema="dbo" />
-    <EntitySet Name="RecipeStepSet" EntityType="Model.Store.RecipeStepSet" store:Type="Tables" Schema="dbo" />
-    <EntitySet Name="IngredientSet1" EntityType="Model.Store.IngredientSet1" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Recipe" EntityType="Model.Store.Recipe" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="DishType" EntityType="Model.Store.DishType" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="RecipeStep" EntityType="Model.Store.RecipeStep" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Ingredient" EntityType="Model.Store.Ingredient" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="UserUserRole" EntityType="Model.Store.UserUserRole" store:Type="Tables" Schema="dbo" />
     <EntitySet Name="IngredientRecipeStep" EntityType="Model.Store.IngredientRecipeStep" store:Type="Tables" Schema="dbo" />
     <AssociationSet Name="FK_UserClaim_User" Association="Model.Store.FK_UserClaim_User">
@@ -33,23 +33,23 @@
       <End Role="UserUserRole" EntitySet="UserUserRole" />
     </AssociationSet>
     <AssociationSet Name="DishTypeRecipe" Association="Model.Store.DishTypeRecipe">
-      <End Role="DishType" EntitySet="DishTypeSet" />
-      <End Role="Recipe" EntitySet="RecipeSet" />
+      <End Role="DishType" EntitySet="DishType" />
+      <End Role="Recipe" EntitySet="Recipe" />
     </AssociationSet>
     <AssociationSet Name="RecipeRecipeStep" Association="Model.Store.RecipeRecipeStep">
-      <End Role="Recipe" EntitySet="RecipeSet" />
-      <End Role="RecipeStep" EntitySet="RecipeStepSet" />
+      <End Role="Recipe" EntitySet="Recipe" />
+      <End Role="RecipeStep" EntitySet="RecipeStep" />
     </AssociationSet>
     <AssociationSet Name="UserRecipe" Association="Model.Store.UserRecipe">
       <End Role="User" EntitySet="Users" />
-      <End Role="Recipe" EntitySet="RecipeSet" />
+      <End Role="Recipe" EntitySet="Recipe" />
     </AssociationSet>
     <AssociationSet Name="FK_IngredientRecipeStep_Ingredient" Association="Model.Store.FK_IngredientRecipeStep_Ingredient">
-      <End Role="Ingredient" EntitySet="IngredientSet1" />
+      <End Role="Ingredient" EntitySet="Ingredient" />
       <End Role="IngredientRecipeStep" EntitySet="IngredientRecipeStep" />
     </AssociationSet>
     <AssociationSet Name="FK_IngredientRecipeStep_RecipeStep" Association="Model.Store.FK_IngredientRecipeStep_RecipeStep">
-      <End Role="RecipeStep" EntitySet="RecipeStepSet" />
+      <End Role="RecipeStep" EntitySet="RecipeStep" />
       <End Role="IngredientRecipeStep" EntitySet="IngredientRecipeStep" />
     </AssociationSet>
   </EntityContainer>
@@ -96,7 +96,7 @@
     <Property Name="Id" Type="int" Nullable="false" />
     <Property Name="Name" Type="nvarchar" Nullable="false" MaxLength="50" />
   </EntityType>
-  <EntityType Name="RecipeSet">
+  <EntityType Name="Recipe">
     <Key>
       <PropertyRef Name="Id" />
     </Key>
@@ -107,24 +107,24 @@
     <Property Name="DishTypeId" Type="int" Nullable="false" />
     <Property Name="AuthorId" Type="int" Nullable="false" />
   </EntityType>
-  <EntityType Name="DishTypeSet">
+  <EntityType Name="DishType">
     <Key>
       <PropertyRef Name="Id" />
     </Key>
     <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
     <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
   </EntityType>
-  <EntityType Name="RecipeStepSet">
+  <EntityType Name="RecipeStep">
     <Key>
       <PropertyRef Name="Id" />
     </Key>
     <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
     <Property Name="Discription" Type="nvarchar(max)" Nullable="false" />
     <Property Name="Time" Type="nvarchar(max)" Nullable="false" />
-    <Property Name="StepNumber" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="StepNumber" Type="int" Nullable="false" />
     <Property Name="RecipeId" Type="int" Nullable="false" />
   </EntityType>
-  <EntityType Name="IngredientSet1">
+  <EntityType Name="Ingredient">
     <Key>
       <PropertyRef Name="Id" />
     </Key>
@@ -141,10 +141,10 @@
   </EntityType>
   <EntityType Name="IngredientRecipeStep">
     <Key>
-      <PropertyRef Name="Ingredient_Id" />
+      <PropertyRef Name="Ingredients_Id" />
       <PropertyRef Name="RecipeSteps_Id" />
     </Key>
-    <Property Name="Ingredient_Id" Type="int" Nullable="false" />
+    <Property Name="Ingredients_Id" Type="int" Nullable="false" />
     <Property Name="RecipeSteps_Id" Type="int" Nullable="false" />
   </EntityType>
   <Association Name="FK_UserClaim_User">
@@ -176,8 +176,8 @@
     </ReferentialConstraint>
   </Association>
   <Association Name="DishTypeRecipe">
-    <End Role="DishType" Type="Model.Store.DishTypeSet" Multiplicity="1" />
-    <End Role="Recipe" Type="Model.Store.RecipeSet" Multiplicity="*" />
+    <End Role="DishType" Type="Model.Store.DishType" Multiplicity="1" />
+    <End Role="Recipe" Type="Model.Store.Recipe" Multiplicity="*" />
     <ReferentialConstraint>
       <Principal Role="DishType">
         <PropertyRef Name="Id" />
@@ -188,8 +188,8 @@
     </ReferentialConstraint>
   </Association>
   <Association Name="RecipeRecipeStep">
-    <End Role="Recipe" Type="Model.Store.RecipeSet" Multiplicity="1" />
-    <End Role="RecipeStep" Type="Model.Store.RecipeStepSet" Multiplicity="*" />
+    <End Role="Recipe" Type="Model.Store.Recipe" Multiplicity="1" />
+    <End Role="RecipeStep" Type="Model.Store.RecipeStep" Multiplicity="*" />
     <ReferentialConstraint>
       <Principal Role="Recipe">
         <PropertyRef Name="Id" />
@@ -201,7 +201,7 @@
   </Association>
   <Association Name="UserRecipe">
     <End Role="User" Type="Model.Store.Users" Multiplicity="1" />
-    <End Role="Recipe" Type="Model.Store.RecipeSet" Multiplicity="*" />
+    <End Role="Recipe" Type="Model.Store.Recipe" Multiplicity="*" />
     <ReferentialConstraint>
       <Principal Role="User">
         <PropertyRef Name="Id" />
@@ -236,20 +236,20 @@
     </ReferentialConstraint>
   </Association>
   <Association Name="FK_IngredientRecipeStep_Ingredient">
-    <End Role="Ingredient" Type="Model.Store.IngredientSet1" Multiplicity="1" />
+    <End Role="Ingredient" Type="Model.Store.Ingredient" Multiplicity="1" />
     <End Role="IngredientRecipeStep" Type="Model.Store.IngredientRecipeStep" Multiplicity="*" />
     <ReferentialConstraint>
       <Principal Role="Ingredient">
         <PropertyRef Name="Id" />
       </Principal>
       <Dependent Role="IngredientRecipeStep">
-        <PropertyRef Name="Ingredient_Id" />
+        <PropertyRef Name="Ingredients_Id" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
   <Association Name="FK_IngredientRecipeStep_RecipeStep">
     <End Role="IngredientRecipeStep" Type="Model.Store.IngredientRecipeStep" Multiplicity="*" />
-    <End Role="RecipeStep" Type="Model.Store.RecipeStepSet" Multiplicity="1" />
+    <End Role="RecipeStep" Type="Model.Store.RecipeStep" Multiplicity="1" />
     <ReferentialConstraint>
       <Principal Role="RecipeStep">
         <PropertyRef Name="Id" />
@@ -280,25 +280,25 @@
             <End Role="User" EntitySet="Users" />
             <End Role="UserRole" EntitySet="UserRoles" />
           </AssociationSet>
-          <EntitySet Name="RecipeSet" EntityType="Model.Recipe" />
-          <EntitySet Name="DishTypeSet" EntityType="Model.DishType" />
-          <EntitySet Name="RecipeStepSet" EntityType="Model.RecipeStep" />
-          <EntitySet Name="IngredientSet1" EntityType="Model.Ingredient" />
+          <EntitySet Name="Recipe" EntityType="Model.Recipe" />
+          <EntitySet Name="DishType" EntityType="Model.DishType" />
+          <EntitySet Name="RecipeStep" EntityType="Model.RecipeStep" />
+          <EntitySet Name="Ingredient" EntityType="Model.Ingredient" />
           <AssociationSet Name="DishTypeRecipe" Association="Model.DishTypeRecipe">
-            <End Role="DishType" EntitySet="DishTypeSet" />
-            <End Role="Recipe" EntitySet="RecipeSet" />
+            <End Role="DishType" EntitySet="DishType" />
+            <End Role="Recipe" EntitySet="Recipe" />
           </AssociationSet>
           <AssociationSet Name="RecipeRecipeStep" Association="Model.RecipeRecipeStep">
-            <End Role="Recipe" EntitySet="RecipeSet" />
-            <End Role="RecipeStep" EntitySet="RecipeStepSet" />
+            <End Role="Recipe" EntitySet="Recipe" />
+            <End Role="RecipeStep" EntitySet="RecipeStep" />
           </AssociationSet>
           <AssociationSet Name="UserRecipe" Association="Model.UserRecipe">
             <End Role="User" EntitySet="Users" />
-            <End Role="Recipe" EntitySet="RecipeSet" />
+            <End Role="Recipe" EntitySet="Recipe" />
           </AssociationSet>
           <AssociationSet Name="IngredientRecipeStep" Association="Model.IngredientRecipeStep">
-            <End Role="Ingredient" EntitySet="IngredientSet1" />
-            <End Role="RecipeStep" EntitySet="RecipeStepSet" />
+            <End Role="Ingredient" EntitySet="Ingredient" />
+            <End Role="RecipeStep" EntitySet="RecipeStep" />
           </AssociationSet>
         </EntityContainer>
         <EntityType Name="User">
@@ -412,10 +412,10 @@
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Discription" Type="String" Nullable="false" />
           <Property Name="Time" Type="String" Nullable="false" />
-          <Property Name="StepNumber" Type="String" Nullable="false" />
+          <Property Name="StepNumber" Type="Int32" Nullable="false" />
           <Property Name="RecipeId" Type="Int32" Nullable="false" />
           <NavigationProperty Name="Recipe" Relationship="Model.RecipeRecipeStep" FromRole="RecipeStep" ToRole="Recipe" />
-          <NavigationProperty Name="Ingredient" Relationship="Model.IngredientRecipeStep" FromRole="RecipeStep" ToRole="Ingredient" />
+          <NavigationProperty Name="Ingredients" Relationship="Model.IngredientRecipeStep" FromRole="RecipeStep" ToRole="Ingredient" />
         </EntityType>
         <EntityType Name="Ingredient">
           <Key>
@@ -516,9 +516,9 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="RecipeSet">
+    <EntitySetMapping Name="Recipe">
       <EntityTypeMapping TypeName="IsTypeOf(Model.Recipe)">
-        <MappingFragment StoreEntitySet="RecipeSet">
+        <MappingFragment StoreEntitySet="Recipe">
           <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="Name" ColumnName="Name" />
           <ScalarProperty Name="Description" ColumnName="Description" />
@@ -528,17 +528,17 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="DishTypeSet">
+    <EntitySetMapping Name="DishType">
       <EntityTypeMapping TypeName="IsTypeOf(Model.DishType)">
-        <MappingFragment StoreEntitySet="DishTypeSet">
+        <MappingFragment StoreEntitySet="DishType">
           <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="Name" ColumnName="Name" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="RecipeStepSet">
+    <EntitySetMapping Name="RecipeStep">
       <EntityTypeMapping TypeName="IsTypeOf(Model.RecipeStep)">
-        <MappingFragment StoreEntitySet="RecipeStepSet">
+        <MappingFragment StoreEntitySet="RecipeStep">
           <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="Discription" ColumnName="Discription" />
           <ScalarProperty Name="Time" ColumnName="Time" />
@@ -547,9 +547,9 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="IngredientSet1">
+    <EntitySetMapping Name="Ingredient">
       <EntityTypeMapping TypeName="IsTypeOf(Model.Ingredient)">
-        <MappingFragment StoreEntitySet="IngredientSet1">
+        <MappingFragment StoreEntitySet="Ingredient">
           <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="Name" ColumnName="Name" />
         </MappingFragment>
@@ -565,7 +565,7 @@
     </AssociationSetMapping>
     <AssociationSetMapping Name="IngredientRecipeStep" TypeName="Model.IngredientRecipeStep" StoreEntitySet="IngredientRecipeStep">
       <EndProperty Name="Ingredient">
-        <ScalarProperty Name="Id" ColumnName="Ingredient_Id" />
+        <ScalarProperty Name="Id" ColumnName="Ingredients_Id" />
       </EndProperty>
       <EndProperty Name="RecipeStep">
         <ScalarProperty Name="Id" ColumnName="RecipeSteps_Id" />

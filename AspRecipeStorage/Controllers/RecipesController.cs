@@ -18,7 +18,7 @@ namespace AspRecipeStorage.Controllers
         // GET: Recipes
         public async Task<ActionResult> Index()
         {
-            var recipeSet = db.RecipeSet.Include(r => r.DishType).Include(r => r.User);
+            var recipeSet = db.Recipe.Include(r => r.DishType).Include(r => r.User);
             return View(await recipeSet.ToListAsync());
         }
 
@@ -29,7 +29,7 @@ namespace AspRecipeStorage.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Recipe recipe = await db.RecipeSet.FindAsync(id);
+            Recipe recipe = await db.Recipe.FindAsync(id);
             if (recipe == null)
             {
                 return HttpNotFound();
@@ -40,7 +40,7 @@ namespace AspRecipeStorage.Controllers
         // GET: Recipes/Create
         public ActionResult Create()
         {
-            ViewBag.DishTypeId = new SelectList(db.DishTypeSet, "Id", "Name");
+            ViewBag.DishTypeId = new SelectList(db.DishType, "Id", "Name");
             ViewBag.AuthorId = new SelectList(db.Users, "Id", "UserName");
             return View();
         }
@@ -54,12 +54,12 @@ namespace AspRecipeStorage.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.RecipeSet.Add(recipe);
+                db.Recipe.Add(recipe);
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
 
-            ViewBag.DishTypeId = new SelectList(db.DishTypeSet, "Id", "Name", recipe.DishTypeId);
+            ViewBag.DishTypeId = new SelectList(db.DishType, "Id", "Name", recipe.DishTypeId);
             ViewBag.AuthorId = new SelectList(db.Users, "Id", "UserName", recipe.AuthorId);
             return View(recipe);
         }
@@ -71,12 +71,12 @@ namespace AspRecipeStorage.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Recipe recipe = await db.RecipeSet.FindAsync(id);
+            Recipe recipe = await db.Recipe.FindAsync(id);
             if (recipe == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.DishTypeId = new SelectList(db.DishTypeSet, "Id", "Name", recipe.DishTypeId);
+            ViewBag.DishTypeId = new SelectList(db.DishType, "Id", "Name", recipe.DishTypeId);
             ViewBag.AuthorId = new SelectList(db.Users, "Id", "UserName", recipe.AuthorId);
             return View(recipe);
         }
@@ -94,7 +94,7 @@ namespace AspRecipeStorage.Controllers
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
-            ViewBag.DishTypeId = new SelectList(db.DishTypeSet, "Id", "Name", recipe.DishTypeId);
+            ViewBag.DishTypeId = new SelectList(db.DishType, "Id", "Name", recipe.DishTypeId);
             ViewBag.AuthorId = new SelectList(db.Users, "Id", "UserName", recipe.AuthorId);
             return View(recipe);
         }
@@ -106,7 +106,7 @@ namespace AspRecipeStorage.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Recipe recipe = await db.RecipeSet.FindAsync(id);
+            Recipe recipe = await db.Recipe.FindAsync(id);
             if (recipe == null)
             {
                 return HttpNotFound();
@@ -119,8 +119,8 @@ namespace AspRecipeStorage.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(int id)
         {
-            Recipe recipe = await db.RecipeSet.FindAsync(id);
-            db.RecipeSet.Remove(recipe);
+            Recipe recipe = await db.Recipe.FindAsync(id);
+            db.Recipe.Remove(recipe);
             await db.SaveChangesAsync();
             return RedirectToAction("Index");
         }

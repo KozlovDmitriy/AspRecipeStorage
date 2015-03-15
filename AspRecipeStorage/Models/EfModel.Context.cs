@@ -29,9 +29,9 @@ namespace AspRecipeStorage.Models
         public virtual DbSet<UserClaim> UserClaims { get; set; }
         public virtual DbSet<UserLogin> UserLogins { get; set; }
         public virtual DbSet<UserRole> UserRoles { get; set; }
-        public virtual DbSet<Recipe> RecipeSet { get; set; }
-        public virtual DbSet<DishType> DishTypeSet { get; set; }
-        public virtual DbSet<RecipeStep> RecipeStepSet { get; set; }
-        public virtual DbSet<Ingredient> IngredientSet1 { get; set; }
+        public virtual DbSet<Recipe> Recipe { get; set; }
+        public virtual DbSet<DishType> DishType { get; set; }
+        public virtual DbSet<RecipeStep> RecipeStep { get; set; }
+        public virtual DbSet<Ingredient> Ingredient { get; set; }
     }
 }
