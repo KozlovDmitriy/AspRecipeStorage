@@ -8,6 +8,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using AspRecipeStorage.Models;
+using Microsoft.AspNet.Identity;
 
 namespace AspRecipeStorage.Controllers
 {
@@ -50,10 +51,11 @@ namespace AspRecipeStorage.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "Id,Name,Description,Picture,DishTypeId,AuthorId")] Recipe recipe)
+        public async Task<ActionResult> Create([Bind(Include = "Id,Name,Description,Picture,DishTypeId")] Recipe recipe)
         {
             if (ModelState.IsValid)
             {
+                recipe.AuthorId = User.Identity.GetUserId<int>();
                 db.Recipe.Add(recipe);
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index");

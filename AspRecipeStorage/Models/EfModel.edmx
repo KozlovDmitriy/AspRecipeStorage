@@ -103,7 +103,7 @@
     <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
     <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
     <Property Name="Description" Type="nvarchar(max)" Nullable="false" />
-    <Property Name="Picture" Type="varbinary(max)" Nullable="false" />
+    <Property Name="Picture" Type="varbinary(max)" Nullable="true" />
     <Property Name="DishTypeId" Type="int" Nullable="false" />
     <Property Name="AuthorId" Type="int" Nullable="false" />
   </EntityType>
@@ -390,7 +390,7 @@
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Name" Type="String" Nullable="false" />
           <Property Name="Description" Type="String" Nullable="false" />
-          <Property Name="Picture" Type="Binary" Nullable="false" />
+          <Property Name="Picture" Type="Binary" Nullable="true" />
           <Property Name="DishTypeId" Type="Int32" Nullable="false" />
           <Property Name="AuthorId" Type="Int32" Nullable="false" />
           <NavigationProperty Name="DishType" Relationship="Model.DishTypeRecipe" FromRole="Recipe" ToRole="DishType" />

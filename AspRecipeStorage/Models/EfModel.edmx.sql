@@ -2,13 +2,13 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, 2012 and Azure
 -- --------------------------------------------------
--- Date Created: 03/15/2015 14:38:58
+-- Date Created: 03/15/2015 20:41:19
 -- Generated from EDMX file: C:\Users\fifa\Documents\Visual Studio 2013\Projects\AspRecipeStorage\AspRecipeStorage\Models\EfModel.edmx
 -- --------------------------------------------------
 
 SET QUOTED_IDENTIFIER OFF;
 GO
-USE [aspnet-AspRecipeStorage-20150314101023];
+USE [AspRecipeDatabase];
 GO
 IF SCHEMA_ID(N'dbo') IS NULL EXECUTE(N'CREATE SCHEMA [dbo]');
 GO
@@ -30,13 +30,13 @@ IF OBJECT_ID(N'[dbo].[FK_UserUserRole_UserRole]', 'F') IS NOT NULL
     ALTER TABLE [dbo].[UserUserRole] DROP CONSTRAINT [FK_UserUserRole_UserRole];
 GO
 IF OBJECT_ID(N'[dbo].[FK_DishTypeRecipe]', 'F') IS NOT NULL
-    ALTER TABLE [dbo].[RecipeSet] DROP CONSTRAINT [FK_DishTypeRecipe];
+    ALTER TABLE [dbo].[Recipe] DROP CONSTRAINT [FK_DishTypeRecipe];
 GO
 IF OBJECT_ID(N'[dbo].[FK_RecipeRecipeStep]', 'F') IS NOT NULL
-    ALTER TABLE [dbo].[RecipeStepSet] DROP CONSTRAINT [FK_RecipeRecipeStep];
+    ALTER TABLE [dbo].[RecipeStep] DROP CONSTRAINT [FK_RecipeRecipeStep];
 GO
 IF OBJECT_ID(N'[dbo].[FK_UserRecipe]', 'F') IS NOT NULL
-    ALTER TABLE [dbo].[RecipeSet] DROP CONSTRAINT [FK_UserRecipe];
+    ALTER TABLE [dbo].[Recipe] DROP CONSTRAINT [FK_UserRecipe];
 GO
 IF OBJECT_ID(N'[dbo].[FK_IngredientRecipeStep_Ingredient]', 'F') IS NOT NULL
     ALTER TABLE [dbo].[IngredientRecipeStep] DROP CONSTRAINT [FK_IngredientRecipeStep_Ingredient];
@@ -61,17 +61,17 @@ GO
 IF OBJECT_ID(N'[dbo].[UserRoles]', 'U') IS NOT NULL
     DROP TABLE [dbo].[UserRoles];
 GO
-IF OBJECT_ID(N'[dbo].[RecipeSet]', 'U') IS NOT NULL
-    DROP TABLE [dbo].[RecipeSet];
+IF OBJECT_ID(N'[dbo].[Recipe]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[Recipe];
 GO
-IF OBJECT_ID(N'[dbo].[DishTypeSet]', 'U') IS NOT NULL
-    DROP TABLE [dbo].[DishTypeSet];
+IF OBJECT_ID(N'[dbo].[DishType]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[DishType];
 GO
-IF OBJECT_ID(N'[dbo].[RecipeStepSet]', 'U') IS NOT NULL
-    DROP TABLE [dbo].[RecipeStepSet];
+IF OBJECT_ID(N'[dbo].[RecipeStep]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[RecipeStep];
 GO
-IF OBJECT_ID(N'[dbo].[IngredientSet1]', 'U') IS NOT NULL
-    DROP TABLE [dbo].[IngredientSet1];
+IF OBJECT_ID(N'[dbo].[Ingredient]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[Ingredient];
 GO
 IF OBJECT_ID(N'[dbo].[UserUserRole]', 'U') IS NOT NULL
     DROP TABLE [dbo].[UserUserRole];
@@ -130,7 +130,7 @@ CREATE TABLE [dbo].[Recipe] (
     [Id] int IDENTITY(1,1) NOT NULL,
     [Name] nvarchar(max)  NOT NULL,
     [Description] nvarchar(max)  NOT NULL,
-    [Picture] varbinary(max)  NOT NULL,
+    [Picture] varbinary(max)  NULL,
     [DishTypeId] int  NOT NULL,
     [AuthorId] int  NOT NULL
 );
