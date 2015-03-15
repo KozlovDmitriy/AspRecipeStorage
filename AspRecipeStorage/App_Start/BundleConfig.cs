@@ -26,6 +26,7 @@ namespace AspRecipeStorage
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
                       "~/Content/bootstrap.paper.min.css",
+                      "~/Content/Gridmvc.css",
                       "~/Content/site.css"));
         }
     }
