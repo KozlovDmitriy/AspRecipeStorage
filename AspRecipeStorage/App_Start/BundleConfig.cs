@@ -24,6 +24,7 @@ namespace AspRecipeStorage
                       "~/Scripts/respond.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
+                      "~/Content/bootstrap.css",
                       "~/Content/bootstrap.paper.min.css",
                       "~/Content/site.css"));
         }
