@@ -172,6 +172,9 @@
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\DishType.cs">
+      <DependentUpon>EfModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\EfModel.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -189,7 +192,16 @@
     </Compile>
     <Compile Include="Models\EntitiesPartial.cs" />
     <Compile Include="Models\IdentityModels.cs" />
+    <Compile Include="Models\Ingredient.cs">
+      <DependentUpon>EfModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="Models\Recipe.cs">
+      <DependentUpon>EfModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\RecipeStep.cs">
+      <DependentUpon>EfModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\RolePartial.cs" />
     <Compile Include="Models\User.cs">
       <DependentUpon>EfModel.tt</DependentUpon>
@@ -216,6 +228,7 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="Models\EfModel.edmx.sql" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <EntityDeploy Include="Models\EfModel.edmx">

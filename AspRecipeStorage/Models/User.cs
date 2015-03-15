@@ -19,6 +19,7 @@ namespace AspRecipeStorage.Models
             this.Claims = new HashSet<UserClaim>();
             this.Logins = new HashSet<UserLogin>();
             this.Roles = new HashSet<UserRole>();
+            this.Recipes = new HashSet<Recipe>();
         }
     
         public int Id { get; set; }
@@ -37,5 +38,6 @@ namespace AspRecipeStorage.Models
         public virtual ICollection<UserClaim> Claims { get; set; }
         public virtual ICollection<UserLogin> Logins { get; set; }
         public virtual ICollection<UserRole> Roles { get; set; }
+        public virtual ICollection<Recipe> Recipes { get; set; }
     }
 }
