@@ -17,11 +17,14 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                @Html.ActionLink("Application name", "Index", "Recipes", new { area = "" }, new { @class = "navbar-brand" })
+                @Html.ActionLink("База рецептов", "Index", "Recipes", new { area = "" }, new { @class = "navbar-brand" })
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     <li>@Html.ActionLink("Рецепты", "Index", "Recipes")</li>
+                </ul>
+                <ul class="nav navbar-nav">
+                    <li>@Html.ActionLink("Типы блюд", "Index", "DishTypes")</li>
                 </ul>
                 @Html.Partial("_LoginPartial")
             </div>
