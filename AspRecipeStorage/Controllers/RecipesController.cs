@@ -71,16 +71,16 @@ namespace AspRecipeStorage.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "Id,Name,Description,DishTypeId")] Recipe recipe, HttpPostedFileBase picture)
+        public async Task<ActionResult> Create([Bind(Include = "Id,Name,Description,DishTypeId")] Recipe recipe, HttpPostedFileBase pictureinput)
         {
             if (ModelState.IsValid)
             {
                 recipe.AuthorId = User.Identity.GetUserId<int>();
-                if (picture != null && picture.ContentLength > 0)
+                if (pictureinput != null && pictureinput.ContentLength > 0)
                 {
-                    using (var reader = new System.IO.BinaryReader(picture.InputStream))
+                    using (var reader = new System.IO.BinaryReader(pictureinput.InputStream))
                     {
-                        recipe.Picture = reader.ReadBytes(picture.ContentLength);
+                        recipe.Picture = reader.ReadBytes(pictureinput.ContentLength);
                     }
                 }
                 db.Recipe.Add(recipe);

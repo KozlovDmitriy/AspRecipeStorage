@@ -31,3 +31,9 @@ textarea {
     margin-top: 5px;
     margin-bottom: 5px;
 }
+
+.gridimage {
+    width: 100%;
+    max-width: 200px;
+    height: auto; 
+}

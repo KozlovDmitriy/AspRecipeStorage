@@ -2,8 +2,8 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, 2012 and Azure
 -- --------------------------------------------------
--- Date Created: 03/16/2015 17:56:29
--- Generated from EDMX file: C:\Users\fifa\Documents\Visual Studio 2013\Projects\AspRecipeStorage\AspRecipeStorage\Models\EfModel.edmx
+-- Date Created: 03/16/2015 18:42:45
+-- Generated from EDMX file: F:\git\AspRecipeStorage\AspRecipeStorage\Models\EfModel.edmx
 -- --------------------------------------------------
 
 SET QUOTED_IDENTIFIER OFF;
@@ -17,68 +17,11 @@ GO
 -- Dropping existing FOREIGN KEY constraints
 -- --------------------------------------------------
 
-IF OBJECT_ID(N'[dbo].[FK_UserClaim_User]', 'F') IS NOT NULL
-    ALTER TABLE [dbo].[UserClaims] DROP CONSTRAINT [FK_UserClaim_User];
-GO
-IF OBJECT_ID(N'[dbo].[FK_UserLogin_User]', 'F') IS NOT NULL
-    ALTER TABLE [dbo].[UserLogins] DROP CONSTRAINT [FK_UserLogin_User];
-GO
-IF OBJECT_ID(N'[dbo].[FK_UserUserRole_User]', 'F') IS NOT NULL
-    ALTER TABLE [dbo].[UserUserRole] DROP CONSTRAINT [FK_UserUserRole_User];
-GO
-IF OBJECT_ID(N'[dbo].[FK_UserUserRole_UserRole]', 'F') IS NOT NULL
-    ALTER TABLE [dbo].[UserUserRole] DROP CONSTRAINT [FK_UserUserRole_UserRole];
-GO
-IF OBJECT_ID(N'[dbo].[FK_DishTypeRecipe]', 'F') IS NOT NULL
-    ALTER TABLE [dbo].[Recipe] DROP CONSTRAINT [FK_DishTypeRecipe];
-GO
-IF OBJECT_ID(N'[dbo].[FK_RecipeRecipeStep]', 'F') IS NOT NULL
-    ALTER TABLE [dbo].[RecipeStep] DROP CONSTRAINT [FK_RecipeRecipeStep];
-GO
-IF OBJECT_ID(N'[dbo].[FK_UserRecipe]', 'F') IS NOT NULL
-    ALTER TABLE [dbo].[Recipe] DROP CONSTRAINT [FK_UserRecipe];
-GO
-IF OBJECT_ID(N'[dbo].[FK_IngredientRecipeStep_Ingredient]', 'F') IS NOT NULL
-    ALTER TABLE [dbo].[IngredientRecipeStep] DROP CONSTRAINT [FK_IngredientRecipeStep_Ingredient];
-GO
-IF OBJECT_ID(N'[dbo].[FK_IngredientRecipeStep_RecipeStep]', 'F') IS NOT NULL
-    ALTER TABLE [dbo].[IngredientRecipeStep] DROP CONSTRAINT [FK_IngredientRecipeStep_RecipeStep];
-GO
 
 -- --------------------------------------------------
 -- Dropping existing tables
 -- --------------------------------------------------
 
-IF OBJECT_ID(N'[dbo].[Users]', 'U') IS NOT NULL
-    DROP TABLE [dbo].[Users];
-GO
-IF OBJECT_ID(N'[dbo].[UserClaims]', 'U') IS NOT NULL
-    DROP TABLE [dbo].[UserClaims];
-GO
-IF OBJECT_ID(N'[dbo].[UserLogins]', 'U') IS NOT NULL
-    DROP TABLE [dbo].[UserLogins];
-GO
-IF OBJECT_ID(N'[dbo].[UserRoles]', 'U') IS NOT NULL
-    DROP TABLE [dbo].[UserRoles];
-GO
-IF OBJECT_ID(N'[dbo].[Recipe]', 'U') IS NOT NULL
-    DROP TABLE [dbo].[Recipe];
-GO
-IF OBJECT_ID(N'[dbo].[DishType]', 'U') IS NOT NULL
-    DROP TABLE [dbo].[DishType];
-GO
-IF OBJECT_ID(N'[dbo].[RecipeStep]', 'U') IS NOT NULL
-    DROP TABLE [dbo].[RecipeStep];
-GO
-IF OBJECT_ID(N'[dbo].[Ingredient]', 'U') IS NOT NULL
-    DROP TABLE [dbo].[Ingredient];
-GO
-IF OBJECT_ID(N'[dbo].[UserUserRole]', 'U') IS NOT NULL
-    DROP TABLE [dbo].[UserUserRole];
-GO
-IF OBJECT_ID(N'[dbo].[IngredientRecipeStep]', 'U') IS NOT NULL
-    DROP TABLE [dbo].[IngredientRecipeStep];
-GO
 
 -- --------------------------------------------------
 -- Creating all tables
