@@ -18,10 +18,29 @@ namespace AspRecipeStorage.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: Recipes
-        public async Task<ActionResult> Index()
+        public ActionResult Index()
         {
             var recipeSet = db.Recipe.Include(r => r.DishType).Include(r => r.User);
-            return View(await recipeSet.ToListAsync());
+            ViewBag.DishTypes = db.DishType.Select(i => new CheckBoxItem { 
+                Id = i.Id,
+                Name = i.Name,
+                Selected = true
+            }).ToList();
+            return View(recipeSet.OrderBy(i => i.Id));
+        }
+
+        public ActionResult FilterIndex(List<int> dishTypeFilter = null)
+        {
+            var recipeSet = db.Recipe.Include(r => r.DishType).Include(r => r.User);
+            List<int> dtFilter = dishTypeFilter == null ? new List<int>() : db.DishType.Select(i => i.Id).ToList();
+            ViewBag.DishTypes = db.DishType.Select(i => new CheckBoxItem
+            {
+                Id = i.Id,
+                Name = i.Name,
+                Selected = dtFilter.Contains(i.Id)
+            }).ToList();
+            recipeSet = recipeSet.Where(i => dtFilter.Contains(i.DishTypeId));
+            return View("Index",recipeSet.OrderBy(i => i.Id));
         }
 
         // GET: Recipes/Details/5

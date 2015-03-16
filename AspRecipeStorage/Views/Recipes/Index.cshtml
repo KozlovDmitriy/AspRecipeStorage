@@ -1,6 +1,6 @@
 ﻿@using GridMvc.Html
 @using AspRecipeStorage.Models
-@model IEnumerable<AspRecipeStorage.Models.Recipe>
+@model IOrderedQueryable<AspRecipeStorage.Models.Recipe>
 
 @{
     ViewBag.Title = "База рецептов";
@@ -9,22 +9,54 @@
 
 <br />
 
-<p class="pull-right">
-    @Html.ActionLink("Добавить свой рецепт", "Create", "Recipes", null, new { @class = "btn btn-default" })
-</p>
-
-@*@Html.Grid(Model, "_Grid").AutoGenerateColumns().Sortable().Filterable()*@
-@NameFilter()
-@Html.Grid(Model, "_MainPageFilters").Columns(columns =>
-{
-    columns.Add(i => i.Name).Titled("Название").Sanitized(false).Encoded(false).Sortable(true).Filterable(true);
-    columns.Add(i => i.User.UserName).Titled("Автор").Sanitized(false).Encoded(false).Sortable(true).Filterable(true);
-    columns.Add(i => i.RecipeStep.FirstOrDefault().Time).Titled("Время приготовления");
-}).WithPaging(10)
-
-@Html.Grid(Model, "_MainPageGrid").Columns(columns => {
-    columns.Add(i => i.Id).Sanitized(false).Encoded(false).RenderValueAs(cell => RecipePenderer(cell));
-}).WithPaging(10)
+<div class="row">
+    <div class="col col-lg-2">
+        @using ( Html.BeginForm("FilterIndex","Recipes", FormMethod.Get) ) {
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <div class="pull-right">
+                        <input type="checkbox" class="dish-type-filter-all">
+                    </div>
+                    <div>Типы блюд</div>
+                </div>
+                <div class="panel-body">
+                    @foreach (CheckBoxItem item in ViewBag.DishTypes)
+                    {
+                        <input type="checkbox" class="dish-type-filter" name="dishTypeFilter" value="@item.Id" checked="@item.Selected"/>
+                        @item.Name
+                    }
+                </div>
+            </div>
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <div class="pull-right">
+                        <input type="checkbox" class="ingridients-filter-all">
+                    </div>
+                    <div>
+                        Ингридиенты
+                    </div>
+                </div>
+                <div class="panel-body">
+                    Panel content
+                </div>
+            </div>
+            <input type="submit" class="btn btn-sm btn-default pull-right" value="Применить фильтры">
+        }
+        @Html.ActionLink("Добавить свой рецепт", "Create", "Recipes", null, new { @class = "btn btn-sm btn-default" })
+    </div>
+    <div class="col col-lg-10">
+        @Html.Grid(Model, "_MainPageFilters").Columns(columns =>
+        {
+            columns.Add(i => i.Name).Titled("Название").Sanitized(false).Encoded(false).Sortable(true).Filterable(true);
+            columns.Add(i => i.User.UserName).Titled("Автор").Sanitized(false).Encoded(false).Sortable(true).Filterable(true);
+            columns.Add(i => i.RecipeStep.FirstOrDefault().Time).Titled("Время приготовления");
+        }).WithPaging(10)
+        @Html.Grid(Model, "_MainPageGrid").Columns(columns =>
+        {
+            columns.Add(i => i.Id).Sanitized(false).Encoded(false).RenderValueAs(cell => RecipePenderer(cell));
+        }).WithPaging(10)
+    </div>
+</div>
 
 @helper RecipePenderer(Recipe recipe)
 {
@@ -50,10 +82,10 @@
             </div>
             <hr class="hr-recipe" />
             <div class="row">
-                <div class="col-md-10">
+                <div class="col-md-9">
                     <p>Ингридиенты:</p>
                 </div>
-                <div class="col-md-2">
+                <div class="col-md-3">
                     <p>Время приготовления:</p>
                 </div>
             </div>
@@ -62,11 +94,7 @@
     </div>
 }
 
-@helper NameFilter() 
-{
-    
-}
-
 @section Scripts {
     <script src="@Url.Content("~/Scripts/gridmvc.min.js")" type="text/javascript"> </script>
+    <script src="@Url.Content("~/Scripts/recipes.js")" type="text/javascript"> </script>
 }
