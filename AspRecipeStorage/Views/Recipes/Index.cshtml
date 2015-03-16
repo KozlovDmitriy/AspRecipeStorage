@@ -45,7 +45,7 @@
                     <p>@recipe.Description</p>
                 </div>
                 <div class="col-md-4">
-                    <img />
+                    @Base64imgPrerender(recipe.Picture)
                 </div>
             </div>
             <hr class="hr-recipe" />
@@ -60,6 +60,20 @@
             @Html.ActionLink("Подробнее", "Details", new { id = recipe.Id }, new { @class = "btn btn-xs btn-default" })
         </div>
     </div>
+}
+
+@helper Base64imgPrerender(byte[] imageByteData)
+{
+    if (imageByteData != null)
+    { 
+        string imageBase64Data = Convert.ToBase64String(imageByteData);
+        string imageDataURL = string.Format("data:image/png;base64,{0}", imageBase64Data);
+        <img class="gridimage" src="@imageDataURL" />
+    }
+    else
+    {
+        @:No image
+    }
 }
 
 @helper NameFilter() 

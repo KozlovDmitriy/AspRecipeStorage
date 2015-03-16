@@ -7,8 +7,7 @@
 
 <h3>Добавление нового рецепта</h3>
 
-
-@using (Html.BeginForm()) 
+@using (Html.BeginForm(null, null, FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
     @Html.AntiForgeryToken()
     
@@ -35,7 +34,7 @@
         <div class="form-group">
             <div class="control-label col-md-2">Изображение</div>
             <div class="col-md-10"> 
-                 <input type="file" id="picture" name="picture" accept="image/*"/>
+                <input type="file" id="pictureinput" name="pictureinput" accept="image/*" />
                 @Html.ValidationMessageFor(model => model.Picture, "", new { @class = "text-danger" })
             </div>
         </div>
