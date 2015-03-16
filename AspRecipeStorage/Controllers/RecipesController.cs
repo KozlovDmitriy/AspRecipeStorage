@@ -18,9 +18,18 @@ namespace AspRecipeStorage.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: Recipes
-        public ActionResult Index()
+        public ActionResult Index(int? userId = null)
         {
             var recipeSet = db.Recipe.Include(r => r.DishType).Include(r => r.User);
+            if (userId != null) 
+            {
+                if (userId == -1) 
+                {
+                    userId = User.Identity.GetUserId<int>();
+                }
+                recipeSet = recipeSet.Where(i => i.User.Id == userId);
+                ViewBag.UserId = userId;
+            }
             ViewBag.DishTypes = db.DishType.Select(i => new CheckBoxItem { 
                 Id = i.Id,
                 Name = i.Name,
@@ -29,10 +38,19 @@ namespace AspRecipeStorage.Controllers
             return View(recipeSet.OrderBy(i => i.Id));
         }
 
-        public ActionResult FilterIndex(List<int> dishTypeFilter = null)
+        public ActionResult FilterIndex(List<int> dishTypeFilter = null, int? userId = null)
         {
             var recipeSet = db.Recipe.Include(r => r.DishType).Include(r => r.User);
-            List<int> dtFilter = dishTypeFilter == null ? new List<int>() : db.DishType.Select(i => i.Id).ToList();
+            if (userId != null)
+            {
+                if (userId == -1)
+                {
+                    userId = User.Identity.GetUserId<int>();
+                }
+                recipeSet = recipeSet.Where(i => i.User.Id == userId);
+                ViewBag.UserId = userId;
+            }
+            List<int> dtFilter = dishTypeFilter == null ? new List<int>() : dishTypeFilter;
             ViewBag.DishTypes = db.DishType.Select(i => new CheckBoxItem
             {
                 Id = i.Id,

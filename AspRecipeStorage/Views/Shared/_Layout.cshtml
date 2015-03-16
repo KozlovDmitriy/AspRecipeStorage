@@ -24,6 +24,9 @@
                     <li>@Html.ActionLink("Рецепты", "Index", "Recipes")</li>
                 </ul>
                 <ul class="nav navbar-nav">
+                    <li>@Html.ActionLink("Мои рецепты", "Index", "Recipes", new { userId = -1 }, null)</li>
+                </ul>
+                <ul class="nav navbar-nav">
                     <li>@Html.ActionLink("Типы блюд", "Index", "DishTypes")</li>
                 </ul>
                 @Html.Partial("_LoginPartial")
