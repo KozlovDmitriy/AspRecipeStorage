@@ -28,6 +28,14 @@ namespace AspRecipeStorage.Controllers
             SignInManager = signInManager;
         }
 
+        public ApplicationDbContext db
+        {
+            get
+            {
+                return HttpContext.GetOwinContext().Get<ApplicationDbContext>();
+            }
+        }
+
         public ApplicationSignInManager SignInManager
         {
             get
@@ -152,6 +160,8 @@ namespace AspRecipeStorage.Controllers
             if (ModelState.IsValid)
             {
                 var user = new User { UserName = model.Email, Email = model.Email };
+                var role = db.UserRoles.SingleOrDefault(r => r.Id == 2);
+                user.Roles.Add(role);
                 var result = await ApplicationUserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {

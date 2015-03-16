@@ -1,59 +1,59 @@
 ﻿@model AspRecipeStorage.Models.Recipe
 
 @{
-    ViewBag.Title = "Details";
+    ViewBag.Title = "Рецепт " + Model.Name;
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Details</h2>
+<h2></h2>
 
-<div>
-    <h4>Recipe</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Description)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Description)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Picture)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Picture)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.DishType.Name)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.DishType.Name)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.User.UserName)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.User.UserName)
-        </dd>
-
-    </dl>
+<div class="panel panel-default">
+    <div class="panel-body">
+        @*<h4>Recipe</h4>
+            <hr />*@
+        <div class="media">
+            <div class="media-left">
+                @Base64imgPrerender(Model.Picture)
+            </div>
+            <div class="media-body">
+                <h4 class="media-heading">@Model.Name</h4>
+                @Model.Description
+            </div>
+        </div>
+    </div>
 </div>
-<p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
-    @Html.ActionLink("Back to List", "Index")
-</p>
+    @if (Model.RecipeStep == null || Model.RecipeStep.Count <= 0)
+    {
+        <div class="panel panel-default">
+            <div class="panel-body">Для этого рецепта еще нет шагов</div>
+        </div>
+    }
+    else
+    {
+        foreach (var step in Model.RecipeStep.OrderBy(r => r.StepNumber))
+        {
+            <div class="panel panel-default">
+                <div class="panel-heading">Шаг @step.StepNumber<text>. (</text>@step.Time<text> минут)</text></div>
+                <div class="panel-body">@step.Discription</div>
+            </div>
+        }
+    }
+    <p>
+        @Html.ActionLink("Назад к списку", "Index")
+    </p>
+
+@helper Base64imgPrerender(byte[] imageByteData)
+{
+    string imageDataURL;
+    if (imageByteData != null)
+    {
+        string imageBase64Data = Convert.ToBase64String(imageByteData);
+        imageDataURL = string.Format("data:image/png;base64,{0}", imageBase64Data);
+
+    }
+    else
+    {
+        imageDataURL = @"data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/PjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA2NCA2NCIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+PGRlZnMvPjxyZWN0IHdpZHRoPSI2NCIgaGVpZ2h0PSI2NCIgZmlsbD0iI0VFRUVFRSIvPjxnPjx0ZXh0IHg9IjE0IiB5PSIzMiIgc3R5bGU9ImZpbGw6I0FBQUFBQTtmb250LXdlaWdodDpib2xkO2ZvbnQtZmFtaWx5OkFyaWFsLCBIZWx2ZXRpY2EsIE9wZW4gU2Fucywgc2Fucy1zZXJpZiwgbW9ub3NwYWNlO2ZvbnQtc2l6ZToxMHB0O2RvbWluYW50LWJhc2VsaW5lOmNlbnRyYWwiPjY0eDY0PC90ZXh0PjwvZz48L3N2Zz4=";
+    }
+    <img class="gridimage media-object" src="@imageDataURL" alt="recipe image">
+}
