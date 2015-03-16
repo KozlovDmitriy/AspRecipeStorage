@@ -168,6 +168,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\RecipesController.cs" />
+    <Compile Include="Controllers\RecipeStepsController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -321,6 +322,11 @@
     <Content Include="Views\Shared\_Grid.cshtml" />
     <Content Include="Views\Shared\_MainPageGrid.cshtml" />
     <Content Include="Views\Shared\_MainPageFilters.cshtml" />
+    <Content Include="Views\RecipeSteps\Create.cshtml" />
+    <Content Include="Views\RecipeSteps\Delete.cshtml" />
+    <Content Include="Views\RecipeSteps\Details.cshtml" />
+    <Content Include="Views\RecipeSteps\Edit.cshtml" />
+    <Content Include="Views\RecipeSteps\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
