@@ -120,7 +120,7 @@
     </Key>
     <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
     <Property Name="Discription" Type="nvarchar(max)" Nullable="false" />
-    <Property Name="Time" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Time" Type="int" Nullable="false" />
     <Property Name="StepNumber" Type="int" Nullable="false" />
     <Property Name="RecipeId" Type="int" Nullable="false" />
   </EntityType>
@@ -411,7 +411,7 @@
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Discription" Type="String" Nullable="false" />
-          <Property Name="Time" Type="String" Nullable="false" />
+          <Property Name="Time" Type="Int32" Nullable="false" />
           <Property Name="StepNumber" Type="Int32" Nullable="false" />
           <Property Name="RecipeId" Type="Int32" Nullable="false" />
           <NavigationProperty Name="Recipe" Relationship="Model.RecipeRecipeStep" FromRole="RecipeStep" ToRole="Recipe" />

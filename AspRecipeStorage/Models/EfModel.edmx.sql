@@ -2,7 +2,7 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, 2012 and Azure
 -- --------------------------------------------------
--- Date Created: 03/15/2015 20:41:19
+-- Date Created: 03/16/2015 17:56:29
 -- Generated from EDMX file: C:\Users\fifa\Documents\Visual Studio 2013\Projects\AspRecipeStorage\AspRecipeStorage\Models\EfModel.edmx
 -- --------------------------------------------------
 
@@ -147,7 +147,7 @@ GO
 CREATE TABLE [dbo].[RecipeStep] (
     [Id] int IDENTITY(1,1) NOT NULL,
     [Discription] nvarchar(max)  NOT NULL,
-    [Time] nvarchar(max)  NOT NULL,
+    [Time] int  NOT NULL,
     [StepNumber] int  NOT NULL,
     [RecipeId] int  NOT NULL
 );

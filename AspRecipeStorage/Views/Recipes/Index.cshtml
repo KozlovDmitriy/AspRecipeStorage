@@ -13,16 +13,25 @@
     @Html.ActionLink("Добавить свой рецепт", "Create", "Recipes", null, new { @class = "btn btn-default" })
 </p>
 
-@Html.Grid(Model, "_MainPageGrid").Columns(
-    columns => columns.Add(i => i.Id).Sanitized(false).Encoded(false).RenderValueAs(cell => RecipePenderer(cell))
-).WithPaging(10)
+@*@Html.Grid(Model, "_Grid").AutoGenerateColumns().Sortable().Filterable()*@
+@NameFilter()
+@Html.Grid(Model, "_MainPageFilters").Columns(columns =>
+{
+    columns.Add(i => i.Name).Titled("Название").Sanitized(false).Encoded(false).Sortable(true).Filterable(true);
+    columns.Add(i => i.User.UserName).Titled("Автор").Sanitized(false).Encoded(false).Sortable(true).Filterable(true);
+    columns.Add(i => i.RecipeStep.FirstOrDefault().Time).Titled("Время приготовления");
+}).WithPaging(10)
+
+@Html.Grid(Model, "_MainPageGrid").Columns(columns => {
+    columns.Add(i => i.Id).Sanitized(false).Encoded(false).RenderValueAs(cell => RecipePenderer(cell));
+}).WithPaging(10)
 
 @helper RecipePenderer(Recipe recipe)
 {
     <div class="panel panel-default panel-recipe">
         <div class="panel-body">
             <div class="row">
-                <div class="col-lg-2">@recipe.DishType.Name : @recipe.Name</div>
+                <div class="col-lg-5">[Автор: @recipe.User.UserName] @recipe.DishType.Name : @recipe.Name</div>
                 <div class="col-lg-3 pull-right">
                     <div class="pull-right btn-group btn-group-xs">
                         @Html.ActionLink("Редактировать", "Edit", new { id = recipe.Id }, new { @class = "btn btn-default" })
@@ -45,12 +54,17 @@
                     <p>Ингридиенты:</p>
                 </div>
                 <div class="col-md-2">
-                    <p>Время готовки:</p>
+                    <p>Время приготовления:</p>
                 </div>
             </div>
             @Html.ActionLink("Подробнее", "Details", new { id = recipe.Id }, new { @class = "btn btn-xs btn-default" })
         </div>
     </div>
+}
+
+@helper NameFilter() 
+{
+    
 }
 
 @section Scripts {

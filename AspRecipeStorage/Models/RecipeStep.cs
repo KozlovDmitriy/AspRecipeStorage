@@ -21,7 +21,7 @@ namespace AspRecipeStorage.Models
     
         public int Id { get; set; }
         public string Discription { get; set; }
-        public string Time { get; set; }
+        public int Time { get; set; }
         public int StepNumber { get; set; }
         public int RecipeId { get; set; }
     
