@@ -10,7 +10,7 @@
 @using (Html.BeginForm(null, null, FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
     @Html.AntiForgeryToken()
-    
+
     <div class="form-horizontal">
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
@@ -33,7 +33,7 @@
 
         <div class="form-group">
             <div class="control-label col-md-2">Изображение</div>
-            <div class="col-md-10"> 
+            <div class="col-md-10">
                 <input type="file" id="pictureinput" name="pictureinput" accept="image/*" />
                 @Html.ValidationMessageFor(model => model.Picture, "", new { @class = "text-danger" })
             </div>
@@ -47,9 +47,14 @@
             </div>
         </div>
 
+        <div class="recipe-steps"></div>
+
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Добавить новый рецепт в базу" class="btn btn-default" />
+                <div class="btn-group btn-group-sm">
+                    <a href="javascript:void(0)" class="btn btn-default add-step">Добавить еще один шаг</a>
+                    <input type="submit" value="Добавить новый рецепт в базу" class="btn btn-default" />
+                </div>
             </div>
         </div>
     </div>
@@ -61,4 +66,6 @@
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+
+    <script src="@Url.Content("~/Scripts/add-recipes.js")" type="text/javascript"> </script>
 }

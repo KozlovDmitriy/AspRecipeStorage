@@ -168,7 +168,6 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\RecipesController.cs" />
-    <Compile Include="Controllers\RecipeStepsController.cs" />
     <Compile Include="Controllers\SetupController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -207,6 +206,7 @@
     <Compile Include="Models\Recipe.cs">
       <DependentUpon>EfModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\RecipePartial.cs" />
     <Compile Include="Models\RecipeStep.cs">
       <DependentUpon>EfModel.tt</DependentUpon>
     </Compile>
@@ -238,6 +238,7 @@
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="Models\EfModel.edmx.sql" />
+    <Content Include="Scripts\add-recipes.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <EntityDeploy Include="Models\EfModel.edmx">
@@ -323,11 +324,7 @@
     <Content Include="Views\Shared\_Grid.cshtml" />
     <Content Include="Views\Shared\_MainPageGrid.cshtml" />
     <Content Include="Views\Shared\_MainPageFilters.cshtml" />
-    <Content Include="Views\RecipeSteps\Create.cshtml" />
-    <Content Include="Views\RecipeSteps\Delete.cshtml" />
-    <Content Include="Views\RecipeSteps\Details.cshtml" />
-    <Content Include="Views\RecipeSteps\Edit.cshtml" />
-    <Content Include="Views\RecipeSteps\Index.cshtml" />
+    <Content Include="Views\Recipes\EditorTemplates\RecipeStep.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

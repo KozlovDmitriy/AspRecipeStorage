@@ -33,8 +33,8 @@ else
         foreach (object item in Model.ItemsToDisplay)
         {
     <tr class="grid-row @Model.GetRowCssClasses(item)">
-        @foreach (IGridColumn column in Model.Columns)
-        {
+        @{
+            IGridColumn column = Model.Columns.FirstOrDefault();
             @column.CellRenderer.Render(column, column.GetCell(item))
         }
     </tr>
