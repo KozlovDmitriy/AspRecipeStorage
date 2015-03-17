@@ -33,7 +33,7 @@
         foreach (var step in Model.RecipeStep.OrderBy(r => r.StepNumber))
         {
             <div class="panel panel-default">
-                <div class="panel-heading">Шаг @step.StepNumber<text>. (</text>@step.Time<text> минут)</text></div>
+                <div class="panel-heading">Шаг @step.StepNumber<text>. (</text>@step.Time<text> мин.)</text></div>
                 <div class="panel-body">@step.Discription</div>
             </div>
         }
