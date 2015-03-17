@@ -30,7 +30,7 @@
                     }
                 </div>
             </div>
-            <div class="panel panel-primary">
+            <div class="panel panel-primary hidden">
                 <div class="panel-heading">
                     <div class="pull-right">
                         <input type="checkbox" class="ingridients-filter-all">
@@ -62,11 +62,12 @@
                 {
                     columns.Add(i => i.Name).Titled("Название").Sanitized(false).Encoded(false).Sortable(true).Filterable(true);
                     columns.Add(i => i.User.UserName).Titled("Автор").Sanitized(false).Encoded(false).Sortable(true).Filterable(true);
-                    columns.Add(i => i.RecipeStep.FirstOrDefault().Time).Titled("Время приготовления");
                 }).WithPaging(10)
-                            @Html.Grid(Model, "_MainPageGrid").Columns(columns =>
+        @Html.Grid(Model, new GridRenderOptions("grid", "_MainPageGrid")).Columns(columns =>
                 {
                     columns.Add(i => i.Id).Sanitized(false).Encoded(false).RenderValueAs(cell => RecipePenderer(cell));
+            columns.Add(i => i.Name).RenderValueAs(c => @<div class="hidden"/>).Titled("Название").Sanitized(false).Encoded(false).Sortable(true).Filterable(true);
+            columns.Add(i => i.User.UserName).RenderValueAs(c => @<div class="hidden" />).Titled("Автор").Sanitized(false).Encoded(false).Sortable(true).Filterable(true);
                 }).WithPaging(10)
                         </div>
                     </div>
@@ -101,7 +102,7 @@
                             <p>Ингридиенты:</p>
                         </div>
                         <div class="col-md-3">
-                            <p>Время приготовления:</p>
+                    <p>Время приготовления: @recipe.Time мин.</p>
                         </div>
                     </div>
                     @Html.AuthorizeActionLink("Подробнее", "Details", new { id = recipe.Id }, new { @class = "btn btn-xs btn-default" })

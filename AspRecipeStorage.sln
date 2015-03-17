@@ -7,8 +7,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspRecipeStorage", "AspReci
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspRecipeStorage.Tests", "AspRecipeStorage.Tests\AspRecipeStorage.Tests.csproj", "{A7F6C918-69C9-4B8D-8C9E-FA7DF8ED5B91}"
 EndProject
-Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "AspRecipeStorageDatabase", "AspRecipeStorageDatabase\AspRecipeStorageDatabase.sqlproj", "{A013A219-3735-4BE1-8B1B-1507206B72D0}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,12 +21,6 @@ Global
 		{A7F6C918-69C9-4B8D-8C9E-FA7DF8ED5B91}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A7F6C918-69C9-4B8D-8C9E-FA7DF8ED5B91}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A7F6C918-69C9-4B8D-8C9E-FA7DF8ED5B91}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A013A219-3735-4BE1-8B1B-1507206B72D0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A013A219-3735-4BE1-8B1B-1507206B72D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A013A219-3735-4BE1-8B1B-1507206B72D0}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
-		{A013A219-3735-4BE1-8B1B-1507206B72D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A013A219-3735-4BE1-8B1B-1507206B72D0}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A013A219-3735-4BE1-8B1B-1507206B72D0}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

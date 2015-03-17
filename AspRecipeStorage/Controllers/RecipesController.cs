@@ -95,7 +95,7 @@ namespace AspRecipeStorage.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin, User")]
-        public async Task<ActionResult> Create([Bind(Include = "Id,Name,Description,DishTypeId")] Recipe recipe, HttpPostedFileBase pictureinput)
+        public async Task<ActionResult> Create(Recipe recipe, HttpPostedFileBase pictureinput)
         {
             if (ModelState.IsValid)
             {
@@ -106,6 +106,9 @@ namespace AspRecipeStorage.Controllers
                     {
                         recipe.Picture = reader.ReadBytes(pictureinput.ContentLength);
                     }
+                }
+                for (int i = 0; i < recipe.RecipeStep.Count; ++i) {
+                    recipe.RecipeStep.ToList<RecipeStep>()[i].StepNumber = i + 1;
                 }
                 db.Recipe.Add(recipe);
                 await db.SaveChangesAsync();

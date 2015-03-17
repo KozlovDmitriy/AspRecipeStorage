@@ -1,0 +1,20 @@
+﻿@model AspRecipeStorage.Models.RecipeStep
+
+<div class="panel panel-primary">
+    <div class="panel-heading">Шаг рецепта</div>
+    <div class="panel-body">
+        <div class="form-group">
+            <div class="control-label col-md-2">Описание шага</div>
+            <div class="col-md-10">
+                <textarea cols="35" htmlattributes="{ class = form-control }" id="Description" name="RecipeStep[0].Description" rows="4"></textarea>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="control-label col-md-2">Время в минутах</div>
+            <div class="col-md-10">
+                @Html.EditorFor(m => m.Time)
+            </div>
+        </div>
+    </div>
+</div>
