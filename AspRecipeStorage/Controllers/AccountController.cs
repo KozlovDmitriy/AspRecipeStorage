@@ -173,7 +173,7 @@ namespace AspRecipeStorage.Controllers
                     // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
                     // await ApplicationUserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
 
-                    return RedirectToAction("Index", "Home");
+                    return Redirect(Url.Content("~/"));
                 }
                 AddErrors(result);
             }
@@ -402,7 +402,7 @@ namespace AspRecipeStorage.Controllers
         public ActionResult LogOff()
         {
             AuthenticationManager.SignOut();
-            return RedirectToAction("Index", "Home");
+            return Redirect(Url.Content("~/"));
         }
 
         //
@@ -459,7 +459,7 @@ namespace AspRecipeStorage.Controllers
             {
                 return Redirect(returnUrl);
             }
-            return RedirectToAction("Index", "Home");
+            return Redirect(Url.Content("~/"));
         }
 
         internal class ChallengeResult : HttpUnauthorizedResult

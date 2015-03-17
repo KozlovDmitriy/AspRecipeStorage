@@ -179,6 +179,7 @@
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\AuthorizeActionLinkExtention.cs" />
     <Compile Include="Models\CheckBoxItem.cs" />
     <Compile Include="Models\DishType.cs">
       <DependentUpon>EfModel.tt</DependentUpon>

@@ -11,6 +11,7 @@ using AspRecipeStorage.Models;
 
 namespace AspRecipeStorage.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class DishTypesController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();

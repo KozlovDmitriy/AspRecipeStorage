@@ -35,9 +35,8 @@ namespace AspRecipeStorage.Models
                     new DishType { Name = "Торты" },
                     new DishType { Name = "Круассаны" },
                     new DishType { Name = "Пирожные" },
-                    new DishType { Name = "Пироги (сластенка)" },
+                    new DishType { Name = "Пироги" },
                     new DishType { Name = "Пряники" },
-                    new DishType { Name = "Блинчатые пироги и пирожки" },
                     new DishType { Name = "Оладьи" },
                     new DishType { Name = "Пончики" },
                     new DishType { Name = "Хлеб" },
@@ -58,7 +57,7 @@ namespace AspRecipeStorage.Models
             {
                 Email = "admin@admin.admin",
                 UserName = "admin@admin.admin",
-                PasswordHash = "AERPoxTkc6T4usk9X+rF2gzUfBOlsjmmcbNENT84uVljw87kItnCao6didax+mT/Lw==",
+                PasswordHash = "AERPoxTkc6T4usk9X+rF2gzUfBOlsjmmcbNENT84uVljw87kItnCao6didax+mT/Lw==", // 123456
                 SecurityStamp = "028213dc-181b-4c58-b42e-293512414225",
                 PhoneNumberConfirmed = false,
                 EmailConfirmed = false,

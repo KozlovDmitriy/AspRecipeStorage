@@ -4,28 +4,32 @@
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+<div class="panel panel-default">
+    <div class="panel-body">
+        <h3>Типы блюд</h3>
 
-<h3>Типы блюд</h3>
+        <p>
+            @Html.AuthorizeActionLink("Добавить новый", "Create")
+        </p>
+        <table class="table">
+            <tr>
+                <th>Название</th>
+                <th></th>
+            </tr>
 
-<p>
-    @Html.ActionLink("Добавить новый", "Create")
-</p>
-<table class="table">
-    <tr>
-        <th>Название</th>
-        <th></th>
-    </tr>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        @Html.AuthorizeActionLink("Редактировать", "Edit", new { id = item.Id }) |
+                        @Html.AuthorizeActionLink("Удалить", "Delete", new { id = item.Id })
+                    </td>
+                </tr>
+            }
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Name)
-        </td>
-        <td>
-            @Html.ActionLink("Редактировать", "Edit", new { id=item.Id }) |
-            @Html.ActionLink("Удалить", "Delete", new { id=item.Id })
-        </td>
-    </tr>
-}
-
-</table>
+        </table>
+    </div>
+</div>

@@ -81,6 +81,7 @@ namespace AspRecipeStorage.Controllers
         }
 
         // GET: Recipes/Create
+        [Authorize(Roles = "Admin, User")]
         public ActionResult Create()
         {
             ViewBag.DishTypeId = new SelectList(db.DishType, "Id", "Name");
@@ -93,6 +94,7 @@ namespace AspRecipeStorage.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin, User")]
         public async Task<ActionResult> Create([Bind(Include = "Id,Name,Description,DishTypeId")] Recipe recipe, HttpPostedFileBase pictureinput)
         {
             if (ModelState.IsValid)
@@ -116,6 +118,7 @@ namespace AspRecipeStorage.Controllers
         }
 
         // GET: Recipes/Edit/5
+        [Authorize(Roles = "Admin, User")]
         public async Task<ActionResult> Edit(int? id)
         {
             if (id == null)
@@ -137,6 +140,7 @@ namespace AspRecipeStorage.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin, User")]
         public async Task<ActionResult> Edit([Bind(Include = "Id,Name,Description,Picture,DishTypeId,AuthorId")] Recipe recipe)
         {
             if (ModelState.IsValid)
@@ -151,6 +155,7 @@ namespace AspRecipeStorage.Controllers
         }
 
         // GET: Recipes/Delete/5
+        [Authorize(Roles = "Admin, User")]
         public async Task<ActionResult> Delete(int? id)
         {
             if (id == null)
@@ -168,6 +173,7 @@ namespace AspRecipeStorage.Controllers
         // POST: Recipes/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin, User")]
         public async Task<ActionResult> DeleteConfirmed(int id)
         {
             Recipe recipe = await db.Recipe.FindAsync(id);

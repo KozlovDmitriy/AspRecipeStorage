@@ -17,18 +17,24 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                @Html.ActionLink("База рецептов", "Index", "Recipes", new { area = "" }, new { @class = "navbar-brand" })
+                @Html.AuthorizeActionLink("База рецептов", "Index", "Recipes", new { area = "" }, new { @class = "navbar-brand" })
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Рецепты", "Index", "Recipes")</li>
+                    <li>@Html.AuthorizeActionLink("Рецепты", "Index", "Recipes")</li>
                 </ul>
-                <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Мои рецепты", "Index", "Recipes", new { userId = -1 }, null)</li>
-                </ul>
-                <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Типы блюд", "Index", "DishTypes")</li>
-                </ul>
+                @if (User.IsInRole("User") || User.IsInRole("Admin"))
+                { 
+                    <ul class="nav navbar-nav">
+                        <li>@Html.AuthorizeActionLink("Мои рецепты", "Index", "Recipes", new { userId = -1 }, null)</li>
+                    </ul>
+                }
+                @if (User.IsInRole("Admin"))
+                {
+                    <ul class="nav navbar-nav">
+                        <li>@Html.AuthorizeActionLink("Типы блюд", "Index", "DishTypes")</li>
+                    </ul>
+                }
                 @Html.Partial("_LoginPartial")
             </div>
         </div>

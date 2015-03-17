@@ -39,7 +39,7 @@
         }
     }
     <p>
-        @Html.ActionLink("Назад к списку", "Index")
+        @Html.AuthorizeActionLink("Назад к списку", "Index")
     </p>
 
 @helper Base64imgPrerender(byte[] imageByteData)
