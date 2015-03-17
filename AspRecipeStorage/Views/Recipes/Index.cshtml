@@ -82,7 +82,7 @@
                         <div class="col-lg-5">Автор: @Html.AuthorizeActionLink(recipe.User.UserName, "Index", new { id = recipe.AuthorId }, null) | @recipe.DishType.Name : @recipe.Name</div>
                         <div class="col-lg-3 pull-right">
                             <div class="pull-right btn-group btn-group-xs">
-                                @Html.AuthorizeActionLink("Редактировать", "Edit", new { id = recipe.Id }, new { @class = "btn btn-default" })
+                                @*@Html.AuthorizeActionLink("Редактировать", "Edit", new { id = recipe.Id }, new { @class = "btn btn-default" })*@
                                 @Html.AuthorizeActionLink("Удалить", "Delete", new { id = recipe.Id }, new { @class = "btn btn-default" })
                             </div>
                         </div>
