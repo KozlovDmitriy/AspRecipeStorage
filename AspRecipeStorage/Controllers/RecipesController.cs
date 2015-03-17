@@ -68,7 +68,11 @@ namespace AspRecipeStorage.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Recipe recipe = await db.Recipe.FindAsync(id);
+            Recipe recipe = await db.Recipe
+                .Include(r => r.DishType)
+                .Include(r => r.User)
+                .Include(r => r.RecipeStep.Select(i => i.Ingredients))
+                .SingleOrDefaultAsync(r => r.Id == id.Value);
             if (recipe == null)
             {
                 return HttpNotFound();
