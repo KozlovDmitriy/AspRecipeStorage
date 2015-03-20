@@ -203,7 +203,13 @@
     <Compile Include="Models\Ingredient.cs">
       <DependentUpon>EfModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\IngridientType.cs">
+      <DependentUpon>EfModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="Models\MeasureType.cs">
+      <DependentUpon>EfModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Recipe.cs">
       <DependentUpon>EfModel.tt</DependentUpon>
     </Compile>

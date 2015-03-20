@@ -20,6 +20,10 @@
         <AssociationConnector Association="Model.RecipeRecipeStep" />
         <AssociationConnector Association="Model.UserRecipe" />
         <AssociationConnector Association="Model.IngredientRecipeStep" />
+        <EntityTypeShape EntityType="Model.MeasureType" Width="1.5" PointX="10.875" PointY="4.75" />
+        <EntityTypeShape EntityType="Model.IngridientType" Width="1.5" PointX="10.875" PointY="6.75" />
+        <AssociationConnector Association="Model.IngredientMeasureType" />
+        <AssociationConnector Association="Model.IngredientIngridientType" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

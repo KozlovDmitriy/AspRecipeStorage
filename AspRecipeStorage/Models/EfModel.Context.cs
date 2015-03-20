@@ -33,5 +33,7 @@ namespace AspRecipeStorage.Models
         public virtual DbSet<DishType> DishType { get; set; }
         public virtual DbSet<RecipeStep> RecipeStep { get; set; }
         public virtual DbSet<Ingredient> Ingredient { get; set; }
+        public virtual DbSet<MeasureType> MeasureTypes { get; set; }
+        public virtual DbSet<IngridientType> IngridientTypes { get; set; }
     }
 }

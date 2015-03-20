@@ -11,7 +11,8 @@
 
 <div class="row">
     <div class="col col-lg-2">
-        @using ( Html.BeginForm("FilterIndex","Recipes", FormMethod.Get) ) {
+        @using (Html.BeginForm("FilterIndex", "Recipes", FormMethod.Get))
+        {
             <input class="hidden" name="userId" value="@ViewBag.UserId" />
             <div class="panel panel-primary">
                 <div class="panel-heading">
@@ -43,74 +44,75 @@
                     Panel content
                 </div>
             </div>
-    <div class="panel panel-default">
-        <div class="panel-body">
-            <input type="submit" class="btn btn-sm btn-default pull-right" value="Применить" style="width:100%">
-        </div>
-    </div>
-        }
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <input type="submit" class="btn btn-sm btn-default pull-right" value="Применить" style="width:100%">
                 </div>
-                <div class="col col-lg-10">
-                    <div class="panel panel-default">
-                        <div class="panel-body">
-                            @Html.AuthorizeActionLink("Добавить свой рецепт", "Create", "Recipes", null, new { @class = "btn btn-sm btn-default" })
-                        </div>
-                    </div>
-                    <div class="panel panel-default">
-                        <div class="panel-body" id="recipetableholder">
-                            @Html.Grid(Model, "_MainPageFilters").Columns(columns =>
+            </div>
+        }
+    </div>
+    <div class="col col-lg-10">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                @Html.AuthorizeActionLink("Добавить свой рецепт", "Create", "Recipes", null, new { @class = "btn btn-sm btn-default" })
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-body" id="recipetableholder">
+                @Html.Grid(Model, "_MainPageFilters").Columns(columns =>
                 {
                     columns.Add(i => i.Name).Titled("Название").Sanitized(false).Encoded(false).Sortable(true).Filterable(true);
                     columns.Add(i => i.User.UserName).Titled("Автор").Sanitized(false).Encoded(false).Sortable(true).Filterable(true);
+                    columns.Add(i => i.Time).Titled("Время приготовления").Sanitized(false).Encoded(false).Sortable(true).Filterable(true);
                 }).WithPaging(10)
-        @Html.Grid(Model, new GridRenderOptions("grid", "_MainPageGrid")).Columns(columns =>
+                @Html.Grid(Model, new GridRenderOptions("grid", "_MainPageGrid")).Columns(columns =>
                 {
                     columns.Add(i => i.Id).Sanitized(false).Encoded(false).RenderValueAs(cell => RecipePenderer(cell));
-            columns.Add(i => i.Name).RenderValueAs(c => @<div class="hidden"/>).Titled("Название").Sanitized(false).Encoded(false).Sortable(true).Filterable(true);
-            columns.Add(i => i.User.UserName).RenderValueAs(c => @<div class="hidden" />).Titled("Автор").Sanitized(false).Encoded(false).Sortable(true).Filterable(true);
+                    columns.Add(i => i.Name).RenderValueAs(c => @<div class="hidden" />).Titled("Название").Sanitized(false).Encoded(false).Sortable(true).Filterable(true);
+                    columns.Add(i => i.User.UserName).RenderValueAs(c => @<div class="hidden" />).Titled("Автор").Sanitized(false).Encoded(false).Sortable(true).Filterable(true);
                 }).WithPaging(10)
-                        </div>
-                    </div>
-                </div>
             </div>
+        </div>
+    </div>
+</div>
 
-            @helper RecipePenderer(Recipe recipe)
+@helper RecipePenderer(Recipe recipe)
 {
-            <div class="panel panel-default panel-recipe">
-                <div class="panel-body">
-                    <div class="row">
-                        <div class="col-lg-5">Автор: @Html.AuthorizeActionLink(recipe.User.UserName, "Index", new { id = recipe.AuthorId }, null) | @recipe.DishType.Name : @recipe.Name</div>
-                        <div class="col-lg-3 pull-right">
-                            <div class="pull-right btn-group btn-group-xs">
-                                @*@Html.AuthorizeActionLink("Редактировать", "Edit", new { id = recipe.Id }, new { @class = "btn btn-default" })*@
-                                @Html.AuthorizeActionLink("Удалить", "Delete", new { id = recipe.Id }, new { @class = "btn btn-default" })
-                            </div>
-                        </div>
+    <div class="panel panel-default panel-recipe">
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-lg-5">Автор: @Html.AuthorizeActionLink(recipe.User.UserName, "Index", new { id = recipe.AuthorId }, null) | @recipe.DishType.Name : @recipe.Name</div>
+                <div class="col-lg-3 pull-right">
+                    <div class="pull-right btn-group btn-group-xs">
+                        @*@Html.AuthorizeActionLink("Редактировать", "Edit", new { id = recipe.Id }, new { @class = "btn btn-default" })*@
+                        @Html.AuthorizeActionLink("Удалить", "Delete", new { id = recipe.Id }, new { @class = "btn btn-default" })
                     </div>
-                    <hr class="hr-recipe" />
-                    <div class="row">
-                        <div class="col-md-8">
-                            <p>@recipe.Description</p>
-                        </div>
-                        <div class="col-md-4">
-                            @Base64imgPrerender(recipe.Picture)
-                        </div>
-                    </div>
-                    <hr class="hr-recipe" />
-                    <div class="row">
-                <div class="col-md-9 hidden">
-                            <p>Ингридиенты:</p>
-                        </div>
-                        <div class="col-md-3">
-                    <p>Время приготовления: @recipe.Time мин.</p>
-                        </div>
-                    </div>
-                    @Html.AuthorizeActionLink("Подробнее", "Details", new { id = recipe.Id }, new { @class = "btn btn-xs btn-default" })
                 </div>
             </div>
+            <hr class="hr-recipe" />
+            <div class="row">
+                <div class="col-md-8">
+                    <p>@recipe.Description</p>
+                </div>
+                <div class="col-md-4">
+                    @Base64imgPrerender(recipe.Picture)
+                </div>
+            </div>
+            <hr class="hr-recipe" />
+            <div class="row">
+                <div class="col-md-9 hidden">
+                    <p>Ингридиенты:</p>
+                </div>
+                <div class="col-md-3">
+                    <p>Время приготовления: @recipe.Time мин.</p>
+                </div>
+            </div>
+            @Html.AuthorizeActionLink("Подробнее", "Details", new { id = recipe.Id }, new { @class = "btn btn-xs btn-default" })
+        </div>
+    </div>
 }
 
-            @helper Base64imgPrerender(byte[] imageByteData)
+@helper Base64imgPrerender(byte[] imageByteData)
 {
     string imageDataURL;
     if (imageByteData != null)
@@ -126,7 +128,7 @@
     <img class="gridimage media-object" src="@imageDataURL" alt="recipe image">
 }
 
-            @section Scripts {
-                <script src="@Url.Content("~/Scripts/gridmvc.min.js")" type="text/javascript"> </script>
-                <script src="@Url.Content("~/Scripts/recipes.js")" type="text/javascript"> </script>
-            }
+@section Scripts {
+    <script src="@Url.Content("~/Scripts/gridmvc.min.js")" type="text/javascript"> </script>
+    <script src="@Url.Content("~/Scripts/recipes.js")" type="text/javascript"> </script>
+}

@@ -2,7 +2,7 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, 2012 and Azure
 -- --------------------------------------------------
--- Date Created: 03/16/2015 20:23:13
+-- Date Created: 03/20/2015 21:50:36
 -- Generated from EDMX file: C:\Users\fifa\Documents\Visual Studio 2013\Projects\AspRecipeStorage\AspRecipeStorage\Models\EfModel.edmx
 -- --------------------------------------------------
 
@@ -132,7 +132,7 @@ CREATE TABLE [dbo].[Recipe] (
     [Description] nvarchar(max)  NOT NULL,
     [Picture] varbinary(max)  NULL,
     [DishTypeId] int  NOT NULL,
-    [AuthorId] int  NOT NULL
+    [AuthorId] int  NULL
 );
 GO
 
@@ -155,6 +155,22 @@ GO
 
 -- Creating table 'Ingredient'
 CREATE TABLE [dbo].[Ingredient] (
+    [Id] int IDENTITY(1,1) NOT NULL,
+    [IngridientTypeId] int  NOT NULL,
+    [MeasureTypeId] int  NOT NULL,
+    [Amount] int  NOT NULL
+);
+GO
+
+-- Creating table 'MeasureTypes'
+CREATE TABLE [dbo].[MeasureTypes] (
+    [Id] int IDENTITY(1,1) NOT NULL,
+    [Name] nvarchar(max)  NOT NULL
+);
+GO
+
+-- Creating table 'IngridientTypes'
+CREATE TABLE [dbo].[IngridientTypes] (
     [Id] int IDENTITY(1,1) NOT NULL,
     [Name] nvarchar(max)  NOT NULL
 );
@@ -223,6 +239,18 @@ GO
 -- Creating primary key on [Id] in table 'Ingredient'
 ALTER TABLE [dbo].[Ingredient]
 ADD CONSTRAINT [PK_Ingredient]
+    PRIMARY KEY CLUSTERED ([Id] ASC);
+GO
+
+-- Creating primary key on [Id] in table 'MeasureTypes'
+ALTER TABLE [dbo].[MeasureTypes]
+ADD CONSTRAINT [PK_MeasureTypes]
+    PRIMARY KEY CLUSTERED ([Id] ASC);
+GO
+
+-- Creating primary key on [Id] in table 'IngridientTypes'
+ALTER TABLE [dbo].[IngridientTypes]
+ADD CONSTRAINT [PK_IngridientTypes]
     PRIMARY KEY CLUSTERED ([Id] ASC);
 GO
 
@@ -296,7 +324,7 @@ ADD CONSTRAINT [FK_DishTypeRecipe]
     FOREIGN KEY ([DishTypeId])
     REFERENCES [dbo].[DishType]
         ([Id])
-    ON DELETE NO ACTION ON UPDATE NO ACTION;
+    ON DELETE CASCADE ON UPDATE NO ACTION;
 GO
 
 -- Creating non-clustered index for FOREIGN KEY 'FK_DishTypeRecipe'
@@ -311,7 +339,7 @@ ADD CONSTRAINT [FK_RecipeRecipeStep]
     FOREIGN KEY ([RecipeId])
     REFERENCES [dbo].[Recipe]
         ([Id])
-    ON DELETE NO ACTION ON UPDATE NO ACTION;
+    ON DELETE CASCADE ON UPDATE NO ACTION;
 GO
 
 -- Creating non-clustered index for FOREIGN KEY 'FK_RecipeRecipeStep'
@@ -357,6 +385,36 @@ GO
 CREATE INDEX [IX_FK_IngredientRecipeStep_RecipeStep]
 ON [dbo].[IngredientRecipeStep]
     ([RecipeSteps_Id]);
+GO
+
+-- Creating foreign key on [MeasureTypeId] in table 'Ingredient'
+ALTER TABLE [dbo].[Ingredient]
+ADD CONSTRAINT [FK_IngredientMeasureType]
+    FOREIGN KEY ([MeasureTypeId])
+    REFERENCES [dbo].[MeasureTypes]
+        ([Id])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_IngredientMeasureType'
+CREATE INDEX [IX_FK_IngredientMeasureType]
+ON [dbo].[Ingredient]
+    ([MeasureTypeId]);
+GO
+
+-- Creating foreign key on [IngridientTypeId] in table 'Ingredient'
+ALTER TABLE [dbo].[Ingredient]
+ADD CONSTRAINT [FK_IngredientIngridientType]
+    FOREIGN KEY ([IngridientTypeId])
+    REFERENCES [dbo].[IngridientTypes]
+        ([Id])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_IngredientIngridientType'
+CREATE INDEX [IX_FK_IngredientIngridientType]
+ON [dbo].[Ingredient]
+    ([IngridientTypeId]);
 GO
 
 -- --------------------------------------------------

@@ -4,266 +4,316 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="Model.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
-        <EntityType Name="DishType">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
-        </EntityType>
-        <EntityType Name="Ingredient">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
-        </EntityType>
-        <EntityType Name="IngredientRecipeStep">
-          <Key>
-            <PropertyRef Name="Ingredients_Id" />
-            <PropertyRef Name="RecipeSteps_Id" />
-          </Key>
-          <Property Name="Ingredients_Id" Type="int" Nullable="false" />
-          <Property Name="RecipeSteps_Id" Type="int" Nullable="false" />
-        </EntityType>
-        <EntityType Name="Recipe">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
-          <Property Name="Description" Type="nvarchar(max)" Nullable="false" />
-          <Property Name="Picture" Type="varbinary(max)" />
-          <Property Name="DishTypeId" Type="int" Nullable="false" />
-          <Property Name="AuthorId" Type="int" />
-        </EntityType>
-        <EntityType Name="RecipeStep">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Discription" Type="nvarchar(max)" Nullable="false" />
-          <Property Name="Time" Type="int" Nullable="false" />
-          <Property Name="StepNumber" Type="int" Nullable="false" />
-          <Property Name="RecipeId" Type="int" Nullable="false" />
-        </EntityType>
-        <EntityType Name="UserClaims">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="UserId" Type="int" Nullable="false" />
-          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="ClaimType" Type="nvarchar(max)" />
-          <Property Name="ClaimValue" Type="nvarchar(max)" />
-        </EntityType>
-        <EntityType Name="UserLogins">
-          <Key>
-            <PropertyRef Name="UserId" />
-            <PropertyRef Name="LoginProvider" />
-            <PropertyRef Name="ProviderKey" />
-          </Key>
-          <Property Name="UserId" Type="int" Nullable="false" />
-          <Property Name="LoginProvider" Type="nvarchar" MaxLength="128" Nullable="false" />
-          <Property Name="ProviderKey" Type="nvarchar" MaxLength="128" Nullable="false" />
-        </EntityType>
-        <EntityType Name="UserRoles">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="int" Nullable="false" />
-          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
-        </EntityType>
-        <EntityType Name="Users">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="UserName" Type="nvarchar" MaxLength="50" Nullable="false" />
-          <Property Name="Email" Type="nvarchar" MaxLength="100" />
-          <Property Name="EmailConfirmed" Type="bit" Nullable="false" />
-          <Property Name="PasswordHash" Type="nvarchar" MaxLength="100" />
-          <Property Name="SecurityStamp" Type="nvarchar" MaxLength="100" />
-          <Property Name="PhoneNumber" Type="nvarchar" MaxLength="25" />
-          <Property Name="PhoneNumberConfirmed" Type="bit" Nullable="false" />
-          <Property Name="TwoFactorEnabled" Type="bit" Nullable="false" />
-          <Property Name="LockoutEndDateUtc" Type="datetime" />
-          <Property Name="LockoutEnabled" Type="bit" Nullable="false" />
-          <Property Name="AccessFailedCount" Type="int" Nullable="false" />
-        </EntityType>
-        <EntityType Name="UserUserRole">
-          <Key>
-            <PropertyRef Name="Users_Id" />
-            <PropertyRef Name="Roles_Id" />
-          </Key>
-          <Property Name="Users_Id" Type="int" Nullable="false" />
-          <Property Name="Roles_Id" Type="int" Nullable="false" />
-        </EntityType>
-        <Association Name="FK_DishTypeRecipe">
-          <End Role="DishType" Type="Self.DishType" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Role="Recipe" Type="Self.Recipe" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="DishType">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Recipe">
-              <PropertyRef Name="DishTypeId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_IngredientRecipeStep_Ingredient">
-          <End Role="Ingredient" Type="Self.Ingredient" Multiplicity="1" />
-          <End Role="IngredientRecipeStep" Type="Self.IngredientRecipeStep" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Ingredient">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="IngredientRecipeStep">
-              <PropertyRef Name="Ingredients_Id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_IngredientRecipeStep_RecipeStep">
-          <End Role="RecipeStep" Type="Self.RecipeStep" Multiplicity="1" />
-          <End Role="IngredientRecipeStep" Type="Self.IngredientRecipeStep" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="RecipeStep">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="IngredientRecipeStep">
-              <PropertyRef Name="RecipeSteps_Id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_RecipeRecipeStep">
-          <End Role="Recipe" Type="Self.Recipe" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Role="RecipeStep" Type="Self.RecipeStep" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Recipe">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="RecipeStep">
-              <PropertyRef Name="RecipeId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_UserClaim_User">
-          <End Role="Users" Type="Self.Users" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Role="UserClaims" Type="Self.UserClaims" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Users">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="UserClaims">
-              <PropertyRef Name="UserId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_UserLogin_User">
-          <End Role="Users" Type="Self.Users" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Role="UserLogins" Type="Self.UserLogins" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Users">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="UserLogins">
-              <PropertyRef Name="UserId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_UserRecipe">
-          <End Role="Users" Type="Self.Users" Multiplicity="0..1" />
-          <End Role="Recipe" Type="Self.Recipe" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Users">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Recipe">
-              <PropertyRef Name="AuthorId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_UserUserRole_User">
-          <End Role="Users" Type="Self.Users" Multiplicity="1" />
-          <End Role="UserUserRole" Type="Self.UserUserRole" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Users">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="UserUserRole">
-              <PropertyRef Name="Users_Id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_UserUserRole_UserRole">
-          <End Role="UserRoles" Type="Self.UserRoles" Multiplicity="1" />
-          <End Role="UserUserRole" Type="Self.UserUserRole" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="UserRoles">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="UserUserRole">
-              <PropertyRef Name="Roles_Id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <EntityContainer Name="ModelStoreContainer">
-          <EntitySet Name="DishType" EntityType="Self.DishType" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="Ingredient" EntityType="Self.Ingredient" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="IngredientRecipeStep" EntityType="Self.IngredientRecipeStep" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="Recipe" EntityType="Self.Recipe" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="RecipeStep" EntityType="Self.RecipeStep" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="UserClaims" EntityType="Self.UserClaims" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="UserLogins" EntityType="Self.UserLogins" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="UserRoles" EntityType="Self.UserRoles" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="UserUserRole" EntityType="Self.UserUserRole" Schema="dbo" store:Type="Tables" />
-          <AssociationSet Name="FK_DishTypeRecipe" Association="Self.FK_DishTypeRecipe">
-            <End Role="DishType" EntitySet="DishType" />
-            <End Role="Recipe" EntitySet="Recipe" />
-          </AssociationSet>
-          <AssociationSet Name="FK_IngredientRecipeStep_Ingredient" Association="Self.FK_IngredientRecipeStep_Ingredient">
-            <End Role="Ingredient" EntitySet="Ingredient" />
-            <End Role="IngredientRecipeStep" EntitySet="IngredientRecipeStep" />
-          </AssociationSet>
-          <AssociationSet Name="FK_IngredientRecipeStep_RecipeStep" Association="Self.FK_IngredientRecipeStep_RecipeStep">
-            <End Role="RecipeStep" EntitySet="RecipeStep" />
-            <End Role="IngredientRecipeStep" EntitySet="IngredientRecipeStep" />
-          </AssociationSet>
-          <AssociationSet Name="FK_RecipeRecipeStep" Association="Self.FK_RecipeRecipeStep">
-            <End Role="Recipe" EntitySet="Recipe" />
-            <End Role="RecipeStep" EntitySet="RecipeStep" />
-          </AssociationSet>
-          <AssociationSet Name="FK_UserClaim_User" Association="Self.FK_UserClaim_User">
-            <End Role="Users" EntitySet="Users" />
-            <End Role="UserClaims" EntitySet="UserClaims" />
-          </AssociationSet>
-          <AssociationSet Name="FK_UserLogin_User" Association="Self.FK_UserLogin_User">
-            <End Role="Users" EntitySet="Users" />
-            <End Role="UserLogins" EntitySet="UserLogins" />
-          </AssociationSet>
-          <AssociationSet Name="FK_UserRecipe" Association="Self.FK_UserRecipe">
-            <End Role="Users" EntitySet="Users" />
-            <End Role="Recipe" EntitySet="Recipe" />
-          </AssociationSet>
-          <AssociationSet Name="FK_UserUserRole_User" Association="Self.FK_UserUserRole_User">
-            <End Role="Users" EntitySet="Users" />
-            <End Role="UserUserRole" EntitySet="UserUserRole" />
-          </AssociationSet>
-          <AssociationSet Name="FK_UserUserRole_UserRole" Association="Self.FK_UserUserRole_UserRole">
-            <End Role="UserRoles" EntitySet="UserRoles" />
-            <End Role="UserUserRole" EntitySet="UserUserRole" />
-          </AssociationSet>
-        </EntityContainer>
-      </Schema></edmx:StorageModels>
+    <Schema Namespace="Model.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2012" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityContainer Name="ModelStoreContainer">
+    <EntitySet Name="Users" EntityType="Model.Store.Users" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="UserClaims" EntityType="Model.Store.UserClaims" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="UserLogins" EntityType="Model.Store.UserLogins" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="UserRoles" EntityType="Model.Store.UserRoles" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Recipe" EntityType="Model.Store.Recipe" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="DishType" EntityType="Model.Store.DishType" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="RecipeStep" EntityType="Model.Store.RecipeStep" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Ingredient" EntityType="Model.Store.Ingredient" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="MeasureTypes" EntityType="Model.Store.MeasureTypes" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="IngridientTypes" EntityType="Model.Store.IngridientTypes" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="UserUserRole" EntityType="Model.Store.UserUserRole" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="IngredientRecipeStep" EntityType="Model.Store.IngredientRecipeStep" store:Type="Tables" Schema="dbo" />
+    <AssociationSet Name="FK_UserClaim_User" Association="Model.Store.FK_UserClaim_User">
+      <End Role="User" EntitySet="Users" />
+      <End Role="UserClaim" EntitySet="UserClaims" />
+    </AssociationSet>
+    <AssociationSet Name="FK_UserLogin_User" Association="Model.Store.FK_UserLogin_User">
+      <End Role="User" EntitySet="Users" />
+      <End Role="UserLogin" EntitySet="UserLogins" />
+    </AssociationSet>
+    <AssociationSet Name="FK_UserUserRole_User" Association="Model.Store.FK_UserUserRole_User">
+      <End Role="User" EntitySet="Users" />
+      <End Role="UserUserRole" EntitySet="UserUserRole" />
+    </AssociationSet>
+    <AssociationSet Name="FK_UserUserRole_UserRole" Association="Model.Store.FK_UserUserRole_UserRole">
+      <End Role="UserRole" EntitySet="UserRoles" />
+      <End Role="UserUserRole" EntitySet="UserUserRole" />
+    </AssociationSet>
+    <AssociationSet Name="DishTypeRecipe" Association="Model.Store.DishTypeRecipe">
+      <End Role="DishType" EntitySet="DishType" />
+      <End Role="Recipe" EntitySet="Recipe" />
+    </AssociationSet>
+    <AssociationSet Name="RecipeRecipeStep" Association="Model.Store.RecipeRecipeStep">
+      <End Role="Recipe" EntitySet="Recipe" />
+      <End Role="RecipeStep" EntitySet="RecipeStep" />
+    </AssociationSet>
+    <AssociationSet Name="UserRecipe" Association="Model.Store.UserRecipe">
+      <End Role="User" EntitySet="Users" />
+      <End Role="Recipe" EntitySet="Recipe" />
+    </AssociationSet>
+    <AssociationSet Name="FK_IngredientRecipeStep_Ingredient" Association="Model.Store.FK_IngredientRecipeStep_Ingredient">
+      <End Role="Ingredient" EntitySet="Ingredient" />
+      <End Role="IngredientRecipeStep" EntitySet="IngredientRecipeStep" />
+    </AssociationSet>
+    <AssociationSet Name="FK_IngredientRecipeStep_RecipeStep" Association="Model.Store.FK_IngredientRecipeStep_RecipeStep">
+      <End Role="RecipeStep" EntitySet="RecipeStep" />
+      <End Role="IngredientRecipeStep" EntitySet="IngredientRecipeStep" />
+    </AssociationSet>
+    <AssociationSet Name="IngredientMeasureType" Association="Model.Store.IngredientMeasureType">
+      <End Role="Ingredient" EntitySet="Ingredient" />
+      <End Role="MeasureType" EntitySet="MeasureTypes" />
+    </AssociationSet>
+    <AssociationSet Name="IngredientIngridientType" Association="Model.Store.IngredientIngridientType">
+      <End Role="Ingredient" EntitySet="Ingredient" />
+      <End Role="IngridientType" EntitySet="IngridientTypes" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="Users">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="UserName" Type="nvarchar" Nullable="false" MaxLength="50" />
+    <Property Name="Email" Type="nvarchar" Nullable="true" MaxLength="100" />
+    <Property Name="EmailConfirmed" Type="bit" Nullable="false" />
+    <Property Name="PasswordHash" Type="nvarchar" Nullable="true" MaxLength="100" />
+    <Property Name="SecurityStamp" Type="nvarchar" Nullable="true" MaxLength="100" />
+    <Property Name="PhoneNumber" Type="nvarchar" Nullable="true" MaxLength="25" />
+    <Property Name="PhoneNumberConfirmed" Type="bit" Nullable="false" />
+    <Property Name="TwoFactorEnabled" Type="bit" Nullable="false" />
+    <Property Name="LockoutEndDateUtc" Type="datetime" Nullable="true" />
+    <Property Name="LockoutEnabled" Type="bit" Nullable="false" />
+    <Property Name="AccessFailedCount" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="UserClaims">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="UserId" Type="int" Nullable="false" />
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="ClaimType" Type="nvarchar(max)" Nullable="true" />
+    <Property Name="ClaimValue" Type="nvarchar(max)" Nullable="true" />
+  </EntityType>
+  <EntityType Name="UserLogins">
+    <Key>
+      <PropertyRef Name="UserId" />
+      <PropertyRef Name="LoginProvider" />
+      <PropertyRef Name="ProviderKey" />
+    </Key>
+    <Property Name="UserId" Type="int" Nullable="false" />
+    <Property Name="LoginProvider" Type="nvarchar" Nullable="false" MaxLength="128" />
+    <Property Name="ProviderKey" Type="nvarchar" Nullable="false" MaxLength="128" />
+  </EntityType>
+  <EntityType Name="UserRoles">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" Nullable="false" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="Recipe">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Description" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Picture" Type="varbinary(max)" Nullable="true" />
+    <Property Name="DishTypeId" Type="int" Nullable="false" />
+    <Property Name="AuthorId" Type="int" Nullable="true" />
+  </EntityType>
+  <EntityType Name="DishType">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
+  </EntityType>
+  <EntityType Name="RecipeStep">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Discription" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Time" Type="int" Nullable="false" />
+    <Property Name="StepNumber" Type="int" Nullable="false" />
+    <Property Name="RecipeId" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Ingredient">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="IngridientTypeId" Type="int" Nullable="false" />
+    <Property Name="MeasureTypeId" Type="int" Nullable="false" />
+    <Property Name="Amount" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="MeasureTypes">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
+  </EntityType>
+  <EntityType Name="IngridientTypes">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
+  </EntityType>
+  <EntityType Name="UserUserRole">
+    <Key>
+      <PropertyRef Name="Users_Id" />
+      <PropertyRef Name="Roles_Id" />
+    </Key>
+    <Property Name="Users_Id" Type="int" Nullable="false" />
+    <Property Name="Roles_Id" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="IngredientRecipeStep">
+    <Key>
+      <PropertyRef Name="Ingredients_Id" />
+      <PropertyRef Name="RecipeSteps_Id" />
+    </Key>
+    <Property Name="Ingredients_Id" Type="int" Nullable="false" />
+    <Property Name="RecipeSteps_Id" Type="int" Nullable="false" />
+  </EntityType>
+  <Association Name="FK_UserClaim_User">
+    <End Role="User" Type="Model.Store.Users" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="UserClaim" Type="Model.Store.UserClaims" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="User">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="UserClaim">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_UserLogin_User">
+    <End Role="User" Type="Model.Store.Users" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="UserLogin" Type="Model.Store.UserLogins" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="User">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="UserLogin">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="DishTypeRecipe">
+    <End Role="DishType" Type="Model.Store.DishType" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="Recipe" Type="Model.Store.Recipe" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="DishType">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Recipe">
+        <PropertyRef Name="DishTypeId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="RecipeRecipeStep">
+    <End Role="Recipe" Type="Model.Store.Recipe" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="RecipeStep" Type="Model.Store.RecipeStep" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Recipe">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="RecipeStep">
+        <PropertyRef Name="RecipeId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="UserRecipe">
+    <End Role="User" Type="Model.Store.Users" Multiplicity="0..1" />
+    <End Role="Recipe" Type="Model.Store.Recipe" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="User">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Recipe">
+        <PropertyRef Name="AuthorId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="IngredientMeasureType">
+    <End Role="Ingredient" Type="Model.Store.Ingredient" Multiplicity="*" />
+    <End Role="MeasureType" Type="Model.Store.MeasureTypes" Multiplicity="1" />
+    <ReferentialConstraint>
+      <Principal Role="MeasureType">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Ingredient">
+        <PropertyRef Name="MeasureTypeId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="IngredientIngridientType">
+    <End Role="Ingredient" Type="Model.Store.Ingredient" Multiplicity="*" />
+    <End Role="IngridientType" Type="Model.Store.IngridientTypes" Multiplicity="1" />
+    <ReferentialConstraint>
+      <Principal Role="IngridientType">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Ingredient">
+        <PropertyRef Name="IngridientTypeId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_UserUserRole_User">
+    <End Role="User" Type="Model.Store.Users" Multiplicity="1" />
+    <End Role="UserUserRole" Type="Model.Store.UserUserRole" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="User">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="UserUserRole">
+        <PropertyRef Name="Users_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_UserUserRole_UserRole">
+    <End Role="UserUserRole" Type="Model.Store.UserUserRole" Multiplicity="*" />
+    <End Role="UserRole" Type="Model.Store.UserRoles" Multiplicity="1" />
+    <ReferentialConstraint>
+      <Principal Role="UserRole">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="UserUserRole">
+        <PropertyRef Name="Roles_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_IngredientRecipeStep_Ingredient">
+    <End Role="Ingredient" Type="Model.Store.Ingredient" Multiplicity="1" />
+    <End Role="IngredientRecipeStep" Type="Model.Store.IngredientRecipeStep" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Ingredient">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="IngredientRecipeStep">
+        <PropertyRef Name="Ingredients_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_IngredientRecipeStep_RecipeStep">
+    <End Role="IngredientRecipeStep" Type="Model.Store.IngredientRecipeStep" Multiplicity="*" />
+    <End Role="RecipeStep" Type="Model.Store.RecipeStep" Multiplicity="1" />
+    <ReferentialConstraint>
+      <Principal Role="RecipeStep">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="IngredientRecipeStep">
+        <PropertyRef Name="RecipeSteps_Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="Model" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -303,6 +353,16 @@
           <AssociationSet Name="IngredientRecipeStep" Association="Model.IngredientRecipeStep">
             <End Role="Ingredient" EntitySet="Ingredient" />
             <End Role="RecipeStep" EntitySet="RecipeStep" />
+          </AssociationSet>
+          <EntitySet Name="MeasureTypes" EntityType="Model.MeasureType" />
+          <EntitySet Name="IngridientTypes" EntityType="Model.IngridientType" />
+          <AssociationSet Name="IngredientMeasureType" Association="Model.IngredientMeasureType">
+            <End Role="Ingredient" EntitySet="Ingredient" />
+            <End Role="MeasureType" EntitySet="MeasureTypes" />
+          </AssociationSet>
+          <AssociationSet Name="IngredientIngridientType" Association="Model.IngredientIngridientType">
+            <End Role="Ingredient" EntitySet="Ingredient" />
+            <End Role="IngridientType" EntitySet="IngridientTypes" />
           </AssociationSet>
         </EntityContainer>
         <EntityType Name="User">
@@ -426,8 +486,12 @@
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Name" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="IngridientTypeId" Type="Int32" Nullable="false" />
           <NavigationProperty Name="RecipeSteps" Relationship="Model.IngredientRecipeStep" FromRole="Ingredient" ToRole="RecipeStep" />
+          <Property Name="MeasureTypeId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="MeasureType" Relationship="Model.IngredientMeasureType" FromRole="Ingredient" ToRole="MeasureType" />
+          <NavigationProperty Name="IngridientType" Relationship="Model.IngredientIngridientType" FromRole="Ingredient" ToRole="IngridientType" />
+          <Property Name="Amount" Type="Int32" Nullable="false" />
         </EntityType>
         <Association Name="DishTypeRecipe">
           <End Type="Model.DishType" Role="DishType" Multiplicity="1" >
@@ -472,6 +536,46 @@
         <Association Name="IngredientRecipeStep">
           <End Type="Model.Ingredient" Role="Ingredient" Multiplicity="*" />
           <End Type="Model.RecipeStep" Role="RecipeStep" Multiplicity="*" />
+        </Association>
+        <EntityType Name="MeasureType">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" />
+          <NavigationProperty Name="Ingredients" Relationship="Model.IngredientMeasureType" FromRole="MeasureType" ToRole="Ingredient" />
+        </EntityType>
+        <EntityType Name="IngridientType">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" />
+          <NavigationProperty Name="Ingredients" Relationship="Model.IngredientIngridientType" FromRole="IngridientType" ToRole="Ingredient" />
+        </EntityType>
+        <Association Name="IngredientMeasureType">
+          <End Type="Model.Ingredient" Role="Ingredient" Multiplicity="*" />
+          <End Type="Model.MeasureType" Role="MeasureType" Multiplicity="1" />
+          <ReferentialConstraint>
+            <Principal Role="MeasureType">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Ingredient">
+              <PropertyRef Name="MeasureTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="IngredientIngridientType">
+          <End Type="Model.Ingredient" Role="Ingredient" Multiplicity="*" />
+          <End Type="Model.IngridientType" Role="IngridientType" Multiplicity="1" />
+          <ReferentialConstraint>
+            <Principal Role="IngridientType">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Ingredient">
+              <PropertyRef Name="IngridientTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
         </Association>
       </Schema>
     </edmx:ConceptualModels>
@@ -558,6 +662,24 @@
     <EntitySetMapping Name="Ingredient">
       <EntityTypeMapping TypeName="IsTypeOf(Model.Ingredient)">
         <MappingFragment StoreEntitySet="Ingredient">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="IngridientTypeId" ColumnName="IngridientTypeId" />
+          <ScalarProperty Name="MeasureTypeId" ColumnName="MeasureTypeId" />
+          <ScalarProperty Name="Amount" ColumnName="Amount" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="MeasureTypes">
+      <EntityTypeMapping TypeName="IsTypeOf(Model.MeasureType)">
+        <MappingFragment StoreEntitySet="MeasureTypes">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="IngridientTypes">
+      <EntityTypeMapping TypeName="IsTypeOf(Model.IngridientType)">
+        <MappingFragment StoreEntitySet="IngridientTypes">
           <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="Name" ColumnName="Name" />
         </MappingFragment>
