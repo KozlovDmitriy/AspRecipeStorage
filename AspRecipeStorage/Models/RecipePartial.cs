@@ -8,17 +8,5 @@ namespace AspRecipeStorage.Models
 {
     public partial class Recipe
     {
-        [NotMapped] 
-        public int Time
-        {
-            get
-            {
-                if (this != null)
-                {
-                    return this.RecipeStep.Sum(s => s.Time);
-                }
-                return 0;
-            }
-        }
     }
 }

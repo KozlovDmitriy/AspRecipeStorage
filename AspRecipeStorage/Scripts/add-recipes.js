@@ -22,6 +22,12 @@
                             <input type="number" class="recipe-step-time" name="RecipeStep[' + $('.recipe-step-time').length + '].Time"> \
                         </div> \
                     </div> \
+                    <div class="form-group"> \
+                        <div class="control-label col-md-2">Изображение</div> \
+                        <div class="col-md-10"> \
+                            <input type="file" id="stepPicture" name="stepPictures" accept="image/*" /> \
+                        </div> \
+                    </div> \
                 </div> \
             </div>'
         );

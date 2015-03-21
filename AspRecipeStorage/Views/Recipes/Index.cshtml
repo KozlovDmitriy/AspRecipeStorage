@@ -70,6 +70,7 @@
                     columns.Add(i => i.Id).Sanitized(false).Encoded(false).RenderValueAs(cell => RecipePenderer(cell));
                     columns.Add(i => i.Name).RenderValueAs(c => @<div class="hidden" />).Titled("Название").Sanitized(false).Encoded(false).Sortable(true).Filterable(true);
                     columns.Add(i => i.User.UserName).RenderValueAs(c => @<div class="hidden" />).Titled("Автор").Sanitized(false).Encoded(false).Sortable(true).Filterable(true);
+                    columns.Add(i => i.Time).RenderValueAs(c => @<div class="hidden" />).Titled("Время приготовления").Sanitized(false).Encoded(false).Sortable(true).Filterable(true);
                 }).WithPaging(10)
             </div>
         </div>

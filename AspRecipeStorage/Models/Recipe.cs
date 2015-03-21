@@ -25,6 +25,7 @@ namespace AspRecipeStorage.Models
         public byte[] Picture { get; set; }
         public int DishTypeId { get; set; }
         public Nullable<int> AuthorId { get; set; }
+        public Nullable<int> Time { get; set; }
     
         public virtual DishType DishType { get; set; }
         public virtual ICollection<RecipeStep> RecipeStep { get; set; }

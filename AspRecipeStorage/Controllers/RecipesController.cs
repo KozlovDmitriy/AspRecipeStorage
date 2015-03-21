@@ -89,27 +89,40 @@ namespace AspRecipeStorage.Controllers
             return View();
         }
 
+        private byte[] ReadFile(HttpPostedFileBase picture) 
+        {
+            byte[] result = null;
+            if (picture != null && picture.ContentLength > 0)
+            {
+                using (var reader = new System.IO.BinaryReader(picture.InputStream))
+                {
+                    result = reader.ReadBytes(picture.ContentLength);
+                }
+            }
+            return result;
+        }
+
         // POST: Recipes/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin, User")]
-        public async Task<ActionResult> Create(Recipe recipe, HttpPostedFileBase pictureinput)
+        public async Task<ActionResult> Create(Recipe recipe, HttpPostedFileBase recipePicture, List<HttpPostedFileBase> stepPictures)
         {
             if (ModelState.IsValid)
             {
                 recipe.AuthorId = User.Identity.GetUserId<int>();
-                if (pictureinput != null && pictureinput.ContentLength > 0)
+                recipe.Picture = this.ReadFile(recipePicture);
+                int time = 0;
+                List<RecipeStep> steps = recipe.RecipeStep.ToList<RecipeStep>();
+                for (int i = 0; i < recipe.RecipeStep.Count; ++i)
                 {
-                    using (var reader = new System.IO.BinaryReader(pictureinput.InputStream))
-                    {
-                        recipe.Picture = reader.ReadBytes(pictureinput.ContentLength);
-                    }
+                    time += steps[i].Time;
+                    steps[i].StepNumber = i + 1;
+                    steps[i].Picture = this.ReadFile(stepPictures[i]);
                 }
-                for (int i = 0; i < recipe.RecipeStep.Count; ++i) {
-                    recipe.RecipeStep.ToList<RecipeStep>()[i].StepNumber = i + 1;
-                }
+                recipe.Time = time;
                 db.Recipe.Add(recipe);
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index");

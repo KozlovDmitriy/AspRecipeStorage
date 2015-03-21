@@ -24,6 +24,7 @@ namespace AspRecipeStorage.Models
         public int Time { get; set; }
         public int StepNumber { get; set; }
         public int RecipeId { get; set; }
+        public byte[] Picture { get; set; }
     
         public virtual Recipe Recipe { get; set; }
         public virtual ICollection<Ingredient> Ingredients { get; set; }
