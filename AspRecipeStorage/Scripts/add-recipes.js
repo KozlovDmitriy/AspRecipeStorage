@@ -4,8 +4,7 @@ function UpdateStepsAttributes() {
     $('.recipe-step').each(function (i, element) {
         $('.recipe-step-caption', element).text('Шаг ' + (i + 1));
         $('.recipe-step-discription', element).attr('name', 'RecipeStep[' + i + '].Discription');
-        $('.recipe-step-time', element).attr('name', 'RecipeStep[' + i + '].Time');
-        $('.ingredient-delete').click(DeleteIngredient);
+        $('.recipe-step-time', element).attr('name', 'RecipeStep[' + i + '].Time');       
         $('.ingredient', element).each(function (j, ingredient) {
             $('.ingredient-name', ingredient).attr('name', 'RecipeStep[' + i + '].Ingredients[' + j + '].IngredientType.Name');
             $('.ingredient-measure', ingredient).attr('name', 'RecipeStep[' + i + '].Ingredients[' + j + '].MeasureTypeId');
@@ -22,6 +21,7 @@ function OnAddRecipeStep() {
 
 function OnAddIngredient(data) {
     $('.ingredients', $(addingIngredientStep)).append(data);
+    $('.ingredient-delete').click(DeleteIngredient);
     addingIngredientStep = null;
     UpdateStepsAttributes();
 }
