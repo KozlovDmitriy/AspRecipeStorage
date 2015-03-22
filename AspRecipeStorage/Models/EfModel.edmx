@@ -17,7 +17,7 @@
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="IngridientTypeId" Type="int" Nullable="false" />
+          <Property Name="IngredientTypeId" Type="int" Nullable="false" />
           <Property Name="MeasureTypeId" Type="int" Nullable="false" />
           <Property Name="Amount" Type="int" Nullable="false" />
         </EntityType>
@@ -29,7 +29,7 @@
           <Property Name="Ingredients_Id" Type="int" Nullable="false" />
           <Property Name="RecipeSteps_Id" Type="int" Nullable="false" />
         </EntityType>
-        <EntityType Name="IngridientTypes">
+        <EntityType Name="IngredientTypes">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
@@ -128,18 +128,6 @@
             </Principal>
             <Dependent Role="Recipe">
               <PropertyRef Name="DishTypeId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_IngredientIngridientType">
-          <End Role="IngridientTypes" Type="Self.IngridientTypes" Multiplicity="1" />
-          <End Role="Ingredient" Type="Self.Ingredient" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="IngridientTypes">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Ingredient">
-              <PropertyRef Name="IngridientTypeId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -261,7 +249,7 @@
           <EntitySet Name="DishType" EntityType="Self.DishType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Ingredient" EntityType="Self.Ingredient" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="IngredientRecipeStep" EntityType="Self.IngredientRecipeStep" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="IngridientTypes" EntityType="Self.IngridientTypes" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="IngredientTypes" EntityType="Self.IngredientTypes" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="MeasureTypes" EntityType="Self.MeasureTypes" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Recipe" EntityType="Self.Recipe" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="RecipeStep" EntityType="Self.RecipeStep" Schema="dbo" store:Type="Tables" />
@@ -273,10 +261,6 @@
           <AssociationSet Name="FK_DishTypeRecipe" Association="Self.FK_DishTypeRecipe">
             <End Role="DishType" EntitySet="DishType" />
             <End Role="Recipe" EntitySet="Recipe" />
-          </AssociationSet>
-          <AssociationSet Name="FK_IngredientIngridientType" Association="Self.FK_IngredientIngridientType">
-            <End Role="IngridientTypes" EntitySet="IngridientTypes" />
-            <End Role="Ingredient" EntitySet="Ingredient" />
           </AssociationSet>
           <AssociationSet Name="FK_IngredientMeasureType" Association="Self.FK_IngredientMeasureType">
             <End Role="MeasureTypes" EntitySet="MeasureTypes" />
@@ -357,14 +341,14 @@
             <End Role="RecipeStep" EntitySet="RecipeStep" />
           </AssociationSet>
           <EntitySet Name="MeasureTypes" EntityType="Model.MeasureType" />
-          <EntitySet Name="IngridientTypes" EntityType="Model.IngridientType" />
+          <EntitySet Name="IngredientTypes" EntityType="Model.IngredientType" />
           <AssociationSet Name="IngredientMeasureType" Association="Model.IngredientMeasureType">
             <End Role="Ingredient" EntitySet="Ingredient" />
             <End Role="MeasureType" EntitySet="MeasureTypes" />
           </AssociationSet>
-          <AssociationSet Name="IngredientIngridientType" Association="Model.IngredientIngridientType">
+          <AssociationSet Name="IngredientIngredientType" Association="Model.IngredientIngredientType">
             <End Role="Ingredient" EntitySet="Ingredient" />
-            <End Role="IngridientType" EntitySet="IngridientTypes" />
+            <End Role="IngredientType" EntitySet="IngredientTypes" />
           </AssociationSet>
         </EntityContainer>
         <EntityType Name="User">
@@ -490,11 +474,11 @@
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="IngridientTypeId" Type="Int32" Nullable="false" />
+          <Property Name="IngredientTypeId" Type="Int32" Nullable="false" />
           <NavigationProperty Name="RecipeSteps" Relationship="Model.IngredientRecipeStep" FromRole="Ingredient" ToRole="RecipeStep" />
           <Property Name="MeasureTypeId" Type="Int32" Nullable="false" />
           <NavigationProperty Name="MeasureType" Relationship="Model.IngredientMeasureType" FromRole="Ingredient" ToRole="MeasureType" />
-          <NavigationProperty Name="IngridientType" Relationship="Model.IngredientIngridientType" FromRole="Ingredient" ToRole="IngridientType" />
+          <NavigationProperty Name="IngredientType" Relationship="Model.IngredientIngredientType" FromRole="Ingredient" ToRole="IngredientType" />
           <Property Name="Amount" Type="Int32" Nullable="false" />
         </EntityType>
         <Association Name="DishTypeRecipe">
@@ -549,13 +533,13 @@
           <Property Name="Name" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
           <NavigationProperty Name="Ingredients" Relationship="Model.IngredientMeasureType" FromRole="MeasureType" ToRole="Ingredient" />
         </EntityType>
-        <EntityType Name="IngridientType">
+        <EntityType Name="IngredientType">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Name" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
-          <NavigationProperty Name="Ingredients" Relationship="Model.IngredientIngridientType" FromRole="IngridientType" ToRole="Ingredient" />
+          <NavigationProperty Name="Ingredients" Relationship="Model.IngredientIngredientType" FromRole="IngredientType" ToRole="Ingredient" />
         </EntityType>
         <Association Name="IngredientMeasureType">
           <End Type="Model.Ingredient" Role="Ingredient" Multiplicity="*" />
@@ -569,15 +553,15 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="IngredientIngridientType">
+        <Association Name="IngredientIngredientType">
           <End Type="Model.Ingredient" Role="Ingredient" Multiplicity="*" />
-          <End Type="Model.IngridientType" Role="IngridientType" Multiplicity="1" />
+          <End Type="Model.IngredientType" Role="IngredientType" Multiplicity="1" />
           <ReferentialConstraint>
-            <Principal Role="IngridientType">
+            <Principal Role="IngredientType">
               <PropertyRef Name="Id" />
             </Principal>
             <Dependent Role="Ingredient">
-              <PropertyRef Name="IngridientTypeId" />
+              <PropertyRef Name="IngredientTypeId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -669,7 +653,7 @@
       <EntityTypeMapping TypeName="IsTypeOf(Model.Ingredient)">
         <MappingFragment StoreEntitySet="Ingredient">
           <ScalarProperty Name="Id" ColumnName="Id" />
-          <ScalarProperty Name="IngridientTypeId" ColumnName="IngridientTypeId" />
+          <ScalarProperty Name="IngredientTypeId" ColumnName="IngredientTypeId" />
           <ScalarProperty Name="MeasureTypeId" ColumnName="MeasureTypeId" />
           <ScalarProperty Name="Amount" ColumnName="Amount" />
         </MappingFragment>
@@ -683,9 +667,9 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="IngridientTypes">
-      <EntityTypeMapping TypeName="IsTypeOf(Model.IngridientType)">
-        <MappingFragment StoreEntitySet="IngridientTypes">
+    <EntitySetMapping Name="IngredientTypes">
+      <EntityTypeMapping TypeName="IsTypeOf(Model.IngredientType)">
+        <MappingFragment StoreEntitySet="IngredientTypes">
           <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="Name" ColumnName="Name" />
         </MappingFragment>

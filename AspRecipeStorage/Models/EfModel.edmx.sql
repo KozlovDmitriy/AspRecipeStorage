@@ -40,8 +40,8 @@ GO
 IF OBJECT_ID(N'[dbo].[FK_IngredientMeasureType]', 'F') IS NOT NULL
     ALTER TABLE [dbo].[Ingredient] DROP CONSTRAINT [FK_IngredientMeasureType];
 GO
-IF OBJECT_ID(N'[dbo].[FK_IngredientIngridientType]', 'F') IS NOT NULL
-    ALTER TABLE [dbo].[Ingredient] DROP CONSTRAINT [FK_IngredientIngridientType];
+IF OBJECT_ID(N'[dbo].[FK_IngredientIngredientType]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[Ingredient] DROP CONSTRAINT [FK_IngredientIngredientType];
 GO
 
 -- --------------------------------------------------
@@ -75,8 +75,8 @@ GO
 IF OBJECT_ID(N'[dbo].[MeasureTypes]', 'U') IS NOT NULL
     DROP TABLE [dbo].[MeasureTypes];
 GO
-IF OBJECT_ID(N'[dbo].[IngridientTypes]', 'U') IS NOT NULL
-    DROP TABLE [dbo].[IngridientTypes];
+IF OBJECT_ID(N'[dbo].[IngredientTypes]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[IngredientTypes];
 GO
 IF OBJECT_ID(N'[dbo].[UserUserRole]', 'U') IS NOT NULL
     DROP TABLE [dbo].[UserUserRole];
@@ -162,7 +162,7 @@ GO
 -- Creating table 'Ingredient'
 CREATE TABLE [dbo].[Ingredient] (
     [Id] int IDENTITY(1,1) NOT NULL,
-    [IngridientTypeId] int  NOT NULL,
+    [IngredientTypeId] int  NOT NULL,
     [MeasureTypeId] int  NOT NULL,
     [Amount] int  NOT NULL
 );
@@ -175,8 +175,8 @@ CREATE TABLE [dbo].[MeasureTypes] (
 );
 GO
 
--- Creating table 'IngridientTypes'
-CREATE TABLE [dbo].[IngridientTypes] (
+-- Creating table 'IngredientTypes'
+CREATE TABLE [dbo].[IngredientTypes] (
     [Id] int IDENTITY(1,1) NOT NULL,
     [Name] nvarchar(max)  NOT NULL
 );
@@ -254,9 +254,9 @@ ADD CONSTRAINT [PK_MeasureTypes]
     PRIMARY KEY CLUSTERED ([Id] ASC);
 GO
 
--- Creating primary key on [Id] in table 'IngridientTypes'
-ALTER TABLE [dbo].[IngridientTypes]
-ADD CONSTRAINT [PK_IngridientTypes]
+-- Creating primary key on [Id] in table 'IngredientTypes'
+ALTER TABLE [dbo].[IngredientTypes]
+ADD CONSTRAINT [PK_IngredientTypes]
     PRIMARY KEY CLUSTERED ([Id] ASC);
 GO
 
@@ -408,19 +408,19 @@ ON [dbo].[Ingredient]
     ([MeasureTypeId]);
 GO
 
--- Creating foreign key on [IngridientTypeId] in table 'Ingredient'
+-- Creating foreign key on [IngredientTypeId] in table 'Ingredient'
 ALTER TABLE [dbo].[Ingredient]
-ADD CONSTRAINT [FK_IngredientIngridientType]
-    FOREIGN KEY ([IngridientTypeId])
-    REFERENCES [dbo].[IngridientTypes]
+ADD CONSTRAINT [FK_IngredientIngredientType]
+    FOREIGN KEY ([IngredientTypeId])
+    REFERENCES [dbo].[IngredientTypes]
         ([Id])
     ON DELETE NO ACTION ON UPDATE NO ACTION;
 GO
 
--- Creating non-clustered index for FOREIGN KEY 'FK_IngredientIngridientType'
-CREATE INDEX [IX_FK_IngredientIngridientType]
+-- Creating non-clustered index for FOREIGN KEY 'FK_IngredientIngredientType'
+CREATE INDEX [IX_FK_IngredientIngredientType]
 ON [dbo].[Ingredient]
-    ([IngridientTypeId]);
+    ([IngredientTypeId]);
 GO
 
 -- --------------------------------------------------

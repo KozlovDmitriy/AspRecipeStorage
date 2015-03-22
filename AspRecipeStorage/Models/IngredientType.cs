@@ -12,9 +12,9 @@ namespace AspRecipeStorage.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class IngridientType
+    public partial class IngredientType
     {
-        public IngridientType()
+        public IngredientType()
         {
             this.Ingredients = new HashSet<Ingredient>();
         }

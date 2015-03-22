@@ -84,6 +84,7 @@ namespace AspRecipeStorage.Controllers
         [Authorize(Roles = "Admin, User")]
         public ActionResult Create()
         {
+            ViewBag.MeasureTypes = new SelectList(db.MeasureTypes, "Id", "Name");
             ViewBag.DishTypeId = new SelectList(db.DishType, "Id", "Name");
             ViewBag.AuthorId = new SelectList(db.Users, "Id", "UserName");
             return View();
@@ -102,6 +103,25 @@ namespace AspRecipeStorage.Controllers
             return result;
         }
 
+        private void AttachIngredientTypeToDB(IngredientType ingredientType) 
+        {
+            string name = ingredientType.Name;
+            if (db.IngredientTypes.Where(it => it.Name == name).Count() > 0)
+            {
+                ingredientType.Id = db.IngredientTypes.Where(it => it.Name == name).FirstOrDefault().Id;
+                db.IngredientTypes.Attach(ingredientType);
+            }
+        }
+
+        private void AttachRecipeStepToDB(RecipeStep recipeStep)
+        {
+            List<Ingredient> ingredients = recipeStep.Ingredients.ToList<Ingredient>();
+            for (int j = 0; j < ingredients.Count; ++j)
+            {
+                this.AttachIngredientTypeToDB(ingredients[j].IngredientType);
+            }
+        }
+
         // POST: Recipes/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -116,21 +136,32 @@ namespace AspRecipeStorage.Controllers
                 recipe.Picture = this.ReadFile(recipePicture);
                 int time = 0;
                 List<RecipeStep> steps = recipe.RecipeStep.ToList<RecipeStep>();
-                for (int i = 0; i < recipe.RecipeStep.Count; ++i)
+                for (int i = 0; i < steps.Count; ++i)
                 {
                     time += steps[i].Time;
                     steps[i].StepNumber = i + 1;
                     steps[i].Picture = this.ReadFile(stepPictures[i]);
+                    this.AttachRecipeStepToDB(steps[i]);
                 }
                 recipe.Time = time;
                 db.Recipe.Add(recipe);
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
-
+            ViewBag.MeasureTypes = new SelectList(db.MeasureTypes, "Id", "Name");
             ViewBag.DishTypeId = new SelectList(db.DishType, "Id", "Name", recipe.DishTypeId);
             ViewBag.AuthorId = new SelectList(db.Users, "Id", "UserName", recipe.AuthorId);
             return View(recipe);
+        }
+
+        public ActionResult RecipeStep()
+        {
+            return PartialView("_RecipeStepCreate");
+        }
+
+        public ActionResult Ingredient()
+        {
+            return PartialView("_IngredientCreate", new SelectList(db.MeasureTypes, "Id", "Name") );
         }
 
         // GET: Recipes/Edit/5

@@ -20,12 +20,12 @@ namespace AspRecipeStorage.Models
         }
     
         public int Id { get; set; }
-        public int IngridientTypeId { get; set; }
+        public int IngredientTypeId { get; set; }
         public int MeasureTypeId { get; set; }
         public int Amount { get; set; }
     
         public virtual ICollection<RecipeStep> RecipeSteps { get; set; }
         public virtual MeasureType MeasureType { get; set; }
-        public virtual IngridientType IngridientType { get; set; }
+        public virtual IngredientType IngredientType { get; set; }
     }
 }

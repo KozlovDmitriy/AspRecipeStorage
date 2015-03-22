@@ -1,0 +1,48 @@
+﻿<div class="panel panel-primary recipe-step">
+    <div class="panel-heading recipe-step-head">
+        <div class="pull-right">
+            <a href="javascript:void(0)" class="btn btn-xs btn-default recipe-step-delete">Удалить</a>
+        </div>
+        <div class="recipe-step-caption">Шаг</div>
+    </div>
+    <div class="panel-body">
+        <div class="col-lg-6">
+            <div class="form-group">
+                <div class="control-label col-md-3">Описание шага</div>
+                <div class="col-md-9">
+                    <textarea cols="60" class="form-control recipe-step-discription valid" id="Discription" rows="4"></textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="control-label col-md-3">Время в минутах</div>
+                <div class="col-md-9">
+                    <input type="number" class="recipe-step-time">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="control-label col-md-3">Изображение</div>
+                <div class="col-md-9">
+                    <input type="file" id="stepPicture" name="stepPictures" accept="image/*" />
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    Ингридиенты
+                </div>
+                <div class="panel-body">
+                    <div class="ingredients form-horizontal" id="ingredients"></div>
+                </div>
+                <div class="panel-footer clearfix">
+                    @Ajax.ActionLink("Добавить", "Ingredient", null, new AjaxOptions()
+                    {
+                        HttpMethod = "POST",
+                        OnSuccess = "OnAddIngredient(data)"
+                    }, new { @class = "btn btn-xs btn-primary pull-right add-ingredient" })
+                </div>
+            </div>        
+        </div>
+    </div>
+</div>

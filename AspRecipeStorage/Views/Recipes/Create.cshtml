@@ -49,18 +49,26 @@
                     </div>
                 </div>
 
-        <div class="recipe-steps"></div>
+                <div class="recipe-steps" id="recipeSteps">
+                    @Html.Partial("_RecipeStepCreate")
+                </div>
 
                 <div class="form-group">
                     <div class="col-md-offset-2 col-md-10">
-                <div class="btn-group btn-group-sm">
-                    <a href="javascript:void(0)" class="btn btn-default add-step">Добавить еще один шаг</a>
-                    <input type="submit" value="Добавить новый рецепт в базу" class="btn btn-default" />
+                    <div class="btn-group btn-group-sm">
+                        @Ajax.ActionLink("Добавить шаг", "RecipeStep", null, new AjaxOptions()
+                        {
+                            HttpMethod = "POST",
+                            UpdateTargetId = "recipeSteps",
+                            InsertionMode = InsertionMode.InsertAfter,
+                            OnSuccess = "OnAddRecipeStep(data)"
+                        }, new { @class = "btn btn-sm btn-primary" })
+                        <input type="submit" value="Добавить новый рецепт в базу" class="btn btn-default" />
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-        }
+    }
     </div>
 </div>
 

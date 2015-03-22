@@ -1,0 +1,18 @@
+﻿@model SelectList
+
+<div class="form-group ingredient">
+    <div class="col-xs-6">
+        <input type="text" placeholder="Название ..." class="ingredient-name form-control input-sm">
+    </div>
+    <div class="col-xs-2">
+        <select class="form-control input-sm ingredient-measure">
+            @foreach (var item in Model)
+            {
+                <option value="@item.Value">@item.Text</option>
+            }
+        </select>
+    </div>
+    <div class="col-xs-4">
+        <input type="number" min="1" placeholder="Количество ..." class="ingredient-amount form-control input-sm">
+    </div>
+</div><!-- /btn-group -->
