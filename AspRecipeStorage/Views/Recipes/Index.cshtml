@@ -31,19 +31,6 @@
                     }
                 </div>
             </div>
-            <div class="panel panel-primary hidden">
-                <div class="panel-heading">
-                    <div class="pull-right">
-                        <input type="checkbox" class="ingredients-filter-all">
-                    </div>
-                    <div>
-                        Ингридиенты
-                    </div>
-                </div>
-                <div class="panel-body">
-                    Panel content
-                </div>
-            </div>
             <div class="panel panel-default">
                 <div class="panel-body">
                     <input type="submit" class="btn btn-sm btn-default pull-right" value="Применить" style="width:100%">
@@ -55,6 +42,23 @@
         <div class="panel panel-default">
             <div class="panel-body">
                 @Html.AuthorizeActionLink("Добавить свой рецепт", "Create", "Recipes", null, new { @class = "btn btn-sm btn-default" })
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <ul class="list-group ingridients"></ul>
+                <div class="input-group input-group-sm">
+                    <span class="input-group-addon">Поиск по игредиентам</span>
+                    <input type="text" class="form-control ingredients-search" placeholder="Введите название ингредиента...">
+                    <span class="input-group-btn">
+                        <button class="btn btn-primary add-filter-ingredient" type="button">
+                            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                        </button>
+                    </span>
+                    <span class="input-group-btn">
+                        <button class="btn btn-success start-search" type="button">Поиск</button>
+                    </span>
+                </div>
             </div>
         </div>
         <div class="panel panel-default">
@@ -132,4 +136,6 @@
 @section Scripts {
     <script src="@Url.Content("~/Scripts/gridmvc.min.js")" type="text/javascript"> </script>
     <script src="@Url.Content("~/Scripts/recipes.js")" type="text/javascript"> </script>
+    <script src="@Url.Content("~/Scripts/jquery-ui-1.11.4.js")" type="text/javascript"> </script>
+    <script src="@Url.Content("~/Scripts/search-ingredients.js")" type="text/javascript"> </script>
 }

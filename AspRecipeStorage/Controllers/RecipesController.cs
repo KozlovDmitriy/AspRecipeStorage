@@ -159,8 +159,9 @@ namespace AspRecipeStorage.Controllers
             return PartialView("_RecipeStepCreate");
         }
 
-        public ActionResult Ingredient()
+        public ActionResult Ingredient(string ingredientName = null)
         {
+            ViewBag.IngredientName = ingredientName == null ? "" : ingredientName;
             return PartialView("_IngredientCreate", new SelectList(db.MeasureTypes, "Id", "Name") );
         }
 
@@ -227,6 +228,14 @@ namespace AspRecipeStorage.Controllers
             db.Recipe.Remove(recipe);
             await db.SaveChangesAsync();
             return RedirectToAction("Index");
+        }
+
+        public JsonResult AutoCompleteIngredient(string term)
+        {
+            var result = (from r in db.IngredientTypes
+                          where r.Name.ToLower().Contains(term.ToLower())
+                          select new { r.Id, r.Name }).Distinct();
+            return Json(result, JsonRequestBehavior.AllowGet);
         }
 
         protected override void Dispose(bool disposing)

@@ -30,7 +30,7 @@ namespace AspRecipeStorage
                       "~/Content/bootstrap.css",
                       "~/Content/bootstrap.paper.min.css",
                       "~/Content/Gridmvc.css",
-                      "~/Content/site.css"));
+                      "~/Content/Site.css"));
         }
     }
 }

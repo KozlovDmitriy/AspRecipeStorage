@@ -2,7 +2,7 @@
 
 <div class="form-group ingredient">
     <div class="col-xs-5">
-        <input type="text" placeholder="Название ..." class="ingredient-name form-control input-sm">
+        <input type="text" placeholder="Название ..." class="ingredient-name form-control input-sm" value="@ViewBag.IngredientName">
     </div>
     <div class="col-xs-2">
         <select class="form-control input-sm ingredient-measure">
@@ -16,6 +16,8 @@
         <input type="number" min="1" placeholder="Количество ..." class="ingredient-amount form-control input-sm">
     </div>
     <div class="col-xs-1">
-        <a href="javascript:void(0)" class="btn btn-xs btn-defult ingredient-delete">x</a>
+        <a href="javascript:void(0)" class="btn btn-xs btn-defult ingredient-delete pull-right">
+            <i class="glyphicon glyphicon-remove"/>
+        </a>
     </div>
 </div><!-- /btn-group -->
