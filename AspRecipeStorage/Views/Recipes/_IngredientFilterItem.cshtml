@@ -1,0 +1,25 @@
+﻿@model SelectList
+
+@if (!ViewBag.IsEmpty)
+{
+    <div class="form-group ingredient">
+        <input type="text" class="hidden ingredient-name" value="@ViewBag.IngredientName" name="ingredientNames">
+        <div class="col-xs-5">@ViewBag.IngredientName</div>
+        <div class="col-xs-2">
+            <select class="form-control input-sm ingredient-measure" name="measures">
+                @foreach (var item in Model)
+                {
+                    <option value="@item.Value">@item.Text</option>
+                }
+            </select>
+        </div>
+        <div class="col-xs-4">
+            <input type="number" min="1" placeholder="Количество ..." class="ingredient-amount form-control input-sm" name="amounts">
+        </div>
+        <div class="col-xs-1">
+            <a href="javascript:void(0)" class="btn btn-xs btn-default ingredient-delete pull-right">
+                <i class="glyphicon glyphicon-remove"/>
+            </a>
+        </div>
+    </div><!-- /btn-group -->
+}

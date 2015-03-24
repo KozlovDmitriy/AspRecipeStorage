@@ -20,18 +20,21 @@
 
     $('.add-filter-ingredient').click(function (e) {
         var ingredient_name = $('.ingredients-search').val();
-        $.ajax({
-            url: "/Recipes/Ingredient",
-            type: "POST",
-            dataType: "html",
-            data: { ingredientName: ingredient_name },
-            success: function (data) {
-                $('.ingridients').append('<li class="list-group-item clearfix ingridient-item">' + data + '</li>');
-                $('.ingredient-delete').click(DeleteIngredient);
-            }
-        })
+        if ( $('.ingredient-name').val() !== ingredient_name ) {
+            $.ajax({
+                url: "/Recipes/IngredientFilteritem",
+                type: "POST",
+                dataType: "html",
+                data: { ingredientName: ingredient_name },
+                success: function (data) {
+                    if (data !== null && data !== "") {
+                        $('.ingridients').append('<li class="list-group-item clearfix ingridient-item">' + data + '</li>');
+                        $('.ingredient-delete').click(DeleteIngredient);
+                    }
+                }
+            })
+        }
     });
-
 
     function DeleteIngredient(e) {
         $(this).parents('.ingridient-item').remove();

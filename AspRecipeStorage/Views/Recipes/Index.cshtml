@@ -44,23 +44,26 @@
                 @Html.AuthorizeActionLink("Добавить свой рецепт", "Create", "Recipes", null, new { @class = "btn btn-sm btn-default" })
             </div>
         </div>
-        <div class="panel panel-default">
-            <div class="panel-body">
-                <ul class="list-group ingridients"></ul>
-                <div class="input-group input-group-sm">
-                    <span class="input-group-addon">Поиск по игредиентам</span>
-                    <input type="text" class="form-control ingredients-search" placeholder="Введите название ингредиента...">
-                    <span class="input-group-btn">
-                        <button class="btn btn-primary add-filter-ingredient" type="button">
-                            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                        </button>
-                    </span>
-                    <span class="input-group-btn">
-                        <button class="btn btn-success start-search" type="button">Поиск</button>
-                    </span>
+        @using(Html.BeginForm("SearchRecipesByIngredients","Recipes"))
+        { 
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <ul class="list-group ingridients"></ul>
+                    <div class="input-group input-group-sm">
+                        <span class="input-group-addon">Поиск по игредиентам</span>
+                        <input type="text" class="form-control ingredients-search" placeholder="Введите название ингредиента...">
+                        <span class="input-group-btn">
+                            <button class="btn btn-primary add-filter-ingredient" type="button">
+                                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                            </button>
+                        </span>
+                        <span class="input-group-btn">
+                            <button class="btn btn-success start-search" type="submit">Поиск</button>
+                        </span>
+                    </div>
                 </div>
             </div>
-        </div>
+        }
         <div class="panel panel-default">
             <div class="panel-body" id="recipetableholder">
                 @Html.Grid(Model, "_MainPageFilters").Columns(columns =>

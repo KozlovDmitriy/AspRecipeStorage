@@ -159,10 +159,30 @@ namespace AspRecipeStorage.Controllers
             return PartialView("_RecipeStepCreate");
         }
 
-        public ActionResult Ingredient(string ingredientName = null)
+        public ActionResult Ingredient()
         {
+            return PartialView("_IngredientCreate", new SelectList(db.MeasureTypes, "Id", "Name"));
+        }
+
+        public ActionResult IngredientFilteritem(string ingredientName)
+        {
+            SelectList measureTypes = null;
+            List<MeasureType> mt = null;
+            if (ingredientName != null)
+            {
+                mt = db.MeasureTypes.Where(i => i.Ingredients
+                    .Select(j => j.IngredientType.Name)
+                    .Contains(ingredientName)
+                ).Distinct().ToList();
+                ViewBag.IsEmpty = !db.IngredientTypes.Select(i => i.Name).Contains(ingredientName);
+            }
+            else
+            {
+                ViewBag.IsEmpty = true;
+            }
+            measureTypes = new SelectList(mt, "Id", "Name");
             ViewBag.IngredientName = ingredientName == null ? "" : ingredientName;
-            return PartialView("_IngredientCreate", new SelectList(db.MeasureTypes, "Id", "Name") );
+            return PartialView("_IngredientFilteritem", measureTypes);
         }
 
         // GET: Recipes/Edit/5
@@ -236,6 +256,32 @@ namespace AspRecipeStorage.Controllers
                           where r.Name.ToLower().Contains(term.ToLower())
                           select new { r.Id, r.Name }).Distinct();
             return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
+        class IngredientMin
+        {
+            public string Name = "";
+            public int MeasureId = 0;
+            public int Amount = 0;
+        }
+
+        public ActionResult SearchRecipesByIngredients(List<string> ingredientNames = null, List<int> measures = null, List<int?> amounts = null) 
+        {
+            List<IngredientMin> ingredients = new List<IngredientMin>();
+            for (int i = 0; i < ingredientNames.Count; ++i) {
+                ingredients.Add(new IngredientMin{Name = ingredientNames[i], MeasureId = measures[i], Amount = amounts[i] == null ? 0 : amounts[i].Value});
+            }
+            IQueryable<int> ingredientTypesIds = db.IngredientTypes.Where(i => ingredientNames.Contains(i.Name) ).Select(i => i.Id);
+            IQueryable<int> ingredientsIds = db.Ingredient.Where(i => ingredientTypesIds.Contains(i.Id)).Select(i => i.Id);
+            IQueryable<int> recipeStepsIds = db.RecipeStep.Where(i => i.Ingredients.All(j => ingredientsIds.Contains(j.Id))).Select(i => i.Id);
+            IQueryable<Recipe> recipes = db.Recipe.Where(i => i.RecipeStep.All(j => recipeStepsIds.Contains(j.Id)));
+            ViewBag.DishTypes = db.DishType.Select(i => new CheckBoxItem
+            {
+                Id = i.Id,
+                Name = i.Name,
+                Selected = true
+            }).ToList();
+            return View("Index", recipes.OrderBy(i => i.Id));
         }
 
         protected override void Dispose(bool disposing)
