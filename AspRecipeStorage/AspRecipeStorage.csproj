@@ -239,6 +239,7 @@
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\_bootstrap.min.css" />
     <Content Include="Content\Gridmvc.css" />
     <Content Include="Content\themes\base\accordion.css" />
     <Content Include="Content\themes\base\all.css" />
@@ -273,10 +274,19 @@
     <Content Include="Content\themes\base\tabs.css" />
     <Content Include="Content\themes\base\theme.css" />
     <Content Include="Content\themes\base\tooltip.css" />
+    <Content Include="Content\_bootstrap.paper.min.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="Material\css\bootstrap-elements.css" />
+    <Content Include="Material\css\material-fullpalette.min.css" />
+    <Content Include="Material\css\material.min.css" />
+    <Content Include="Material\css\ripples.min.css" />
+    <Content Include="Material\css\roboto.min.css" />
+    <Content Include="Material\fonts\Material-Design-Icons.svg" />
+    <Content Include="Material\js\material.min.js" />
+    <Content Include="Material\js\ripples.min.js" />
     <Content Include="Models\EfModel.edmx.sql" />
     <Content Include="Scripts\add-recipes.js" />
     <Content Include="Scripts\bootstrap.js" />
@@ -299,6 +309,17 @@
       <LastGenOutput>EfModel.cs</LastGenOutput>
     </Content>
     <Content Include="Grid.mvc.readme" />
+    <Content Include="Material\fonts\Material-Design-Icons.eot" />
+    <Content Include="Material\fonts\Material-Design-Icons.ttf" />
+    <Content Include="Material\fonts\Material-Design-Icons.woff" />
+    <Content Include="Material\fonts\RobotoDraftBold.woff" />
+    <Content Include="Material\fonts\RobotoDraftBold.woff2" />
+    <Content Include="Material\fonts\RobotoDraftItalic.woff" />
+    <Content Include="Material\fonts\RobotoDraftItalic.woff2" />
+    <Content Include="Material\fonts\RobotoDraftMedium.woff" />
+    <Content Include="Material\fonts\RobotoDraftMedium.woff2" />
+    <Content Include="Material\fonts\RobotoDraftRegular.woff" />
+    <Content Include="Material\fonts\RobotoDraftRegular.woff2" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\gridmvc.js" />
     <Content Include="Scripts\gridmvc.lang.ru.js" />

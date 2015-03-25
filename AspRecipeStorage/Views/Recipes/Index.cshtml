@@ -16,42 +16,44 @@
             <input class="hidden" name="userId" value="@ViewBag.UserId" />
             <div class="panel panel-primary">
                 <div class="panel-heading">
-                    <div class="pull-right">
-                        <input type="checkbox" class="dish-type-filter-all">
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" class="dish-type-filter-all pull-right">
+                            &nbsp;Типы блюд
+                        </label>
                     </div>
-                    <div>Типы блюд</div>
                 </div>
                 <div class="panel-body">
                     @foreach (CheckBoxItem item in ViewBag.DishTypes)
                     {
-                        <div>
-                            <input type="checkbox" class="dish-type-filter" name="dishTypeFilter" value="@item.Id" checked="@item.Selected" />
-                            @item.Name
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" class="dish-type-filter" name="dishTypeFilter" value="@item.Id" checked="@item.Selected" />
+                                @item.Name
+                            </label>
                         </div>
                     }
-                </div>
-            </div>
-            <div class="panel panel-default">
-                <div class="panel-body">
-                    <input type="submit" class="btn btn-sm btn-default pull-right" value="Применить" style="width:100%">
+                    <div class="span7 text-center">
+                        <button type="submit" class="btn btn-sm btn-primary">Применить</button>
+                    </div>
                 </div>
             </div>
         }
     </div>
     <div class="col col-lg-10">
-        <div class="panel panel-default">
-            <div class="panel-body">
-                @Html.AuthorizeActionLink("Добавить свой рецепт", "Create", "Recipes", null, new { @class = "btn btn-sm btn-default" })
-            </div>
-        </div>
-        @using(Html.BeginForm("SearchRecipesByIngredients","Recipes"))
-        { 
-            <div class="panel panel-default">
+        @using (Html.BeginForm("SearchRecipesByIngredients", "Recipes"))
+        {
+            <div class="panel panel-primary">
+                <div class="panel-heading">Поиск по игредиентам</div>
                 <div class="panel-body">
                     <ul class="list-group ingridients"></ul>
                     <div class="input-group input-group-sm">
-                        <span class="input-group-addon">Поиск по игредиентам</span>
-                        <input type="text" class="form-control ingredients-search" placeholder="Введите название ингредиента...">
+                        <div class="form-control-wrapper">
+                            <input class="form-control empty ingredients-search floating-label" id="focusedInput" type="text" data-hint="" placeholder="Введите название ингредиента...">
+                            <div class="hint"></div>
+                            <div class="floating-label"></div>
+                            <span class="material-input"></span>
+                        </div>
                         <span class="input-group-btn">
                             <button class="btn btn-primary add-filter-ingredient" type="button">
                                 <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>

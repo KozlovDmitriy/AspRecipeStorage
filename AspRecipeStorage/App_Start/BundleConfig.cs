@@ -27,10 +27,19 @@ namespace AspRecipeStorage
                       "~/Scripts/respond.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
-                      "~/Content/bootstrap.css",
-                      "~/Content/bootstrap.paper.min.css",
+                      "~/Content/bootstrap.min.css",
                       "~/Content/Gridmvc.css",
                       "~/Content/Site.css"));
+
+            bundles.Add(new StyleBundle("~/Material/css").Include(
+                        "~/Material/css/roboto.min.css",
+                        "~/Material/css/material-fullpalette.min.css",
+                        "~/Material/css/ripples.min.css",
+                        "~/Material/css/bootstrap-elements.css"));
+
+            bundles.Add(new StyleBundle("~/Material/js").Include(
+                      "~/Material/js/material.min.js",
+                      "~/Material/js/ripples.min.js"));
         }
     }
 }

@@ -267,37 +267,40 @@ namespace AspRecipeStorage.Controllers
 
         public ActionResult SearchRecipesByIngredients(List<string> ingredientNames = null, List<int> measures = null, List<int?> amounts = null) 
         {
-            string name = ingredientNames[0].Clone() as string;
-            int measureId = measures[0];
-            int amount = amounts[0] == null ? 0 : amounts[0].Value;
-            List<IngredientMin> ingredients = new List<IngredientMin>();            
-            //IQueryable<int> ingredientTypesIds = db.IngredientTypes.Where(i => ingredientNames.Contains(i.Name) ).Select(i => i.Id);            
-            IQueryable<int> ingredientsIds = db.Ingredient.Include(i => i.IngredientType).Where(i => 
-                name == i.IngredientType.Name &&
-                measureId == i.MeasureTypeId &&
-                amount >= i.Amount
-            ).Select(i => i.Id);
-            for (int m = 1; m < ingredientNames.Count; ++m)
-            {
-                string name2 = ingredientNames[m].Clone() as string;
-                int measureId2 = measures[m];
-                int amount2 = amounts[m] == null ? 0 : amounts[m].Value;
-                IQueryable<int> ids = db.Ingredient.Include(i => i.IngredientType).Where(i =>
-                    name2 == i.IngredientType.Name &&
-                    measureId2 == i.MeasureTypeId &&
-                    amount2 >= i.Amount
+            if (ingredientNames != null) {
+                string name = ingredientNames[0].Clone() as string;
+                int measureId = measures[0];
+                int amount = amounts[0] == null ? 0 : amounts[0].Value;
+                List<IngredientMin> ingredients = new List<IngredientMin>();            
+                //IQueryable<int> ingredientTypesIds = db.IngredientTypes.Where(i => ingredientNames.Contains(i.Name) ).Select(i => i.Id);            
+                IQueryable<int> ingredientsIds = db.Ingredient.Include(i => i.IngredientType).Where(i => 
+                    name == i.IngredientType.Name &&
+                    measureId == i.MeasureTypeId &&
+                    amount >= i.Amount
                 ).Select(i => i.Id);
-                ingredientsIds = ingredientsIds.Concat( ids );
+                for (int m = 1; m < ingredientNames.Count; ++m)
+                {
+                    string name2 = ingredientNames[m].Clone() as string;
+                    int measureId2 = measures[m];
+                    int amount2 = amounts[m] == null ? 0 : amounts[m].Value;
+                    IQueryable<int> ids = db.Ingredient.Include(i => i.IngredientType).Where(i =>
+                        name2 == i.IngredientType.Name &&
+                        measureId2 == i.MeasureTypeId &&
+                        amount2 >= i.Amount
+                    ).Select(i => i.Id);
+                    ingredientsIds = ingredientsIds.Concat( ids );
+                }
+                IQueryable<int> recipeStepsIds = db.RecipeStep.Where(i => i.Ingredients.All(j => ingredientsIds.Contains(j.Id))).Select(i => i.Id);
+                IQueryable<Recipe> recipes = db.Recipe.Where(i => i.RecipeStep.All(j => recipeStepsIds.Contains(j.Id)));
+                ViewBag.DishTypes = db.DishType.Select(i => new CheckBoxItem
+                {
+                    Id = i.Id,
+                    Name = i.Name,
+                    Selected = true
+                }).ToList();
+                return View("Index", recipes.OrderBy(i => i.Id));
             }
-            IQueryable<int> recipeStepsIds = db.RecipeStep.Where(i => i.Ingredients.All(j => ingredientsIds.Contains(j.Id))).Select(i => i.Id);
-            IQueryable<Recipe> recipes = db.Recipe.Where(i => i.RecipeStep.All(j => recipeStepsIds.Contains(j.Id)));
-            ViewBag.DishTypes = db.DishType.Select(i => new CheckBoxItem
-            {
-                Id = i.Id,
-                Name = i.Name,
-                Selected = true
-            }).ToList();
-            return View("Index", recipes.OrderBy(i => i.Id));
+            return RedirectToAction("Index");
         }
 
         protected override void Dispose(bool disposing)

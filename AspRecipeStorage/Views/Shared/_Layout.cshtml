@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title</title>
     @Styles.Render("~/Content/css")
+    @Styles.Render("~/Material/css")
     @Scripts.Render("~/bundles/modernizr")
 </head>
 <body>
@@ -23,7 +24,7 @@
                     <li>@Html.AuthorizeActionLink("Рецепты", "Index", "Recipes")</li>
                 </ul>
                 @if (User.IsInRole("User") || User.IsInRole("Admin"))
-                { 
+                {
                     <ul class="nav navbar-nav">
                         <li>@Html.AuthorizeActionLink("Мои рецепты", "Index", "Recipes", new { userId = -1 }, null)</li>
                     </ul>
@@ -32,6 +33,14 @@
                 {
                     <ul class="nav navbar-nav">
                         <li>@Html.AuthorizeActionLink("Типы блюд", "Index", "DishTypes")</li>
+                    </ul>
+                }
+                @if (User.IsInRole("User") || User.IsInRole("Admin"))
+                {
+                    <ul class="nav navbar-nav">
+                        <li>
+                            @Html.AuthorizeActionLink("Добавить новый рецепт", "Create", "Recipes", null, null)
+                        </li>
                     </ul>
                 }
                 @Html.Partial("_LoginPartial")
@@ -45,10 +54,15 @@
             <p>&copy; @DateTime.Now.Year - База рецептов</p>
         </footer>
     </div>
-
     @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/Material/js")
+    @*@Scripts.Render("~/bundles/bootstrap")*@
     @RenderSection("scripts", required: false)
     @Scripts.Render("~/bundles/jqueryunobtrusive")
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $.material.init();
+        })
+    </script>
 </body>
 </html>
