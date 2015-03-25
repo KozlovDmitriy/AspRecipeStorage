@@ -8,41 +8,73 @@
 <h2></h2>
 
 <div class="panel panel-default">
+    <div class="panel-heading">@Model.Name</div>
     <div class="panel-body">
-        @*<h4>Recipe</h4>
-            <hr />*@
         <div class="media">
-            <div class="media-left">
-                @Base64imgPrerender(Model.Picture)
-            </div>
             <div class="media-body">
-                <h4 class="media-heading">@Model.Name</h4>
+                @*<h4 class="media-heading">@Model.Name</h4>*@
                 @Model.Description
+            </div>
+            <div class="media-right">
+                @Base64imgPrerender(Model.Picture, "gridimage media-object")
             </div>
         </div>
     </div>
 </div>
-    @if (Model.RecipeStep == null || Model.RecipeStep.Count <= 0)
-    {
-        <div class="panel panel-default">
-            <div class="panel-body">Для этого рецепта еще нет шагов</div>
-        </div>
-    }
-    else
-    {
-        foreach (var step in Model.RecipeStep.OrderBy(r => r.StepNumber))
-        {
-            <div class="panel panel-default">
-                <div class="panel-heading">Шаг @step.StepNumber<text>. (</text>@step.Time<text> мин.)</text></div>
-                <div class="panel-body">@step.Discription</div>
+@if (Model.RecipeStep == null || Model.RecipeStep.Count <= 0)
+{
+    <div class="panel panel-default">
+        <div class="panel-body">Для этого рецепта еще нет шагов</div>
+    </div>
+}
+else
+{
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div class="list-group">
+                @foreach (var step in Model.RecipeStep.OrderBy(r => r.StepNumber))
+                {
+                    <div class="list-group-item">
+                        <div class="row-picture">
+                            @Base64imgPrerender(step.Picture, "circle")
+                        </div>
+                        <div class="row-content">
+                            <div class="least-content">@step.Time мин.</div>
+                            <h4 class="list-group-item-heading">Шаг @step.StepNumber</h4>
+                            <div class="list-group-item-text">
+                                @step.Discription
+                                <h4>Ингридиенты</h4>
+                                <div class="list-group">
+                                    @foreach (var ingredient in step.Ingredients)
+                                    {
+                                        @*<li class="list-group-item list-group-item-success">@ingredient.IngredientType.Name @ingredient.Amount @ingredient.MeasureType.Name</li>*@
+                                        <div class="list-group-item">
+                                            <div class="row-action-primary">
+                                                <i class="mdi-action-shopping-cart"></i>
+                                            </div>
+                                            <div class="row-content">
+                                                <h4 class="list-group-item-heading">@ingredient.IngredientType.Name</h4>
+                                                <p class="list-group-item-text">@ingredient.Amount @ingredient.MeasureType.Name</p>
+                                            </div>
+                                        </div>
+                                        <div class="list-group-separator"></div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @*<div class="list-group-separator"></div>*@
+                }
             </div>
-        }
-    }
-    <p>
-        @Html.AuthorizeActionLink("Назад к списку", "Index")
-    </p>
+        </div>
+    </div>
+}
 
-@helper Base64imgPrerender(byte[] imageByteData)
+<p>
+    @Html.AuthorizeActionLink("Назад к списку", "Index")
+</p>
+
+@helper Base64imgPrerender(byte[] imageByteData, string imgclass)
 {
     string imageDataURL;
     if (imageByteData != null)
@@ -55,5 +87,5 @@
     {
         imageDataURL = @"data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/PjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA2NCA2NCIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+PGRlZnMvPjxyZWN0IHdpZHRoPSI2NCIgaGVpZ2h0PSI2NCIgZmlsbD0iI0VFRUVFRSIvPjxnPjx0ZXh0IHg9IjE0IiB5PSIzMiIgc3R5bGU9ImZpbGw6I0FBQUFBQTtmb250LXdlaWdodDpib2xkO2ZvbnQtZmFtaWx5OkFyaWFsLCBIZWx2ZXRpY2EsIE9wZW4gU2Fucywgc2Fucy1zZXJpZiwgbW9ub3NwYWNlO2ZvbnQtc2l6ZToxMHB0O2RvbWluYW50LWJhc2VsaW5lOmNlbnRyYWwiPjY0eDY0PC90ZXh0PjwvZz48L3N2Zz4=";
     }
-    <img class="gridimage media-object" src="@imageDataURL" alt="recipe image">
+    <img class="@imgclass" src="@imageDataURL" alt="step">
 }
