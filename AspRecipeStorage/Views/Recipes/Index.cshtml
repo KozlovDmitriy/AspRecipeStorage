@@ -6,6 +6,18 @@
     ViewBag.Title = "База рецептов";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+<style>
+    .filters a {
+        color:#fff !important;
+    }
+    .filters th {
+        border-bottom: none !important; 
+    }
+    #recipetableholder td {
+        border: none !important;
+    }
+</style>
+
 
 <br />
 
@@ -44,14 +56,21 @@
         @using (Html.BeginForm("SearchRecipesByIngredients", "Recipes"))
         {
             <div class="panel panel-primary">
-                <div class="panel-heading">Поиск по игредиентам</div>
+                <div class="panel-heading filters">
+                    @Html.Grid(Model, "_MainPageFilters").SetLanguage("ru").Columns(columns =>
+                    {
+                        columns.Add(i => i.Name).Titled("Название").Sanitized(false).Encoded(false).Sortable(true).Filterable(true);
+                        columns.Add(i => i.User.UserName).Titled("Автор").Sanitized(false).Encoded(false).Sortable(true).Filterable(true);
+                        columns.Add(i => i.Time).Titled("Время приготовления").Sanitized(false).Encoded(false).Sortable(true).Filterable(true);
+                    }).WithPaging(10)
+                </div>
                 <div class="panel-body">
                     <ul class="list-group ingridients"></ul>
                     <div class="input-group input-group-sm">
                         <div class="form-control-wrapper">
                             <input class="form-control empty ingredients-search floating-label" id="focusedInput" type="text" data-hint="" placeholder="Введите название ингредиента...">
                             <div class="hint"></div>
-                            <div class="floating-label"></div>
+                            <div class="floating-label">Введите название ингредиента...</div>
                             <span class="material-input"></span>
                         </div>
                         <span class="input-group-btn">
@@ -66,22 +85,14 @@
                 </div>
             </div>
         }
-        <div class="panel panel-default">
-            <div class="panel-body" id="recipetableholder">
-                @Html.Grid(Model, "_MainPageFilters").Columns(columns =>
-                {
-                    columns.Add(i => i.Name).Titled("Название").Sanitized(false).Encoded(false).Sortable(true).Filterable(true);
-                    columns.Add(i => i.User.UserName).Titled("Автор").Sanitized(false).Encoded(false).Sortable(true).Filterable(true);
-                    columns.Add(i => i.Time).Titled("Время приготовления").Sanitized(false).Encoded(false).Sortable(true).Filterable(true);
-                }).WithPaging(10)
-                @Html.Grid(Model, new GridRenderOptions("grid", "_MainPageGrid")).Columns(columns =>
+        <div id="recipetableholder">
+            @Html.Grid(Model, new GridRenderOptions("grid", "_MainPageGrid")).Columns(columns =>
                 {
                     columns.Add(i => i.Id).Sanitized(false).Encoded(false).RenderValueAs(cell => RecipePenderer(cell));
                     columns.Add(i => i.Name).RenderValueAs(c => @<div class="hidden" />).Titled("Название").Sanitized(false).Encoded(false).Sortable(true).Filterable(true);
                     columns.Add(i => i.User.UserName).RenderValueAs(c => @<div class="hidden" />).Titled("Автор").Sanitized(false).Encoded(false).Sortable(true).Filterable(true);
                     columns.Add(i => i.Time).RenderValueAs(c => @<div class="hidden" />).Titled("Время приготовления").Sanitized(false).Encoded(false).Sortable(true).Filterable(true);
-                }).WithPaging(10)
-            </div>
+                }).WithPaging(10).Selectable(false)
         </div>
     </div>
 </div>
@@ -92,11 +103,9 @@
         <div class="panel-body">
             <div class="row">
                 <div class="col-xs-8">Автор: @Html.AuthorizeActionLink(recipe.User.UserName, "Index", new { id = recipe.AuthorId }, null) | @recipe.DishType.Name : @recipe.Name</div>
-                <div class="col-xs-4 pull-right">
-                    <div class="pull-right btn-group btn-group-xs">
-                        @*@Html.AuthorizeActionLink("Редактировать", "Edit", new { id = recipe.Id }, new { @class = "btn btn-default" })*@
-                        @Html.AuthorizeActionLink("Удалить", "Delete", new { id = recipe.Id }, new { @class = "btn btn-default" })
-                    </div>
+                <div class="col-xs-4">
+                    @*@Html.AuthorizeActionLink("Редактировать", "Edit", new { id = recipe.Id }, new { @class = "btn btn-default" })*@
+                    @Html.AuthorizeActionLink("Удалить", "Delete", new { id = recipe.Id }, new { @class = "pull-right" })
                 </div>
             </div>
             <hr class="hr-recipe" />
@@ -135,11 +144,12 @@
     {
         imageDataURL = @"data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/PjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA2NCA2NCIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+PGRlZnMvPjxyZWN0IHdpZHRoPSI2NCIgaGVpZ2h0PSI2NCIgZmlsbD0iI0VFRUVFRSIvPjxnPjx0ZXh0IHg9IjE0IiB5PSIzMiIgc3R5bGU9ImZpbGw6I0FBQUFBQTtmb250LXdlaWdodDpib2xkO2ZvbnQtZmFtaWx5OkFyaWFsLCBIZWx2ZXRpY2EsIE9wZW4gU2Fucywgc2Fucy1zZXJpZiwgbW9ub3NwYWNlO2ZvbnQtc2l6ZToxMHB0O2RvbWluYW50LWJhc2VsaW5lOmNlbnRyYWwiPjY0eDY0PC90ZXh0PjwvZz48L3N2Zz4=";
     }
-    <img class="gridimage media-object" src="@imageDataURL" alt="recipe image">
+    <img class="gridimage media-object pull-right" src="@imageDataURL" alt="recipe image">
 }
 
 @section Scripts {
     <script src="@Url.Content("~/Scripts/gridmvc.min.js")" type="text/javascript"> </script>
+    <script src="@Url.Content("~/Scripts/gridmvc.lang.ru.js")" type="text/javascript"> </script>
     <script src="@Url.Content("~/Scripts/recipes.js")" type="text/javascript"> </script>
     <script src="@Url.Content("~/Scripts/jquery-ui-1.11.4.js")" type="text/javascript"> </script>
     <script src="@Url.Content("~/Scripts/search-ingredients.js")" type="text/javascript"> </script>
