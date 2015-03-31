@@ -15,7 +15,7 @@ namespace AspRecipeStorage.Controllers
 {
     public class RecipesController : Controller
     {
-        private ApplicationDbContext db = new ApplicationDbContext();
+        public ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: Recipes
         public ActionResult Index(int? userId = null)
@@ -109,8 +109,12 @@ namespace AspRecipeStorage.Controllers
             string name = ingredientType.Name;
             if (db.IngredientTypes.Where(it => it.Name == name).Count() > 0)
             {
-                ingredientType.Id = db.IngredientTypes.Where(it => it.Name == name).FirstOrDefault().Id;
+                ingredientType.Id = db.IngredientTypes.AsNoTracking().Where(it => it.Name == name).FirstOrDefault().Id;
                 db.IngredientTypes.Attach(ingredientType);
+            }
+            else
+            {
+                db.Entry(ingredientType).State = EntityState.Added;
             }
         }
 
@@ -157,12 +161,12 @@ namespace AspRecipeStorage.Controllers
 
         public ActionResult RecipeStep()
         {
-            return PartialView("_RecipeStepCreate");
+            return PartialView("_RecipeStepCreate", new RecipeStep());
         }
 
         public ActionResult Ingredient()
         {
-            return PartialView("_IngredientCreate", new SelectList(db.MeasureTypes, "Id", "Name"));
+            return PartialView("_IngredientCreate", new Ingredient { IngredientType = new IngredientType(), MeasureType = new MeasureType() });
         }
 
         public ActionResult IngredientFilteritem(string ingredientName)
@@ -194,13 +198,19 @@ namespace AspRecipeStorage.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Recipe recipe = await db.Recipe.FindAsync(id);
+            Recipe recipe = await db.Recipe
+                .Include(r => r.DishType)
+                .Include(r => r.User)
+                .Include(r => r.RecipeStep.Select(i => i.Ingredients.Select(g => g.MeasureType)))
+                .Include(r => r.RecipeStep.Select(i => i.Ingredients.Select(g => g.IngredientType)))
+                .SingleOrDefaultAsync(r => r.Id == id.Value);
             if (recipe == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.DishTypeId = new SelectList(db.DishType, "Id", "Name", recipe.DishTypeId);
-            ViewBag.AuthorId = new SelectList(db.Users, "Id", "UserName", recipe.AuthorId);
+            ViewBag.MeasureTypes = new SelectList(db.MeasureTypes, "Id", "Name");
+            ViewBag.DishTypeId = new SelectList(db.DishType, "Id", "Name");
+            ViewBag.AuthorId = new SelectList(db.Users, "Id", "UserName");
             return View(recipe);
         }
 
@@ -210,17 +220,55 @@ namespace AspRecipeStorage.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin, User")]
-        public async Task<ActionResult> Edit([Bind(Include = "Id,Name,Description,Picture,DishTypeId,AuthorId")] Recipe recipe)
+        public async Task<ActionResult> Edit(Recipe recipe, HttpPostedFileBase recipePicture, List<HttpPostedFileBase> stepPictures)
         {
-            if (ModelState.IsValid)
+            Recipe trackedrecipe = await db.Recipe
+                .AsNoTracking()
+                .Include(r => r.DishType)
+                .Include(r => r.User)
+                .Include(r => r.RecipeStep.Select(i => i.Ingredients.Select(g => g.MeasureType)))
+                .Include(r => r.RecipeStep.Select(i => i.Ingredients.Select(g => g.IngredientType)))
+                .SingleOrDefaultAsync(r => r.Id == recipe.Id);
+            trackedrecipe.Name = recipe.Name;
+            trackedrecipe.Description = recipe.Description;
+            trackedrecipe.DishType = recipe.DishType;
+            trackedrecipe.DishType = recipe.DishType;
+            trackedrecipe.AuthorId = User.Identity.GetUserId<int>();
+            trackedrecipe.Picture = recipePicture != null && recipePicture.ContentLength >0
+                ? this.ReadFile(recipePicture)
+                : trackedrecipe.Picture;
+            int time = 0;
+            var steps = recipe.RecipeStep.ToList<RecipeStep>();
+            var removestep = trackedrecipe.RecipeStep.Where(s => !steps.Select(i => i.Id).Contains(s.Id));
+            foreach (var rs in removestep)
             {
-                db.Entry(recipe).State = EntityState.Modified;
-                await db.SaveChangesAsync();
-                return RedirectToAction("Index");
+                trackedrecipe.RecipeStep.Remove(rs);
             }
-            ViewBag.DishTypeId = new SelectList(db.DishType, "Id", "Name", recipe.DishTypeId);
-            ViewBag.AuthorId = new SelectList(db.Users, "Id", "UserName", recipe.AuthorId);
-            return View(recipe);
+            for (int i = 0; i < steps.Count; ++i)
+            {
+                var origstep = trackedrecipe.RecipeStep.SingleOrDefault(s => s.Id == steps[i].Id);
+                if (origstep == null)
+                {
+                    origstep = db.RecipeStep.Create();
+                    origstep.RecipeId = trackedrecipe.Id;
+                    db.RecipeStep.Add(origstep);
+                }
+                origstep.Discription = steps[i].Discription;
+                origstep.Time = steps[i].Time;
+                time += steps[i].Time;
+                origstep.StepNumber = i + 1;
+                origstep.Picture = stepPictures[i] != null && stepPictures[i].ContentLength > 0
+                    ? this.ReadFile(stepPictures[i])
+                    :  origstep != null
+                        ? origstep.Picture
+                        : null;
+                AttachRecipeStepToDB(steps[i]);
+                origstep.Ingredients.Clear();
+                origstep.Ingredients = steps[i].Ingredients;
+            }
+            trackedrecipe.Time = time;
+            await db.SaveChangesAsync();
+            return RedirectToAction("Index");
         }
 
         // GET: Recipes/Delete/5
@@ -245,7 +293,12 @@ namespace AspRecipeStorage.Controllers
         [Authorize(Roles = "Admin, User")]
         public async Task<ActionResult> DeleteConfirmed(int id)
         {
-            Recipe recipe = await db.Recipe.FindAsync(id);
+            Recipe recipe = await db.Recipe
+                .Include(r => r.DishType)
+                .Include(r => r.User)
+                .Include(r => r.RecipeStep.Select(i => i.Ingredients.Select(g => g.MeasureType)))
+                .Include(r => r.RecipeStep.Select(i => i.Ingredients.Select(g => g.IngredientType)))
+                .SingleOrDefaultAsync(r => r.Id == id);
             db.Recipe.Remove(recipe);
             await db.SaveChangesAsync();
             return RedirectToAction("Index");

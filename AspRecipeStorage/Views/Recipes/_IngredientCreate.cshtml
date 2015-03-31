@@ -1,22 +1,35 @@
-﻿@model SelectList
+﻿@using AspRecipeStorage.Controllers
+@model Ingredient
+@{
+    var db = (ViewContext.Controller as RecipesController).db;
+    var sl = new SelectList(db.MeasureTypes, "Id", "Name");
+}
 <div class="form-group ingredient">
+    <input type="hidden" class="ingredient-id" value="@Model.Id" />
     <div class="col-xs-5">
-        <input type="text" placeholder="Название ..." class="ingredient-name form-control input-sm">
+        <input type="text" placeholder="Название ..." class="ingredient-name form-control input-sm" value="@Model.IngredientType.Name" />
     </div>
     <div class="col-xs-2">
-        <select class="form-control input-sm ingredient-measure">
-            @foreach (var item in Model)
+        <select class="form-control input-sm ingredient-measure" >
+            @foreach (var item in sl)
             {
-                <option value="@item.Value">@item.Text</option>
+                if (Model.MeasureType.Id.ToString() == item.Value)
+                {
+                    <option selected="selected" value="@item.Value">@item.Text</option>
+                }
+                else
+                {
+                    <option value="@item.Value">@item.Text</option>
+                }
             }
         </select>
     </div>
     <div class="col-xs-4">
-        <input type="number" min="1" placeholder="Количество ..." class="ingredient-amount form-control input-sm">
+        <input type="number" min="1" placeholder="Количество ..." class="ingredient-amount form-control input-sm" value="@Model.Amount" />
     </div>
     <div class="col-xs-1">
         <a href="javascript:void(0)" class="btn btn-xs btn-default ingredient-delete pull-right">
-            <i class="glyphicon glyphicon-remove"/>
+            <i class="glyphicon glyphicon-remove"></i>
         </a>
     </div>
 </div><!-- /btn-group -->
