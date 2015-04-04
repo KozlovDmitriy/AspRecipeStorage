@@ -280,12 +280,19 @@
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="Material\css\bootstrap-elements.css" />
+    <Content Include="Material\css\material-fullpalette.css" />
     <Content Include="Material\css\material-fullpalette.min.css" />
+    <Content Include="Material\css\material.css" />
     <Content Include="Material\css\material.min.css" />
+    <Content Include="Material\css\ripples.css" />
     <Content Include="Material\css\ripples.min.css" />
+    <Content Include="Material\css\roboto.css" />
     <Content Include="Material\css\roboto.min.css" />
+    <Content Include="Material\fonts\LICENSE.txt" />
     <Content Include="Material\fonts\Material-Design-Icons.svg" />
+    <Content Include="Material\js\material.js" />
     <Content Include="Material\js\material.min.js" />
+    <Content Include="Material\js\ripples.js" />
     <Content Include="Material\js\ripples.min.js" />
     <Content Include="Models\EfModel.edmx.sql" />
     <Content Include="Scripts\add-recipes.js" />
@@ -309,6 +316,8 @@
       <LastGenOutput>EfModel.cs</LastGenOutput>
     </Content>
     <Content Include="Grid.mvc.readme" />
+    <Content Include="Material\js\material.min.js.map" />
+    <Content Include="Material\js\ripples.min.js.map" />
     <Content Include="Material\fonts\Material-Design-Icons.eot" />
     <Content Include="Material\fonts\Material-Design-Icons.ttf" />
     <Content Include="Material\fonts\Material-Design-Icons.woff" />
@@ -320,6 +329,15 @@
     <Content Include="Material\fonts\RobotoDraftMedium.woff2" />
     <Content Include="Material\fonts\RobotoDraftRegular.woff" />
     <Content Include="Material\fonts\RobotoDraftRegular.woff2" />
+    <Content Include="Material\css\material-fullpalette.css.map" />
+    <Content Include="Material\css\material-fullpalette.min.css.map" />
+    <Content Include="Material\css\material.css.map" />
+    <Content Include="Material\css\material.min.css.map" />
+    <Content Include="Material\css\ripples.css.map" />
+    <Content Include="Material\css\ripples.min.css.map" />
+    <Content Include="Material\css\roboto.css.map" />
+    <Content Include="Material\css\roboto.min.css.map" />
+    <None Include="Properties\PublishProfiles\SmartAsp.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\gridmvc.js" />
     <Content Include="Scripts\gridmvc.lang.ru.js" />
