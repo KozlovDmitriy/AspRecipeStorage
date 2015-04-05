@@ -31,11 +31,11 @@ namespace AspRecipeStorage
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.min.css",
                       "~/Content/Gridmvc.css",
-                      "~/Content/Site.css",
                       "~/Material/css/roboto.min.css",
                       "~/Material/css/material-fullpalette.min.css",
                       "~/Material/css/ripples.min.css",
-                      "~/Material/css/bootstrap-elements.css"));
+                      "~/Material/css/bootstrap-elements.css",
+                      "~/Content/Site.css"));
         }
     }
 }

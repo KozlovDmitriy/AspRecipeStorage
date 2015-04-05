@@ -88,3 +88,7 @@
 .ingridients > li {
     padding: 5px;
 }
+
+.btn {
+    margin: 0px !important;
+}
