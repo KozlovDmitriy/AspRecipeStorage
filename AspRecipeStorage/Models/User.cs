@@ -34,6 +34,7 @@ namespace AspRecipeStorage.Models
         public Nullable<System.DateTime> LockoutEndDateUtc { get; set; }
         public bool LockoutEnabled { get; set; }
         public int AccessFailedCount { get; set; }
+        public string RestorePwToket { get; set; }
     
         public virtual ICollection<UserClaim> Claims { get; set; }
         public virtual ICollection<UserLogin> Logins { get; set; }

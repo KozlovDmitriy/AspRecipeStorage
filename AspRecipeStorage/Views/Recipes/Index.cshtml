@@ -104,8 +104,10 @@
             <div class="row">
                 <div class="col-xs-8">Автор: @Html.AuthorizeActionLink(recipe.User.UserName, "Index", new { id = recipe.AuthorId }, null) | @recipe.DishType.Name : @recipe.Name</div>
                 <div class="col-xs-4">
-                    @*@Html.AuthorizeActionLink("Редактировать", "Edit", new { id = recipe.Id }, new { @class = "btn btn-default" })*@
-                    @Html.AuthorizeActionLink("Удалить", "Delete", new { id = recipe.Id }, new { @class = "pull-right" })
+                    <div class="pull-right">
+                        @Html.AuthorizeActionLink("Редактировать", "Edit", new { id = recipe.Id }, new { @class = "btn btn-default btn-xs" })
+                        @Html.AuthorizeActionLink("Удалить", "Delete", new { id = recipe.Id }, new { @class = "btn btn-default btn-xs" })
+                    </div>
                 </div>
             </div>
             <hr class="hr-recipe" />

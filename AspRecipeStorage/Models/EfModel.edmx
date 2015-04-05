@@ -371,6 +371,7 @@
           <NavigationProperty Name="Logins" Relationship="Model.FK_UserLogin_User" FromRole="User" ToRole="UserLogin" />
           <NavigationProperty Name="Roles" Relationship="Model.UserUserRole" FromRole="User" ToRole="UserRole" />
           <NavigationProperty Name="Recipes" Relationship="Model.UserRecipe" FromRole="User" ToRole="Recipe" />
+          <Property Name="RestorePwToket" Type="String" Nullable="true" />
         </EntityType>
         <EntityType Name="UserClaim">
           <Key>

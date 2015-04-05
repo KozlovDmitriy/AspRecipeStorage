@@ -4,11 +4,13 @@ function UpdateStepsAttributes() {
     $('.recipe-step').each(function (i, element) {
         $('.recipe-step-caption', element).text('Шаг ' + (i + 1));
         $('.recipe-step-discription', element).attr('name', 'RecipeStep[' + i + '].Discription');
-        $('.recipe-step-time', element).attr('name', 'RecipeStep[' + i + '].Time');       
+        $('.recipe-step-time', element).attr('name', 'RecipeStep[' + i + '].Time');
+        $('.recipe-step-id', element).attr('name', 'RecipeStep[' + i + '].Id');
         $('.ingredient', element).each(function (j, ingredient) {
             $('.ingredient-name', ingredient).attr('name', 'RecipeStep[' + i + '].Ingredients[' + j + '].IngredientType.Name');
             $('.ingredient-measure', ingredient).attr('name', 'RecipeStep[' + i + '].Ingredients[' + j + '].MeasureTypeId');
             $('.ingredient-amount', ingredient).attr('name', 'RecipeStep[' + i + '].Ingredients[' + j + '].Amount');
+            $('.ingredient-id', ingredient).attr('name', 'RecipeStep[' + i + '].Ingredients[' + j + '].Id');
         });
     });
 }
@@ -43,5 +45,6 @@ function SaveAddingIngredientStep(e) {
 $(document).ready(function() {
     $('.add-ingredient').click(SaveAddingIngredientStep);
     $('.recipe-step-delete').click(DeleteRecipeStep);
+    $('.ingredient-delete').click(DeleteIngredient);
     UpdateStepsAttributes();
 })
