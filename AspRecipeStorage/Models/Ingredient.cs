@@ -14,17 +14,13 @@ namespace AspRecipeStorage.Models
     
     public partial class Ingredient
     {
-        public Ingredient()
-        {
-            this.RecipeSteps = new HashSet<RecipeStep>();
-        }
-    
         public int Id { get; set; }
         public int IngredientTypeId { get; set; }
         public int MeasureTypeId { get; set; }
         public int Amount { get; set; }
+        public int RecipeStepId { get; set; }
     
-        public virtual ICollection<RecipeStep> RecipeSteps { get; set; }
+        public virtual RecipeStep RecipeStep { get; set; }
         public virtual MeasureType MeasureType { get; set; }
         public virtual IngredientType IngredientType { get; set; }
     }

@@ -207,7 +207,13 @@
       <DependentUpon>EfModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="Models\MeasureConversion.cs">
+      <DependentUpon>EfModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\MeasureType.cs">
+      <DependentUpon>EfModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Picture.cs">
       <DependentUpon>EfModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Recipe.cs">

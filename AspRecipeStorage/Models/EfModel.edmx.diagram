@@ -20,10 +20,17 @@
         <AssociationConnector Association="Model.RecipeRecipeStep" />
         <AssociationConnector Association="Model.UserRecipe" />
         <AssociationConnector Association="Model.IngredientRecipeStep" />
-        <EntityTypeShape EntityType="Model.MeasureType" Width="1.5" PointX="10.875" PointY="4.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="Model.IngredientType" Width="1.5" PointX="10.875" PointY="6.75" />
+        <EntityTypeShape EntityType="Model.MeasureType" Width="2.125" PointX="10.5" PointY="4.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.IngredientType" Width="2.125" PointX="10.5" PointY="7.125" />
         <AssociationConnector Association="Model.IngredientMeasureType" />
         <AssociationConnector Association="Model.IngredientIngredientType" />
+        <EntityTypeShape EntityType="Model.Picture" Width="1.5" PointX="7.875" PointY="0.5" />
+        <AssociationConnector Association="Model.PictureRecipe" />
+        <AssociationConnector Association="Model.PictureRecipeStep" />
+        <EntityTypeShape EntityType="Model.MeasureConversion" Width="2.25" PointX="13.875" PointY="4.75" />
+        <AssociationConnector Association="Model.MeasureConversionMeasureTypeSecond" />
+        <AssociationConnector Association="Model.MeasureConversionMeasureTypeFirst" />
+        <AssociationConnector Association="Model.IngredientTypeMeasureConversion" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

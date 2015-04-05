@@ -17,11 +17,13 @@ namespace AspRecipeStorage.Models
         public IngredientType()
         {
             this.Ingredients = new HashSet<Ingredient>();
+            this.MeasureConversions = new HashSet<MeasureConversion>();
         }
     
         public int Id { get; set; }
         public string Name { get; set; }
     
         public virtual ICollection<Ingredient> Ingredients { get; set; }
+        public virtual ICollection<MeasureConversion> MeasureConversions { get; set; }
     }
 }

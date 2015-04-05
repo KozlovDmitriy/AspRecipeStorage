@@ -138,14 +138,14 @@ namespace AspRecipeStorage.Controllers
             if (ModelState.IsValid)
             {
                 recipe.AuthorId = User.Identity.GetUserId<int>();
-                recipe.Picture = this.ReadFile(recipePicture);
+                recipe.Picture.Data = this.ReadFile(recipePicture);
                 int time = 0;
                 List<RecipeStep> steps = recipe.RecipeStep.ToList<RecipeStep>();
                 for (int i = 0; i < steps.Count; ++i)
                 {
                     time += steps[i].Time;
                     steps[i].StepNumber = i + 1;
-                    steps[i].Picture = this.ReadFile(stepPictures[i]);
+                    steps[i].Pictures.FirstOrDefault().Data = this.ReadFile(stepPictures[i]);
                     this.AttachRecipeStepToDB(steps[i]);
                 }
                 recipe.Time = time;
@@ -234,9 +234,9 @@ namespace AspRecipeStorage.Controllers
             trackedrecipe.DishType = recipe.DishType;
             trackedrecipe.DishType = recipe.DishType;
             trackedrecipe.AuthorId = User.Identity.GetUserId<int>();
-            trackedrecipe.Picture = recipePicture != null && recipePicture.ContentLength >0
+            trackedrecipe.Picture.Data = recipePicture != null && recipePicture.ContentLength >0
                 ? this.ReadFile(recipePicture)
-                : trackedrecipe.Picture;
+                : trackedrecipe.Picture.Data;
             int time = 0;
             var steps = recipe.RecipeStep.ToList<RecipeStep>();
             var removestep = trackedrecipe.RecipeStep.Where(s => !steps.Select(i => i.Id).Contains(s.Id));
@@ -257,11 +257,11 @@ namespace AspRecipeStorage.Controllers
                 origstep.Time = steps[i].Time;
                 time += steps[i].Time;
                 origstep.StepNumber = i + 1;
-                origstep.Picture = stepPictures[i] != null && stepPictures[i].ContentLength > 0
-                    ? this.ReadFile(stepPictures[i])
-                    :  origstep != null
-                        ? origstep.Picture
-                        : null;
+                //origstep.Pictures = stepPictures[i] != null && stepPictures[i].ContentLength > 0
+                //    ? this.ReadFile(stepPictures[i])
+                //    :  origstep != null
+                //        ? origstep.Pictures
+                //        : null;
                 AttachRecipeStepToDB(steps[i]);
                 origstep.Ingredients.Clear();
                 origstep.Ingredients = steps[i].Ingredients;

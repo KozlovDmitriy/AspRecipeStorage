@@ -2,7 +2,7 @@
 -- --------------------------------------------------
 -- Entity Designer DDL Script for SQL Server 2005, 2008, 2012 and Azure
 -- --------------------------------------------------
--- Date Created: 03/21/2015 17:58:05
+-- Date Created: 04/05/2015 14:55:41
 -- Generated from EDMX file: C:\Users\fifa\Documents\Visual Studio 2013\Projects\AspRecipeStorage\AspRecipeStorage\Models\EfModel.edmx
 -- --------------------------------------------------
 
@@ -31,17 +31,32 @@ GO
 IF OBJECT_ID(N'[dbo].[FK_UserRecipe]', 'F') IS NOT NULL
     ALTER TABLE [dbo].[Recipe] DROP CONSTRAINT [FK_UserRecipe];
 GO
-IF OBJECT_ID(N'[dbo].[FK_IngredientRecipeStep_Ingredient]', 'F') IS NOT NULL
-    ALTER TABLE [dbo].[IngredientRecipeStep] DROP CONSTRAINT [FK_IngredientRecipeStep_Ingredient];
-GO
-IF OBJECT_ID(N'[dbo].[FK_IngredientRecipeStep_RecipeStep]', 'F') IS NOT NULL
-    ALTER TABLE [dbo].[IngredientRecipeStep] DROP CONSTRAINT [FK_IngredientRecipeStep_RecipeStep];
+IF OBJECT_ID(N'[dbo].[FK_IngredientRecipeStep]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[Ingredient] DROP CONSTRAINT [FK_IngredientRecipeStep];
 GO
 IF OBJECT_ID(N'[dbo].[FK_IngredientMeasureType]', 'F') IS NOT NULL
     ALTER TABLE [dbo].[Ingredient] DROP CONSTRAINT [FK_IngredientMeasureType];
 GO
 IF OBJECT_ID(N'[dbo].[FK_IngredientIngredientType]', 'F') IS NOT NULL
     ALTER TABLE [dbo].[Ingredient] DROP CONSTRAINT [FK_IngredientIngredientType];
+GO
+IF OBJECT_ID(N'[dbo].[FK_PictureRecipe]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[Recipe] DROP CONSTRAINT [FK_PictureRecipe];
+GO
+IF OBJECT_ID(N'[dbo].[FK_PictureRecipeStep_Picture]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[PictureRecipeStep] DROP CONSTRAINT [FK_PictureRecipeStep_Picture];
+GO
+IF OBJECT_ID(N'[dbo].[FK_PictureRecipeStep_RecipeStep]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[PictureRecipeStep] DROP CONSTRAINT [FK_PictureRecipeStep_RecipeStep];
+GO
+IF OBJECT_ID(N'[dbo].[FK_MeasureConversionMeasureTypeSecond]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[MeasureConversions] DROP CONSTRAINT [FK_MeasureConversionMeasureTypeSecond];
+GO
+IF OBJECT_ID(N'[dbo].[FK_MeasureConversionMeasureTypeFirst]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[MeasureConversions] DROP CONSTRAINT [FK_MeasureConversionMeasureTypeFirst];
+GO
+IF OBJECT_ID(N'[dbo].[FK_IngredientTypeMeasureConversion]', 'F') IS NOT NULL
+    ALTER TABLE [dbo].[MeasureConversions] DROP CONSTRAINT [FK_IngredientTypeMeasureConversion];
 GO
 
 -- --------------------------------------------------
@@ -78,11 +93,17 @@ GO
 IF OBJECT_ID(N'[dbo].[IngredientTypes]', 'U') IS NOT NULL
     DROP TABLE [dbo].[IngredientTypes];
 GO
+IF OBJECT_ID(N'[dbo].[Pictures]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[Pictures];
+GO
+IF OBJECT_ID(N'[dbo].[MeasureConversions]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[MeasureConversions];
+GO
 IF OBJECT_ID(N'[dbo].[UserUserRole]', 'U') IS NOT NULL
     DROP TABLE [dbo].[UserUserRole];
 GO
-IF OBJECT_ID(N'[dbo].[IngredientRecipeStep]', 'U') IS NOT NULL
-    DROP TABLE [dbo].[IngredientRecipeStep];
+IF OBJECT_ID(N'[dbo].[PictureRecipeStep]', 'U') IS NOT NULL
+    DROP TABLE [dbo].[PictureRecipeStep];
 GO
 
 -- --------------------------------------------------
@@ -102,7 +123,8 @@ CREATE TABLE [dbo].[Users] (
     [TwoFactorEnabled] bit  NOT NULL,
     [LockoutEndDateUtc] datetime  NULL,
     [LockoutEnabled] bit  NOT NULL,
-    [AccessFailedCount] int  NOT NULL
+    [AccessFailedCount] int  NOT NULL,
+    [RestorePwToket] nvarchar(max)  NULL
 );
 GO
 
@@ -135,10 +157,10 @@ CREATE TABLE [dbo].[Recipe] (
     [Id] int IDENTITY(1,1) NOT NULL,
     [Name] nvarchar(max)  NOT NULL,
     [Description] nvarchar(max)  NOT NULL,
-    [Picture] varbinary(max)  NULL,
     [DishTypeId] int  NOT NULL,
     [AuthorId] int  NULL,
-    [Time] int  NULL
+    [Time] int  NULL,
+    [PictureId] int  NULL
 );
 GO
 
@@ -164,7 +186,8 @@ CREATE TABLE [dbo].[Ingredient] (
     [Id] int IDENTITY(1,1) NOT NULL,
     [IngredientTypeId] int  NOT NULL,
     [MeasureTypeId] int  NOT NULL,
-    [Amount] int  NOT NULL
+    [Amount] int  NOT NULL,
+    [RecipeStepId] int  NOT NULL
 );
 GO
 
@@ -182,6 +205,23 @@ CREATE TABLE [dbo].[IngredientTypes] (
 );
 GO
 
+-- Creating table 'Pictures'
+CREATE TABLE [dbo].[Pictures] (
+    [Id] int IDENTITY(1,1) NOT NULL,
+    [Data] varbinary(max)  NOT NULL
+);
+GO
+
+-- Creating table 'MeasureConversions'
+CREATE TABLE [dbo].[MeasureConversions] (
+    [Id] int IDENTITY(1,1) NOT NULL,
+    [MeasureTypeFirstId] int  NOT NULL,
+    [MeasureTypeSecondId] int  NOT NULL,
+    [Ratio] float  NOT NULL,
+    [IngredientTypeId] int  NOT NULL
+);
+GO
+
 -- Creating table 'UserUserRole'
 CREATE TABLE [dbo].[UserUserRole] (
     [Users_Id] int  NOT NULL,
@@ -189,9 +229,9 @@ CREATE TABLE [dbo].[UserUserRole] (
 );
 GO
 
--- Creating table 'IngredientRecipeStep'
-CREATE TABLE [dbo].[IngredientRecipeStep] (
-    [Ingredients_Id] int  NOT NULL,
+-- Creating table 'PictureRecipeStep'
+CREATE TABLE [dbo].[PictureRecipeStep] (
+    [Pictures_Id] int  NOT NULL,
     [RecipeSteps_Id] int  NOT NULL
 );
 GO
@@ -260,16 +300,28 @@ ADD CONSTRAINT [PK_IngredientTypes]
     PRIMARY KEY CLUSTERED ([Id] ASC);
 GO
 
+-- Creating primary key on [Id] in table 'Pictures'
+ALTER TABLE [dbo].[Pictures]
+ADD CONSTRAINT [PK_Pictures]
+    PRIMARY KEY CLUSTERED ([Id] ASC);
+GO
+
+-- Creating primary key on [Id] in table 'MeasureConversions'
+ALTER TABLE [dbo].[MeasureConversions]
+ADD CONSTRAINT [PK_MeasureConversions]
+    PRIMARY KEY CLUSTERED ([Id] ASC);
+GO
+
 -- Creating primary key on [Users_Id], [Roles_Id] in table 'UserUserRole'
 ALTER TABLE [dbo].[UserUserRole]
 ADD CONSTRAINT [PK_UserUserRole]
     PRIMARY KEY CLUSTERED ([Users_Id], [Roles_Id] ASC);
 GO
 
--- Creating primary key on [Ingredients_Id], [RecipeSteps_Id] in table 'IngredientRecipeStep'
-ALTER TABLE [dbo].[IngredientRecipeStep]
-ADD CONSTRAINT [PK_IngredientRecipeStep]
-    PRIMARY KEY CLUSTERED ([Ingredients_Id], [RecipeSteps_Id] ASC);
+-- Creating primary key on [Pictures_Id], [RecipeSteps_Id] in table 'PictureRecipeStep'
+ALTER TABLE [dbo].[PictureRecipeStep]
+ADD CONSTRAINT [PK_PictureRecipeStep]
+    PRIMARY KEY CLUSTERED ([Pictures_Id], [RecipeSteps_Id] ASC);
 GO
 
 -- --------------------------------------------------
@@ -369,28 +421,19 @@ ON [dbo].[Recipe]
     ([AuthorId]);
 GO
 
--- Creating foreign key on [Ingredients_Id] in table 'IngredientRecipeStep'
-ALTER TABLE [dbo].[IngredientRecipeStep]
-ADD CONSTRAINT [FK_IngredientRecipeStep_Ingredient]
-    FOREIGN KEY ([Ingredients_Id])
-    REFERENCES [dbo].[Ingredient]
-        ([Id])
-    ON DELETE NO ACTION ON UPDATE NO ACTION;
-GO
-
--- Creating foreign key on [RecipeSteps_Id] in table 'IngredientRecipeStep'
-ALTER TABLE [dbo].[IngredientRecipeStep]
-ADD CONSTRAINT [FK_IngredientRecipeStep_RecipeStep]
-    FOREIGN KEY ([RecipeSteps_Id])
+-- Creating foreign key on [RecipeStepId] in table 'Ingredient'
+ALTER TABLE [dbo].[Ingredient]
+ADD CONSTRAINT [FK_IngredientRecipeStep]
+    FOREIGN KEY ([RecipeStepId])
     REFERENCES [dbo].[RecipeStep]
         ([Id])
     ON DELETE NO ACTION ON UPDATE NO ACTION;
 GO
 
--- Creating non-clustered index for FOREIGN KEY 'FK_IngredientRecipeStep_RecipeStep'
-CREATE INDEX [IX_FK_IngredientRecipeStep_RecipeStep]
-ON [dbo].[IngredientRecipeStep]
-    ([RecipeSteps_Id]);
+-- Creating non-clustered index for FOREIGN KEY 'FK_IngredientRecipeStep'
+CREATE INDEX [IX_FK_IngredientRecipeStep]
+ON [dbo].[Ingredient]
+    ([RecipeStepId]);
 GO
 
 -- Creating foreign key on [MeasureTypeId] in table 'Ingredient'
@@ -420,6 +463,90 @@ GO
 -- Creating non-clustered index for FOREIGN KEY 'FK_IngredientIngredientType'
 CREATE INDEX [IX_FK_IngredientIngredientType]
 ON [dbo].[Ingredient]
+    ([IngredientTypeId]);
+GO
+
+-- Creating foreign key on [PictureId] in table 'Recipe'
+ALTER TABLE [dbo].[Recipe]
+ADD CONSTRAINT [FK_PictureRecipe]
+    FOREIGN KEY ([PictureId])
+    REFERENCES [dbo].[Pictures]
+        ([Id])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_PictureRecipe'
+CREATE INDEX [IX_FK_PictureRecipe]
+ON [dbo].[Recipe]
+    ([PictureId]);
+GO
+
+-- Creating foreign key on [Pictures_Id] in table 'PictureRecipeStep'
+ALTER TABLE [dbo].[PictureRecipeStep]
+ADD CONSTRAINT [FK_PictureRecipeStep_Picture]
+    FOREIGN KEY ([Pictures_Id])
+    REFERENCES [dbo].[Pictures]
+        ([Id])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+-- Creating foreign key on [RecipeSteps_Id] in table 'PictureRecipeStep'
+ALTER TABLE [dbo].[PictureRecipeStep]
+ADD CONSTRAINT [FK_PictureRecipeStep_RecipeStep]
+    FOREIGN KEY ([RecipeSteps_Id])
+    REFERENCES [dbo].[RecipeStep]
+        ([Id])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_PictureRecipeStep_RecipeStep'
+CREATE INDEX [IX_FK_PictureRecipeStep_RecipeStep]
+ON [dbo].[PictureRecipeStep]
+    ([RecipeSteps_Id]);
+GO
+
+-- Creating foreign key on [MeasureTypeSecondId] in table 'MeasureConversions'
+ALTER TABLE [dbo].[MeasureConversions]
+ADD CONSTRAINT [FK_MeasureConversionMeasureTypeSecond]
+    FOREIGN KEY ([MeasureTypeSecondId])
+    REFERENCES [dbo].[MeasureTypes]
+        ([Id])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_MeasureConversionMeasureTypeSecond'
+CREATE INDEX [IX_FK_MeasureConversionMeasureTypeSecond]
+ON [dbo].[MeasureConversions]
+    ([MeasureTypeSecondId]);
+GO
+
+-- Creating foreign key on [MeasureTypeFirstId] in table 'MeasureConversions'
+ALTER TABLE [dbo].[MeasureConversions]
+ADD CONSTRAINT [FK_MeasureConversionMeasureTypeFirst]
+    FOREIGN KEY ([MeasureTypeFirstId])
+    REFERENCES [dbo].[MeasureTypes]
+        ([Id])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_MeasureConversionMeasureTypeFirst'
+CREATE INDEX [IX_FK_MeasureConversionMeasureTypeFirst]
+ON [dbo].[MeasureConversions]
+    ([MeasureTypeFirstId]);
+GO
+
+-- Creating foreign key on [IngredientTypeId] in table 'MeasureConversions'
+ALTER TABLE [dbo].[MeasureConversions]
+ADD CONSTRAINT [FK_IngredientTypeMeasureConversion]
+    FOREIGN KEY ([IngredientTypeId])
+    REFERENCES [dbo].[IngredientTypes]
+        ([Id])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_IngredientTypeMeasureConversion'
+CREATE INDEX [IX_FK_IngredientTypeMeasureConversion]
+ON [dbo].[MeasureConversions]
     ([IngredientTypeId]);
 GO
 
