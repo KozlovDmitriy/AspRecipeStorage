@@ -90,5 +90,31 @@
 }
 
 .btn {
-    margin: 0px !important;
+    margin: 0px;
+}
+
+.recipe-steps .control-label {
+    padding: 0px;
+}
+
+.dish-types-filter-block {
+    max-height: 450px;
+    overflow-y: auto;
+    margin-bottom: 0px;
+}
+
+.panel-heading, .panel-footer {
+    padding: 3px 10px;
+}
+
+.list-group {
+    margin-bottom: 0px;
+}
+
+#mimg {
+    width:100%;
+}
+
+img {
+    cursor: zoom-in;
 }

@@ -6,6 +6,7 @@ function UpdateStepsAttributes() {
         $('.recipe-step-discription', element).attr('name', 'RecipeStep[' + i + '].Discription');
         $('.recipe-step-time', element).attr('name', 'RecipeStep[' + i + '].Time');
         $('.recipe-step-id', element).attr('name', 'RecipeStep[' + i + '].Id');
+        $('.recipe-step-images', element).attr('name', 'stepPictures[' + i + ']');
         $('.ingredient', element).each(function (j, ingredient) {
             $('.ingredient-name', ingredient).attr('name', 'RecipeStep[' + i + '].Ingredients[' + j + '].IngredientType.Name');
             $('.ingredient-measure', ingredient).attr('name', 'RecipeStep[' + i + '].Ingredients[' + j + '].MeasureTypeId');

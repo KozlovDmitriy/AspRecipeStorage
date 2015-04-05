@@ -133,19 +133,27 @@ namespace AspRecipeStorage.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin, User")]
-        public async Task<ActionResult> Create(Recipe recipe, HttpPostedFileBase recipePicture, List<HttpPostedFileBase> stepPictures)
+        public async Task<ActionResult> Create(Recipe recipe, HttpPostedFileBase recipePicture, List<List<HttpPostedFileBase>> stepPictures)
         {
             if (ModelState.IsValid)
             {
                 recipe.AuthorId = User.Identity.GetUserId<int>();
-                recipe.Picture.Data = this.ReadFile(recipePicture);
+                if (recipePicture != null) { 
+                    recipe.Picture = new Picture { Data = this.ReadFile(recipePicture) };
+                }
                 int time = 0;
                 List<RecipeStep> steps = recipe.RecipeStep.ToList<RecipeStep>();
                 for (int i = 0; i < steps.Count; ++i)
                 {
                     time += steps[i].Time;
                     steps[i].StepNumber = i + 1;
-                    steps[i].Pictures.FirstOrDefault().Data = this.ReadFile(stepPictures[i]);
+                    stepPictures[i].ForEach(j =>
+                    {
+                        if (j != null)
+                        {
+                            steps[i].Pictures.Add(new Picture { Data = this.ReadFile(j) });
+                        }
+                    });
                     this.AttachRecipeStepToDB(steps[i]);
                 }
                 recipe.Time = time;

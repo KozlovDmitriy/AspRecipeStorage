@@ -16,7 +16,7 @@
                 @Model.Description
             </div>
             <div class="media-right">
-                @Base64imgPrerender(Model.Picture, "gridimage media-object")
+                @Base64imgPrerender(Model.Picture.Data, "gridimage media-object")
             </div>
         </div>
     </div>
@@ -35,12 +35,34 @@ else
                 @foreach (var step in Model.RecipeStep.OrderBy(r => r.StepNumber))
                 {
                     <div class="list-group-item">
-                        <div class="row-picture">
-                            @Base64imgPrerender(step.Picture, "circle")
-                        </div>
                         <div class="row-content">
+                            <text class="list-group-item-heading">Шаг @step.StepNumber</text>
                             <div class="least-content">@step.Time мин.</div>
-                            <h4 class="list-group-item-heading">Шаг @step.StepNumber</h4>
+                        </div>
+                        <div class="row-picture">
+                            <table>
+                                <tbody>
+                                    <tr>
+                                        @if (step.Pictures.Count == 0)
+                                        {
+                                            <td>
+                                                @Base64imgPrerender(null, "circle")
+                                            </td>
+                                        }
+                                        else
+                                        {
+                                            foreach (var img in step.Pictures)
+                                            {
+                                                <td>
+                                                    @Base64imgPrerender(img.Data, "circle")
+                                                </td>
+                                            }
+                                        }
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="row-content">                         
                             <div class="list-group-item-text">
                                 @step.Discription
                                 <h4>Ингридиенты</h4>
@@ -63,7 +85,7 @@ else
                             </div>
                         </div>
                     </div>
-                    @*<div class="list-group-separator"></div>*@
+                    <div class="list-group-separator"></div>
                 }
             </div>
         </div>

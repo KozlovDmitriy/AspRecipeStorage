@@ -36,17 +36,21 @@
                     </div>
                 </div>
                 <div class="panel-body">
-                    @foreach (CheckBoxItem item in ViewBag.DishTypes)
-                    {
-                        <div class="checkbox">
-                            <label>
-                                <input type="checkbox" class="dish-type-filter" name="dishTypeFilter" value="@item.Id" checked="@item.Selected" />
-                                @item.Name
-                            </label>
-                        </div>
-                    }
+                    <div class="dish-types-filter-block">
+                        @foreach (CheckBoxItem item in ViewBag.DishTypes)
+                        {
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" class="dish-type-filter" name="dishTypeFilter" value="@item.Id" checked="@item.Selected" />
+                                    @item.Name
+                                </label>
+                            </div>
+                        }
+                    </div>
+                </div>
+                <div class="panel-footer clearfix">
                     <div class="span7 text-center">
-                        <button type="submit" class="btn btn-sm btn-primary">Применить</button>
+                        <button type="submit" class="btn btn-xs btn-primary">Применить</button>
                     </div>
                 </div>
             </div>
