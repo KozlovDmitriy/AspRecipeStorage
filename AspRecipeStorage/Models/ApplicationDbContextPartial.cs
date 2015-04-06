@@ -35,7 +35,6 @@ namespace AspRecipeStorage.Models
                     new DishType { Name = "Торты" },
                     new DishType { Name = "Круассаны" },
                     new DishType { Name = "Пирожные" },
-                    new DishType { Name = "Пироги" },
                     new DishType { Name = "Пряники" },
                     new DishType { Name = "Оладьи" },
                     new DishType { Name = "Пончики" },

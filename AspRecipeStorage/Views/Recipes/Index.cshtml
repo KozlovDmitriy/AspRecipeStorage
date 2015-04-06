@@ -6,25 +6,12 @@
     ViewBag.Title = "База рецептов";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-<style>
-    .filters a {
-        color:#fff !important;
-    }
-    .filters th {
-        border-bottom: none !important; 
-    }
-    #recipetableholder td {
-        border: none !important;
-    }
-</style>
-
-
 <br />
+@using (Html.BeginForm("FilterIndex", "Recipes", FormMethod.Get))
+{
+    <div class="row">
+        <div class="col col-lg-2">
 
-<div class="row">
-    <div class="col col-lg-2">
-        @using (Html.BeginForm("FilterIndex", "Recipes", FormMethod.Get))
-        {
             <input class="hidden" name="userId" value="@ViewBag.UserId" />
             <div class="panel panel-primary">
                 <div class="panel-heading">
@@ -54,11 +41,8 @@
                     </div>
                 </div>
             </div>
-        }
-    </div>
-    <div class="col col-lg-10">
-        @using (Html.BeginForm("SearchRecipesByIngredients", "Recipes"))
-        {
+        </div>
+        <div class="col col-lg-10">
             <div class="panel panel-primary">
                 <div class="panel-heading filters">
                     @Html.Grid(Model, "_MainPageFilters").SetLanguage("ru").Columns(columns =>
@@ -82,25 +66,31 @@
                                 <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                             </button>
                         </span>
+                        <div class="form-control-wrapper">
+                            <input class="form-control empty floating-label" id="focusedInput" name="keywords" type="text" data-hint="" placeholder="Ключевые слова...">
+                            <div class="hint"></div>
+                            <div class="floating-label">Ключевые слова...</div>
+                            <span class="material-input"></span>
+                        </div>
                         <span class="input-group-btn">
                             <button class="btn btn-success start-search" type="submit">Поиск</button>
                         </span>
                     </div>
                 </div>
             </div>
-        }
-        <div id="recipetableholder">
-            @Html.Grid(Model, new GridRenderOptions("grid", "_MainPageGrid")).Columns(columns =>
+            <div id="recipetableholder">
+                @Html.Grid(Model, new GridRenderOptions("grid", "_MainPageGrid")).Columns(columns =>
                 {
                     columns.Add(i => i.Id).Sanitized(false).Encoded(false).RenderValueAs(cell => RecipePenderer(cell));
                     columns.Add(i => i.Name).RenderValueAs(c => @<div class="hidden" />).Titled("Название").Sanitized(false).Encoded(false).Sortable(true).Filterable(true);
                     columns.Add(i => i.User.UserName).RenderValueAs(c => @<div class="hidden" />).Titled("Автор").Sanitized(false).Encoded(false).Sortable(true).Filterable(true);
                     columns.Add(i => i.Time).RenderValueAs(c => @<div class="hidden" />).Titled("Время приготовления").Sanitized(false).Encoded(false).Sortable(true).Filterable(true);
                 }).WithPaging(10).Selectable(false)
+            </div>
         </div>
     </div>
-</div>
 
+}
 @helper RecipePenderer(Recipe recipe)
 {
     <div class="panel panel-default panel-recipe">
@@ -120,7 +110,7 @@
                     <p>@recipe.Description</p>
                 </div>
                 <div class="col-md-4">
-                    @Base64imgPrerender(recipe.Picture.Data)
+                    @Base64imgPrerender(recipe.Picture == null ? null : recipe.Picture.Data)
                 </div>
             </div>
             <hr class="hr-recipe" />

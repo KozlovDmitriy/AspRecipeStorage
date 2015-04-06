@@ -16,7 +16,7 @@
                 @Model.Description
             </div>
             <div class="media-right">
-                @Base64imgPrerender(Model.Picture.Data, "gridimage media-object")
+                @Base64imgPrerender(Model.Picture == null ? null : Model.Picture.Data, "gridimage media-object")
             </div>
         </div>
     </div>
@@ -65,23 +65,25 @@ else
                         <div class="row-content">                         
                             <div class="list-group-item-text">
                                 @step.Discription
-                                <h4>Ингридиенты</h4>
-                                <div class="list-group">
-                                    @foreach (var ingredient in step.Ingredients)
-                                    {
-                                        @*<li class="list-group-item list-group-item-success">@ingredient.IngredientType.Name @ingredient.Amount @ingredient.MeasureType.Name</li>*@
-                                        <div class="list-group-item">
-                                            <div class="row-action-primary">
-                                                <i class="mdi-action-shopping-cart"></i>
+                                @if (step.Ingredients.Count > 0) { 
+                                    <h4>Ингридиенты</h4>
+                                    <div class="list-group">
+                                        @foreach (var ingredient in step.Ingredients)
+                                        {
+                                            @*<li class="list-group-item list-group-item-success">@ingredient.IngredientType.Name @ingredient.Amount @ingredient.MeasureType.Name</li>*@
+                                            <div class="list-group-item">
+                                                <div class="row-action-primary">
+                                                    <i class="mdi-action-shopping-cart"></i>
+                                                </div>
+                                                <div class="row-content">
+                                                    <h4 class="list-group-item-heading">@ingredient.IngredientType.Name</h4>
+                                                    <p class="list-group-item-text">@ingredient.Amount @ingredient.MeasureType.Name</p>
+                                                </div>
                                             </div>
-                                            <div class="row-content">
-                                                <h4 class="list-group-item-heading">@ingredient.IngredientType.Name</h4>
-                                                <p class="list-group-item-text">@ingredient.Amount @ingredient.MeasureType.Name</p>
-                                            </div>
-                                        </div>
-                                        <div class="list-group-separator"></div>
-                                    }
-                                </div>
+                                            <div class="list-group-separator"></div>
+                                        }
+                                    </div>                                    
+                                }
                             </div>
                         </div>
                     </div>

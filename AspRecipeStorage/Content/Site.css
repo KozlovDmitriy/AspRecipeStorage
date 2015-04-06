@@ -113,8 +113,23 @@
 
 #mimg {
     width:100%;
+    padding-top: 10px;
 }
 
 img {
     cursor: zoom-in;
+}
+
+.filters a {
+    color:#fff !important;
+}
+.filters th {
+    border-bottom: none !important; 
+}
+#recipetableholder td {
+    border: none !important;
+}
+
+.modal-header .close {
+    margin-top: -10px;
 }

@@ -17,6 +17,16 @@ namespace AspRecipeStorage.Controllers
     {
         public ApplicationDbContext db = new ApplicationDbContext();
 
+        private void IndexViewBagSetter() 
+        {
+            ViewBag.DishTypes = db.DishType.Select(i => new CheckBoxItem
+            {
+                Id = i.Id,
+                Name = i.Name,
+                Selected = true
+            }).ToList();
+        }
+
         // GET: Recipes
         public ActionResult Index(int? userId = null)
         {
@@ -30,24 +40,84 @@ namespace AspRecipeStorage.Controllers
                 recipeSet = recipeSet.Where(i => i.User.Id == userId);
                 ViewBag.UserId = userId;
             }
-            ViewBag.DishTypes = db.DishType.Select(i => new CheckBoxItem { 
-                Id = i.Id,
-                Name = i.Name,
-                Selected = true
-            }).ToList();
+            this.IndexViewBagSetter();
             return View(recipeSet.OrderBy(i => i.Id));
         }
 
-        public ActionResult FilterIndex(List<int> dishTypeFilter = null, int? userId = null)
+        private IQueryable<Recipe> SearchRecipesBykeyword(string word)
         {
-            var recipeSet = db.Recipe.Include(r => r.DishType).Include(r => r.User);
+            return db.Recipe
+                .Include(i => i.DishType)
+                .Include(i => i.RecipeStep.Select(j => j.Ingredients.Select(k => k.IngredientType)))
+                .Where(i =>
+                    i.Name.Contains(word) ||
+                    i.Description.Contains(word) ||
+                    i.RecipeStep.Any(j =>
+                        j.Discription.Contains(word) ||
+                        j.Ingredients.Any(k => k.IngredientType.Name.Contains(word))
+                    )
+                );
+        }
+
+        public ActionResult FilterIndex(
+            string keywords = "", 
+            List<string> ingredientNames = null,
+            List<int> measures = null, 
+            List<int?> amounts = null,
+            List<int> dishTypeFilter = null, 
+            int? userId = null
+        )
+        {
+            List<string> keywordsList = keywords.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToList();
+            IQueryable<Recipe> recipes = null;
+            if (keywordsList.Count == 0)
+            {
+                recipes = db.Recipe.Include(i => i.DishType).AsQueryable();
+            }
+            else
+            {
+                foreach (string word in keywordsList)
+                {
+                    recipes = recipes == null ?
+                        SearchRecipesBykeyword(word.Clone() as string) :
+                        recipes.Union(
+                            SearchRecipesBykeyword(word.Clone() as string)
+                        );
+                }
+            }
+            recipes.Distinct();
+            if (ingredientNames != null)
+            {
+                string name = ingredientNames[0].Clone() as string;
+                int measureId = measures[0];
+                int amount = amounts[0] == null ? 0 : amounts[0].Value;
+                IQueryable<int> ingredientsIds = db.Ingredient.Include(i => i.IngredientType).Where(i =>
+                    name == i.IngredientType.Name &&
+                    measureId == i.MeasureTypeId &&
+                    amount >= i.Amount
+                ).Select(i => i.Id);
+                for (int m = 1; m < ingredientNames.Count; ++m)
+                {
+                    string name2 = ingredientNames[m].Clone() as string;
+                    int measureId2 = measures[m];
+                    int amount2 = amounts[m] == null ? 0 : amounts[m].Value;
+                    IQueryable<int> ids = db.Ingredient.Include(i => i.IngredientType).Where(i =>
+                        name2 == i.IngredientType.Name &&
+                        measureId2 == i.MeasureTypeId &&
+                        amount2 >= i.Amount
+                    ).Select(i => i.Id);
+                    ingredientsIds = ingredientsIds.Concat(ids);
+                }
+                IQueryable<int> recipeStepsIds = db.RecipeStep.Where(i => i.Ingredients.All(j => ingredientsIds.Contains(j.Id))).Select(i => i.Id);
+                recipes = recipes.Where(i => i.RecipeStep.All(j => recipeStepsIds.Contains(j.Id)));
+            }
             if (userId != null)
             {
                 if (userId == -1)
                 {
                     userId = User.Identity.GetUserId<int>();
                 }
-                recipeSet = recipeSet.Where(i => i.User.Id == userId);
+                recipes = recipes.Where(i => i.User.Id == userId);
                 ViewBag.UserId = userId;
             }
             List<int> dtFilter = dishTypeFilter == null ? new List<int>() : dishTypeFilter;
@@ -57,8 +127,8 @@ namespace AspRecipeStorage.Controllers
                 Name = i.Name,
                 Selected = dtFilter.Contains(i.Id)
             }).ToList();
-            recipeSet = recipeSet.Where(i => dtFilter.Contains(i.DishTypeId));
-            return View("Index",recipeSet.OrderBy(i => i.Id));
+            recipes = recipes.Where(i => dtFilter.Contains(i.DishTypeId));
+            return View("Index", recipes.OrderBy(i => i.Id));
         }
 
         // GET: Recipes/Details/5
@@ -318,51 +388,6 @@ namespace AspRecipeStorage.Controllers
                           where r.Name.ToLower().Contains(term.ToLower())
                           select new { r.Id, r.Name }).Distinct();
             return Json(result, JsonRequestBehavior.AllowGet);
-        }
-
-        class IngredientMin
-        {
-            public string Name = "";
-            public int MeasureId = 0;
-            public int Amount = 0;
-        }
-
-        public ActionResult SearchRecipesByIngredients(List<string> ingredientNames = null, List<int> measures = null, List<int?> amounts = null) 
-        {
-            if (ingredientNames != null) {
-                string name = ingredientNames[0].Clone() as string;
-                int measureId = measures[0];
-                int amount = amounts[0] == null ? 0 : amounts[0].Value;
-                List<IngredientMin> ingredients = new List<IngredientMin>();            
-                //IQueryable<int> ingredientTypesIds = db.IngredientTypes.Where(i => ingredientNames.Contains(i.Name) ).Select(i => i.Id);            
-                IQueryable<int> ingredientsIds = db.Ingredient.Include(i => i.IngredientType).Where(i => 
-                    name == i.IngredientType.Name &&
-                    measureId == i.MeasureTypeId &&
-                    amount >= i.Amount
-                ).Select(i => i.Id);
-                for (int m = 1; m < ingredientNames.Count; ++m)
-                {
-                    string name2 = ingredientNames[m].Clone() as string;
-                    int measureId2 = measures[m];
-                    int amount2 = amounts[m] == null ? 0 : amounts[m].Value;
-                    IQueryable<int> ids = db.Ingredient.Include(i => i.IngredientType).Where(i =>
-                        name2 == i.IngredientType.Name &&
-                        measureId2 == i.MeasureTypeId &&
-                        amount2 >= i.Amount
-                    ).Select(i => i.Id);
-                    ingredientsIds = ingredientsIds.Concat( ids );
-                }
-                IQueryable<int> recipeStepsIds = db.RecipeStep.Where(i => i.Ingredients.All(j => ingredientsIds.Contains(j.Id))).Select(i => i.Id);
-                IQueryable<Recipe> recipes = db.Recipe.Where(i => i.RecipeStep.All(j => recipeStepsIds.Contains(j.Id)));
-                ViewBag.DishTypes = db.DishType.Select(i => new CheckBoxItem
-                {
-                    Id = i.Id,
-                    Name = i.Name,
-                    Selected = true
-                }).ToList();
-                return View("Index", recipes.OrderBy(i => i.Id));
-            }
-            return RedirectToAction("Index");
         }
 
         protected override void Dispose(bool disposing)
