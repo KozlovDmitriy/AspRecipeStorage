@@ -95,7 +95,8 @@ else
 }
 
 <p>
-    @Html.AuthorizeActionLink("Назад к списку", "Index")
+    @Html.AuthorizeActionLink("Назад к списку", "Index") | 
+    @Html.AuthorizeActionLink("Редактировать", "Edit", new { id = Model.Id })
 </p>
 
 @helper Base64imgPrerender(byte[] imageByteData, string imgclass)

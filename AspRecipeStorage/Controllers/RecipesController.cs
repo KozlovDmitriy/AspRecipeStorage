@@ -184,16 +184,30 @@ namespace AspRecipeStorage.Controllers
             }
             else
             {
-                db.Entry(ingredientType).State = EntityState.Added;
+                db.IngredientTypes.Add(ingredientType);
             }
         }
 
         private void AttachRecipeStepToDB(RecipeStep recipeStep)
         {
             List<Ingredient> ingredients = recipeStep.Ingredients.ToList<Ingredient>();
+            List<int> ids = ingredients.Select(i => i.Id).ToList();
+            int rsid = recipeStep.Id;
+            db.Ingredient.RemoveRange(db.Ingredient.Where(i => i.RecipeStepId == rsid && !ids.Contains(i.Id)));
             for (int j = 0; j < ingredients.Count; ++j)
             {
+
                 this.AttachIngredientTypeToDB(ingredients[j].IngredientType);
+                ingredients[j].IngredientTypeId = ingredients[j].IngredientType.Id;
+                ingredients[j].RecipeStepId = recipeStep.Id;
+                if (ingredients[j].Id == 0)
+                {
+                    db.Ingredient.Add(ingredients[j]);
+                }
+                else 
+                {
+                    db.Entry(ingredients[j]).State = EntityState.Modified;
+                }
             }
         }
 
@@ -298,53 +312,59 @@ namespace AspRecipeStorage.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin, User")]
-        public async Task<ActionResult> Edit(Recipe recipe, HttpPostedFileBase recipePicture, List<HttpPostedFileBase> stepPictures)
+        public async Task<ActionResult> Edit(
+            Recipe recipe, 
+            HttpPostedFileBase recipePicture, 
+            List<List<HttpPostedFileBase>> stepPictures,
+            List<int> pictureStepStatuses
+        )
         {
-            Recipe trackedrecipe = await db.Recipe
-                .AsNoTracking()
-                .Include(r => r.DishType)
-                .Include(r => r.User)
-                .Include(r => r.RecipeStep.Select(i => i.Ingredients.Select(g => g.MeasureType)))
-                .Include(r => r.RecipeStep.Select(i => i.Ingredients.Select(g => g.IngredientType)))
-                .SingleOrDefaultAsync(r => r.Id == recipe.Id);
-            trackedrecipe.Name = recipe.Name;
-            trackedrecipe.Description = recipe.Description;
-            trackedrecipe.DishType = recipe.DishType;
-            trackedrecipe.DishType = recipe.DishType;
-            trackedrecipe.AuthorId = User.Identity.GetUserId<int>();
-            trackedrecipe.Picture.Data = recipePicture != null && recipePicture.ContentLength >0
-                ? this.ReadFile(recipePicture)
-                : trackedrecipe.Picture.Data;
+            int rid = recipe.Id;
             int time = 0;
-            var steps = recipe.RecipeStep.ToList<RecipeStep>();
-            var removestep = trackedrecipe.RecipeStep.Where(s => !steps.Select(i => i.Id).Contains(s.Id));
-            foreach (var rs in removestep)
+            var steps = recipe.RecipeStep;
+            List<int> rsids = recipe.RecipeStep.Select(i => i.Id).ToList();
+            db.RecipeStep.RemoveRange(db.RecipeStep.Where(i => i.RecipeId == rid && !rsids.Contains(i.Id)));
+            if (recipePicture != null && recipePicture.ContentLength > 0)
             {
-                trackedrecipe.RecipeStep.Remove(rs);
+                db.Pictures.Remove(db.Pictures.AsNoTracking().FirstOrDefault(i => i.Id == recipe.PictureId));
+                recipe.Picture = new Picture {Data = this.ReadFile(recipePicture)};
+            }
+            else
+            {
+                recipe.Picture = null;
             }
             for (int i = 0; i < steps.Count; ++i)
             {
-                var origstep = trackedrecipe.RecipeStep.SingleOrDefault(s => s.Id == steps[i].Id);
-                if (origstep == null)
+                int stepNumber = i + 1;
+                int rsid = steps.ElementAt(i).Id ;
+                AttachRecipeStepToDB(steps.ElementAt(i));
+                steps.ElementAt(i).RecipeId = rid;
+                steps.ElementAt(i).StepNumber = stepNumber;
+                if (pictureStepStatuses[i] > 0 && stepPictures[i][0] == null)
                 {
-                    origstep = db.RecipeStep.Create();
-                    origstep.RecipeId = trackedrecipe.Id;
-                    db.RecipeStep.Add(origstep);
+                    steps.ElementAt(i).Pictures = null;
                 }
-                origstep.Discription = steps[i].Discription;
-                origstep.Time = steps[i].Time;
-                time += steps[i].Time;
-                origstep.StepNumber = i + 1;
-                //origstep.Pictures = stepPictures[i] != null && stepPictures[i].ContentLength > 0
-                //    ? this.ReadFile(stepPictures[i])
-                //    :  origstep != null
-                //        ? origstep.Pictures
-                //        : null;
-                AttachRecipeStepToDB(steps[i]);
-                origstep.Ingredients.Clear();
-                origstep.Ingredients = steps[i].Ingredients;
+                else
+                {
+                    db.Pictures.RemoveRange(
+                        db.Pictures.Where(j => j.RecipeSteps.Any(l => l.RecipeId == rid && l.StepNumber == stepNumber))
+                    );
+                }
+                stepPictures[i].ForEach(j =>
+                {
+                    if (j != null)
+                    {
+                        Picture img = new Picture { Data = this.ReadFile(j) };
+                        db.Pictures.Add(img);
+                        steps.ElementAt(i).Pictures.Add(img);
+                    }
+                });
+                time += steps.ElementAt(i).Time;
+                var entry = db.Entry(steps.ElementAt(i));
+                db.Entry(steps.ElementAt(i)).State = rsid == 0 ? EntityState.Added : EntityState.Modified;
             }
-            trackedrecipe.Time = time;
+            recipe.Time = time;
+            db.Entry(recipe).State = EntityState.Modified;
             await db.SaveChangesAsync();
             return RedirectToAction("Index");
         }

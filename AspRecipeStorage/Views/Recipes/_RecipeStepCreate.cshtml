@@ -1,4 +1,5 @@
 ﻿@model RecipeStep
+
 <div class="panel panel-primary recipe-step">
     <div class="panel-heading recipe-step-head clearfix">
         <div class="pull-right">
@@ -22,9 +23,16 @@
                 </div>
             </div>
             <div class="form-group">
-                <div class="control-label col-md-3">Изображения</div>
+                <div class="control-label col-md-3">
+                    Изображения
+                </div>
                 <div class="col-md-9">
                     <input type="file" class="recipe-step-images" id="stepPicture" accept="image/*" multiple />
+                    @if (Model.Pictures.Count > 0)
+                    {
+                        <i>@("Уже загружено " + Model.Pictures.Count + " изображения. Новые изображения заменят существующие.")</i>
+                    }
+                    <input type="number" name="pictureStepStatuses" class="hidden" value="@Model.Pictures.Count" />
                 </div>
             </div>
         </div>
