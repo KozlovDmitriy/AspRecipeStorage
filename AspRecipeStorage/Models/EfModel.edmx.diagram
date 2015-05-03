@@ -13,7 +13,7 @@
         <AssociationConnector Association="Model.FK_UserLogin_User" />
         <AssociationConnector Association="Model.UserUserRole" />
         <EntityTypeShape EntityType="Model.Recipe" Width="1.5" PointX="5.5" PointY="2.75" />
-        <EntityTypeShape EntityType="Model.DishType" Width="1.5" PointX="5.5" PointY="0.5" />
+        <EntityTypeShape EntityType="Model.DishType" Width="1.5" PointX="5.5" PointY="0.625" />
         <EntityTypeShape EntityType="Model.RecipeStep" Width="1.5" PointX="7.875" PointY="3" />
         <EntityTypeShape EntityType="Model.Ingredient" Width="1.5" PointX="7.875" PointY="6" />
         <AssociationConnector Association="Model.DishTypeRecipe" />

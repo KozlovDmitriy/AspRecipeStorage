@@ -26,7 +26,8 @@ namespace AspRecipeStorage
                       "~/Scripts/bootstrap.js",
                       "~/Scripts/respond.js",
                       "~/Material/js/material.min.js",
-                      "~/Material/js/ripples.min.js"));
+                      "~/Material/js/ripples.min.js",
+                      "~/Scripts/add-recipes.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.min.css",

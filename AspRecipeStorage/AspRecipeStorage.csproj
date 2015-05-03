@@ -343,6 +343,7 @@
     <Content Include="Material\css\ripples.min.css.map" />
     <Content Include="Material\css\roboto.css.map" />
     <Content Include="Material\css\roboto.min.css.map" />
+    <Content Include="ClassDiagram.cd" />
     <None Include="Properties\PublishProfiles\SmartAsp.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\gridmvc.js" />
