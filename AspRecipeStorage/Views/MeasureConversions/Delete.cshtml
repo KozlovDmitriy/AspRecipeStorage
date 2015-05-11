@@ -1,23 +1,23 @@
-﻿@model AspRecipeStorage.Models.MeasureType
+﻿@model AspRecipeStorage.Models.MeasureConversion
 
 @{
-    ViewBag.Title = "Удаление меры";
+    ViewBag.Title = "Удаление соотношения мер";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <div class="panel panel-default">
     <div class="panel-body">
-        <h3>Вы уверены что хотите удалить выбранную меру?</h3>
+        <h3>Вы уверены что хотите удалить выбранное соотношение?</h3>
         <hr />
         <div>
             <dl class="dl-horizontal">
-                <dt>Название</dt>
-
+                <dt>Соотношение</dt>
                 <dd>
-                    @Html.DisplayFor(model => model.Name)
+                    1 &#xd7; @Html.DisplayFor(model => model.MeasureFirstType.Name) =
+                    @Html.DisplayFor(model => model.Ratio) &#xd7;
+                    @Html.DisplayFor(model => model.MeasureSecondType.Name)
+                    ( @Html.DisplayFor(model => model.IngredientType.Name) )
                 </dd>
-
-            </dl>
-
+            </dl> 
             @using (Html.BeginForm())
             {
                 @Html.AntiForgeryToken()

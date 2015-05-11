@@ -167,6 +167,8 @@
     <Compile Include="Controllers\DishTypesController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\MeasureConversionsController.cs" />
+    <Compile Include="Controllers\MeasureTypesController.cs" />
     <Compile Include="Controllers\RecipesController.cs" />
     <Compile Include="Controllers\SetupController.cs" />
     <Compile Include="Global.asax.cs">
@@ -423,6 +425,16 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.bootstrap.min.js.map" />
     <Content Include="Views\Recipes\_RecipeStepCreate.cshtml" />
     <Content Include="Views\Recipes\_IngredientFilterItem.cshtml" />
+    <Content Include="Views\MeasureTypes\Create.cshtml" />
+    <Content Include="Views\MeasureTypes\Delete.cshtml" />
+    <Content Include="Views\MeasureTypes\Details.cshtml" />
+    <Content Include="Views\MeasureTypes\Edit.cshtml" />
+    <Content Include="Views\MeasureTypes\Index.cshtml" />
+    <Content Include="Views\MeasureConversions\Create.cshtml" />
+    <Content Include="Views\MeasureConversions\Delete.cshtml" />
+    <Content Include="Views\MeasureConversions\Details.cshtml" />
+    <Content Include="Views\MeasureConversions\Edit.cshtml" />
+    <Content Include="Views\MeasureConversions\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

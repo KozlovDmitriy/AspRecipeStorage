@@ -1,13 +1,13 @@
 ﻿@model IEnumerable<AspRecipeStorage.Models.DishType>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Типы блюд";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <div class="panel panel-default">
     <div class="panel-body">
-        <h3>Типы блюд</h3>
-
+        <h3>@ViewBag.Title</h3>
+        <hr />
         <p>
             @Html.AuthorizeActionLink("Добавить новый", "Create")
         </p>

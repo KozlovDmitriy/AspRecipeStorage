@@ -42,6 +42,20 @@ namespace AspRecipeStorage.Controllers
             return View();
         }
 
+        private bool ValidationMeasureType(MeasureType measureType)
+        {
+            if (measureType != null && measureType.Name != null)
+            {
+                measureType.Name = measureType.Name.ToLower();
+                if (db.MeasureTypes.Where(i => i.Name == measureType.Name).Count() > 0)
+                {
+                    ViewBag.WarningMessage = "Операция отклонена, т.к. введенная мера уже существует.";
+                    return false;
+                }
+            }
+            return true;
+        }
+
         // POST: MeasureTypes/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -49,7 +63,7 @@ namespace AspRecipeStorage.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create([Bind(Include = "Id,Name")] MeasureType measureType)
         {
-            if (ModelState.IsValid)
+            if (ModelState.IsValid && this.ValidationMeasureType(measureType))
             {
                 db.MeasureTypes.Add(measureType);
                 await db.SaveChangesAsync();
@@ -81,7 +95,7 @@ namespace AspRecipeStorage.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit([Bind(Include = "Id,Name")] MeasureType measureType)
         {
-            if (ModelState.IsValid)
+            if (ModelState.IsValid && this.ValidationMeasureType(measureType))
             {
                 db.Entry(measureType).State = EntityState.Modified;
                 await db.SaveChangesAsync();
