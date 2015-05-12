@@ -11,113 +11,107 @@ using AspRecipeStorage.Models;
 
 namespace AspRecipeStorage.Controllers
 {
-    [Authorize(Roles = "Admin")]
-    public class DishTypesController : Controller
+    public class InstrumentsController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 
-        // GET: DishTypes
+        // GET: Instruments
         public async Task<ActionResult> Index()
         {
-            return View(await db.DishType.ToListAsync());
+            return View(await db.Instruments.ToListAsync());
         }
 
-        // GET: DishTypes/Details/5
+        // GET: Instruments/Details/5
         public async Task<ActionResult> Details(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            DishType dishType = await db.DishType.FindAsync(id);
-            if (dishType == null)
+            Instrument instrument = await db.Instruments.FindAsync(id);
+            if (instrument == null)
             {
                 return HttpNotFound();
             }
-            return View(dishType);
+            return View(instrument);
         }
 
-        // GET: DishTypes/Create
+        // GET: Instruments/Create
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: DishTypes/Create
+        // POST: Instruments/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "Id,Name")] DishType dishType)
+        public async Task<ActionResult> Create([Bind(Include = "Id,Name")] Instrument instrument)
         {
             if (ModelState.IsValid)
             {
-                db.DishType.Add(dishType);
+                db.Instruments.Add(instrument);
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
 
-            return View(dishType);
+            return View(instrument);
         }
 
-        // GET: DishTypes/Edit/5
+        // GET: Instruments/Edit/5
         public async Task<ActionResult> Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            DishType dishType = await db.DishType.FindAsync(id);
-            if (dishType == null)
+            Instrument instrument = await db.Instruments.FindAsync(id);
+            if (instrument == null)
             {
                 return HttpNotFound();
             }
-            return View(dishType);
+            return View(instrument);
         }
 
-        // POST: DishTypes/Edit/5
+        // POST: Instruments/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "Id,Name")] DishType dishType)
+        public async Task<ActionResult> Edit([Bind(Include = "Id,Name")] Instrument instrument)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(dishType).State = EntityState.Modified;
+                db.Entry(instrument).State = EntityState.Modified;
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
-            return View(dishType);
+            return View(instrument);
         }
 
-        // GET: DishTypes/Delete/5
+        // GET: Instruments/Delete/5
         public async Task<ActionResult> Delete(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            DishType dishType = await db.DishType.FindAsync(id);
-            int recipesCount = db.Recipe.Include(i => i.DishType).Where(i => i.DishType.Id == dishType.Id).Count();
-            if (recipesCount > 0)
-            { 
-                ViewBag.WarningMessage = "Внимание! При удаление выбранного типа блюд, также удаляться " + recipesCount + " рецептов";
-            }
-            if (dishType == null)
+            Instrument instrument = await db.Instruments.FindAsync(id);
+            if (instrument == null)
             {
                 return HttpNotFound();
             }
-            return View(dishType);
+            return View(instrument);
         }
 
-        // POST: DishTypes/Delete/5
+        // POST: Instruments/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(int id)
         {
-            DishType dishType = await db.DishType.FindAsync(id);
-            db.DishType.Remove(dishType);
+            Instrument instrument = await db.Instruments.FindAsync(id);
+            db.Instruments.Remove(instrument);
             await db.SaveChangesAsync();
             return RedirectToAction("Index");
         }

@@ -166,6 +166,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\DishTypesController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\InstrumentsController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\MeasureConversionsController.cs" />
     <Compile Include="Controllers\MeasureTypesController.cs" />
@@ -206,6 +207,9 @@
       <DependentUpon>EfModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\IngredientType.cs">
+      <DependentUpon>EfModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Instrument.cs">
       <DependentUpon>EfModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\ManageViewModels.cs" />
@@ -435,6 +439,11 @@
     <Content Include="Views\MeasureConversions\Details.cshtml" />
     <Content Include="Views\MeasureConversions\Edit.cshtml" />
     <Content Include="Views\MeasureConversions\Index.cshtml" />
+    <Content Include="Views\Instruments\Create.cshtml" />
+    <Content Include="Views\Instruments\Delete.cshtml" />
+    <Content Include="Views\Instruments\Details.cshtml" />
+    <Content Include="Views\Instruments\Edit.cshtml" />
+    <Content Include="Views\Instruments\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -37,5 +37,6 @@ namespace AspRecipeStorage.Models
         public virtual DbSet<IngredientType> IngredientTypes { get; set; }
         public virtual DbSet<Picture> Pictures { get; set; }
         public virtual DbSet<MeasureConversion> MeasureConversions { get; set; }
+        public virtual DbSet<Instrument> Instruments { get; set; }
     }
 }
