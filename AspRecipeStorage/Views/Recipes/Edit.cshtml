@@ -5,7 +5,6 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-
 <div class="panel panel-default">
     <div class="panel-body">
         <h3>Добавление нового рецепта</h3>
@@ -30,7 +29,7 @@
                     <div class="control-label col-md-2">Описание</div>
                     <div class="col-md-10">
                         @*@Html.TextAreaFor(model => model.Description, new { htmlAttributes = new { @class = "form-control" } })*@
-                        <textarea cols="35" htmlattributes="{ class = form-control }" id="Description" name="Description" rows="4">@Model.Description</textarea>
+                        <textarea cols="35" class = "form-control" id="Description" name="Description" rows="4">@Model.Description</textarea>
                         @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
                     </div>
                 </div>
@@ -38,11 +37,19 @@
                 <div class="form-group">
                     <div class="control-label col-md-2">Изображение</div>
                     <div class="col-md-10">
-                        <input type="file" id="recipePicture" name="recipePicture" accept="image/*" />
                         @if (Model.Picture != null)
-                        {
-                            <i>@("Изображение уже загружено. Новое изображение заменит существующее.")</i>
+                        {                           
+                            <i>@("Изображение уже загружено. Новое изображение заменит существующее.")</i>                            
+                            <div class="list-group">
+                                <div class=" list-group-item">
+                                    <div class="row-picture">
+                                        @Base64imgPrerender(Model.Picture == null ? null : Model.Picture.Data, "circle")
+                                    </div>
+                                </div>
+                            </div>
+                            <br/>
                         }
+                        <input type="file" id="recipePicture" name="recipePicture" accept="image/*" />
                         @Html.ValidationMessageFor(model => model.Picture, "", new { @class = "text-danger" })
                     </div>
                 </div>
@@ -84,6 +91,22 @@
 <div>
     @Html.AuthorizeActionLink("Назад на главную", "Index")
 </div>
+
+@helper Base64imgPrerender(byte[] imageByteData, string imgclass)
+{
+    string imageDataURL;
+    if (imageByteData != null)
+    {
+        string imageBase64Data = Convert.ToBase64String(imageByteData);
+        imageDataURL = string.Format("data:image/png;base64,{0}", imageBase64Data);
+
+    }
+    else
+    {
+        imageDataURL = @"data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/PjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA2NCA2NCIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+PGRlZnMvPjxyZWN0IHdpZHRoPSI2NCIgaGVpZ2h0PSI2NCIgZmlsbD0iI0VFRUVFRSIvPjxnPjx0ZXh0IHg9IjE0IiB5PSIzMiIgc3R5bGU9ImZpbGw6I0FBQUFBQTtmb250LXdlaWdodDpib2xkO2ZvbnQtZmFtaWx5OkFyaWFsLCBIZWx2ZXRpY2EsIE9wZW4gU2Fucywgc2Fucy1zZXJpZiwgbW9ub3NwYWNlO2ZvbnQtc2l6ZToxMHB0O2RvbWluYW50LWJhc2VsaW5lOmNlbnRyYWwiPjY0eDY0PC90ZXh0PjwvZz48L3N2Zz4=";
+    }
+    <img class="@imgclass" src="@imageDataURL" alt="step">
+}
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")

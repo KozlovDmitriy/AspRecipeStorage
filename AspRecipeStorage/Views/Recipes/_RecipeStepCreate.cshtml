@@ -27,11 +27,30 @@
                     Изображения
                 </div>
                 <div class="col-md-9">
-                    <input type="file" class="recipe-step-images" id="stepPicture" accept="image/*" multiple />
                     @if (Model.Pictures.Count > 0)
                     {
                         <i>@("Уже загружено " + Model.Pictures.Count + " изображения. Новые изображения заменят существующие.")</i>
+                        <div class="list-group">
+                            <div class=" list-group-item">
+                                <div class="row-picture">
+                                    <table style="overflow-x:scroll">
+                                        <tbody>
+                                            <tr>
+                                                @foreach (var img in Model.Pictures)
+                                                {
+                                                    <td>
+                                                        @Base64imgPrerender(img.Data, "circle")
+                                                    </td>
+                                                }
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <br />
                     }
+                    <input type="file" class="recipe-step-images" id="stepPicture" accept="image/*" multiple />
                     <input type="number" name="pictureStepStatuses" class="hidden" value="@Model.Pictures.Count" />
                 </div>
             </div>
@@ -45,8 +64,8 @@
                 <div class="panel-body">
                     <div class="ingredients form-horizontal" id="ingredients">
                         @if (Model.Ingredients != null)
-                        { 
-                            foreach(var ingridient in Model.Ingredients)
+                        {
+                            foreach (var ingridient in Model.Ingredients)
                             {
                                 @Html.Partial("_IngredientCreate", ingridient);
                             }
@@ -60,7 +79,22 @@
                         OnSuccess = "OnAddIngredient(data)"
                     }, new { @class = "btn btn-xs btn-primary pull-right add-ingredient" })
                 </div>
-            </div>        
+            </div>
         </div>
     </div>
 </div>
+@helper Base64imgPrerender(byte[] imageByteData, string imgclass)
+{
+    string imageDataURL;
+    if (imageByteData != null)
+    {
+        string imageBase64Data = Convert.ToBase64String(imageByteData);
+        imageDataURL = string.Format("data:image/png;base64,{0}", imageBase64Data);
+
+    }
+    else
+    {
+        imageDataURL = @"data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/PjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA2NCA2NCIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+PGRlZnMvPjxyZWN0IHdpZHRoPSI2NCIgaGVpZ2h0PSI2NCIgZmlsbD0iI0VFRUVFRSIvPjxnPjx0ZXh0IHg9IjE0IiB5PSIzMiIgc3R5bGU9ImZpbGw6I0FBQUFBQTtmb250LXdlaWdodDpib2xkO2ZvbnQtZmFtaWx5OkFyaWFsLCBIZWx2ZXRpY2EsIE9wZW4gU2Fucywgc2Fucy1zZXJpZiwgbW9ub3NwYWNlO2ZvbnQtc2l6ZToxMHB0O2RvbWluYW50LWJhc2VsaW5lOmNlbnRyYWwiPjY0eDY0PC90ZXh0PjwvZz48L3N2Zz4=";
+    }
+    <img class="@imgclass" src="@imageDataURL" alt="step">
+}

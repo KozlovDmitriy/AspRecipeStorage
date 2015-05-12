@@ -291,8 +291,10 @@ namespace AspRecipeStorage.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             Recipe recipe = await db.Recipe
+                .Include(r => r.Picture)
                 .Include(r => r.DishType)
                 .Include(r => r.User)
+                .Include(r => r.RecipeStep.Select(i => i.Pictures))
                 .Include(r => r.RecipeStep.Select(i => i.Ingredients.Select(g => g.MeasureType)))
                 .Include(r => r.RecipeStep.Select(i => i.Ingredients.Select(g => g.IngredientType)))
                 .SingleOrDefaultAsync(r => r.Id == id.Value);
