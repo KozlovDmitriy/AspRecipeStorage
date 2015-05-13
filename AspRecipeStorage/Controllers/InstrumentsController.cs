@@ -36,6 +36,17 @@ namespace AspRecipeStorage.Controllers
             return View(instrument);
         }
 
+        public bool ValidateInstrument(Instrument instrument)
+        {
+            instrument.Name = instrument.Name.ToLower();
+            if (db.Instruments.Where(i => i.Name == instrument.Name).Count() > 0)
+            {
+                ViewBag.WarningMessage = "Операция отклонена, т.к. введенное название инструмента уже зарегистрированно.";
+                return false;
+            }
+            return true;
+        }
+
         // GET: Instruments/Create
         public ActionResult Create()
         {
@@ -49,7 +60,7 @@ namespace AspRecipeStorage.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create([Bind(Include = "Id,Name")] Instrument instrument)
         {
-            if (ModelState.IsValid)
+            if (ModelState.IsValid && this.ValidateInstrument(instrument))
             {
                 db.Instruments.Add(instrument);
                 await db.SaveChangesAsync();
@@ -81,7 +92,7 @@ namespace AspRecipeStorage.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit([Bind(Include = "Id,Name")] Instrument instrument)
         {
-            if (ModelState.IsValid)
+            if (ModelState.IsValid && this.ValidateInstrument(instrument))
             {
                 db.Entry(instrument).State = EntityState.Modified;
                 await db.SaveChangesAsync();

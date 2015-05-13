@@ -1,33 +1,33 @@
 ﻿@model AspRecipeStorage.Models.Instrument
 
 @{
-    ViewBag.Title = "Delete";
+    ViewBag.Title = "Удаление инструмента";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Delete</h2>
+<div class="panel panel-default">
+    <div class="panel-body">
+        <h3>Вы уверены что хотите удалить выбранный инструмент?</h3>
+        <hr />
+        <div>
+            <dl class="dl-horizontal">
+                <dt>Название</dt>
 
-<h3>Are you sure you want to delete this?</h3>
-<div>
-    <h4>Instrument</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.Name)
+                </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.Name)
-        </dd>
+            </dl>
 
-    </dl>
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
 
-    @using (Html.BeginForm()) {
-        @Html.AntiForgeryToken()
-
-        <div class="form-actions no-color">
-            <input type="submit" value="Delete" class="btn btn-default" /> |
-            @Html.ActionLink("Back to List", "Index")
+                <div class="form-actions no-color">
+                    <input type="submit" value="Удалить" class="btn btn-sm btn-warning" /> |
+                    @Html.ActionLink("Назад к списку", "Index")
+                </div>
+            }
         </div>
-    }
+    </div>
 </div>
