@@ -31,12 +31,13 @@ namespace AspRecipeStorage.Models
         public virtual DbSet<UserRole> UserRoles { get; set; }
         public virtual DbSet<Recipe> Recipe { get; set; }
         public virtual DbSet<DishType> DishType { get; set; }
-        public virtual DbSet<RecipeStep> RecipeStep { get; set; }
         public virtual DbSet<Ingredient> Ingredient { get; set; }
         public virtual DbSet<MeasureType> MeasureTypes { get; set; }
         public virtual DbSet<IngredientType> IngredientTypes { get; set; }
         public virtual DbSet<Picture> Pictures { get; set; }
         public virtual DbSet<MeasureConversion> MeasureConversions { get; set; }
         public virtual DbSet<Instrument> Instruments { get; set; }
+        public virtual DbSet<InstrumentRecipeStep> InstrumentRecipeSteps { get; set; }
+        public virtual DbSet<RecipeStep> RecipeSteps { get; set; }
     }
 }

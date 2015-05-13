@@ -16,7 +16,7 @@ namespace AspRecipeStorage.Models
     {
         public Recipe()
         {
-            this.RecipeStep = new HashSet<RecipeStep>();
+            this.RecipeSteps = new HashSet<RecipeStep>();
         }
     
         public int Id { get; set; }
@@ -28,8 +28,8 @@ namespace AspRecipeStorage.Models
         public Nullable<int> PictureId { get; set; }
     
         public virtual DishType DishType { get; set; }
-        public virtual ICollection<RecipeStep> RecipeStep { get; set; }
         public virtual User User { get; set; }
         public virtual Picture Picture { get; set; }
+        public virtual ICollection<RecipeStep> RecipeSteps { get; set; }
     }
 }

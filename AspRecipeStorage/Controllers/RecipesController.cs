@@ -48,11 +48,11 @@ namespace AspRecipeStorage.Controllers
         {
             return db.Recipe
                 .Include(i => i.DishType)
-                .Include(i => i.RecipeStep.Select(j => j.Ingredients.Select(k => k.IngredientType)))
+                .Include(i => i.RecipeSteps.Select(j => j.Ingredients.Select(k => k.IngredientType)))
                 .Where(i =>
                     i.Name.Contains(word) ||
                     i.Description.Contains(word) ||
-                    i.RecipeStep.Any(j =>
+                    i.RecipeSteps.Any(j =>
                         j.Discription.Contains(word) ||
                         j.Ingredients.Any(k => k.IngredientType.Name.Contains(word))
                     )
@@ -108,8 +108,8 @@ namespace AspRecipeStorage.Controllers
                     ).Select(i => i.Id);
                     ingredientsIds = ingredientsIds.Concat(ids);
                 }
-                IQueryable<int> recipeStepsIds = db.RecipeStep.Where(i => i.Ingredients.All(j => ingredientsIds.Contains(j.Id))).Select(i => i.Id);
-                recipes = recipes.Where(i => i.RecipeStep.All(j => recipeStepsIds.Contains(j.Id)));
+                IQueryable<int> recipeStepsIds = db.RecipeSteps.Where(i => i.Ingredients.All(j => ingredientsIds.Contains(j.Id))).Select(i => i.Id);
+                recipes = recipes.Where(i => i.RecipeSteps.All(j => recipeStepsIds.Contains(j.Id)));
             }
             if (userId != null)
             {
@@ -141,8 +141,8 @@ namespace AspRecipeStorage.Controllers
             Recipe recipe = await db.Recipe
                 .Include(r => r.DishType)
                 .Include(r => r.User)
-                .Include(r => r.RecipeStep.Select(i => i.Ingredients.Select(g => g.MeasureType)))
-                .Include(r => r.RecipeStep.Select(i => i.Ingredients.Select(g => g.IngredientType)))
+                .Include(r => r.RecipeSteps.Select(i => i.Ingredients.Select(g => g.MeasureType)))
+                .Include(r => r.RecipeSteps.Select(i => i.Ingredients.Select(g => g.IngredientType)))
                 .SingleOrDefaultAsync(r => r.Id == id.Value);
             if (recipe == null)
             {
@@ -226,7 +226,7 @@ namespace AspRecipeStorage.Controllers
                     recipe.Picture = new Picture { Data = this.ReadFile(recipePicture) };
                 }
                 int time = 0;
-                List<RecipeStep> steps = recipe.RecipeStep.ToList<RecipeStep>();
+                List<RecipeStep> steps = recipe.RecipeSteps.ToList<RecipeStep>();
                 for (int i = 0; i < steps.Count; ++i)
                 {
                     time += steps[i].Time;
@@ -294,9 +294,9 @@ namespace AspRecipeStorage.Controllers
                 .Include(r => r.Picture)
                 .Include(r => r.DishType)
                 .Include(r => r.User)
-                .Include(r => r.RecipeStep.Select(i => i.Pictures))
-                .Include(r => r.RecipeStep.Select(i => i.Ingredients.Select(g => g.MeasureType)))
-                .Include(r => r.RecipeStep.Select(i => i.Ingredients.Select(g => g.IngredientType)))
+                .Include(r => r.RecipeSteps.Select(i => i.Pictures))
+                .Include(r => r.RecipeSteps.Select(i => i.Ingredients.Select(g => g.MeasureType)))
+                .Include(r => r.RecipeSteps.Select(i => i.Ingredients.Select(g => g.IngredientType)))
                 .SingleOrDefaultAsync(r => r.Id == id.Value);
             if (recipe == null)
             {
@@ -323,9 +323,9 @@ namespace AspRecipeStorage.Controllers
         {
             int rid = recipe.Id;
             int time = 0;
-            var steps = recipe.RecipeStep;
-            List<int> rsids = recipe.RecipeStep.Select(i => i.Id).ToList();
-            db.RecipeStep.RemoveRange(db.RecipeStep.Where(i => i.RecipeId == rid && !rsids.Contains(i.Id)));
+            var steps = recipe.RecipeSteps;
+            List<int> rsids = recipe.RecipeSteps.Select(i => i.Id).ToList();
+            db.RecipeSteps.RemoveRange(db.RecipeSteps.Where(i => i.RecipeId == rid && !rsids.Contains(i.Id)));
             if (recipePicture != null && recipePicture.ContentLength > 0)
             {
                 db.Pictures.Remove(db.Pictures.AsNoTracking().FirstOrDefault(i => i.Id == recipe.PictureId));
@@ -396,8 +396,8 @@ namespace AspRecipeStorage.Controllers
             Recipe recipe = await db.Recipe
                 .Include(r => r.DishType)
                 .Include(r => r.User)
-                .Include(r => r.RecipeStep.Select(i => i.Ingredients.Select(g => g.MeasureType)))
-                .Include(r => r.RecipeStep.Select(i => i.Ingredients.Select(g => g.IngredientType)))
+                .Include(r => r.RecipeSteps.Select(i => i.Ingredients.Select(g => g.MeasureType)))
+                .Include(r => r.RecipeSteps.Select(i => i.Ingredients.Select(g => g.IngredientType)))
                 .SingleOrDefaultAsync(r => r.Id == id);
             db.Recipe.Remove(recipe);
             await db.SaveChangesAsync();

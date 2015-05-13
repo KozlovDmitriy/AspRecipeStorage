@@ -14,7 +14,15 @@ namespace AspRecipeStorage.Models
     
     public partial class Instrument
     {
+        public Instrument()
+        {
+            this.InstrumentRecipeSteps = new HashSet<InstrumentRecipeStep>();
+        }
+    
         public int Id { get; set; }
         public string Name { get; set; }
+        public bool ForAllUsers { get; set; }
+    
+        public virtual ICollection<InstrumentRecipeStep> InstrumentRecipeSteps { get; set; }
     }
 }
