@@ -19,7 +19,7 @@
             <div class="form-group">
                 <div class="control-label col-md-3">Время (мин.)</div>
                 <div class="col-md-9">
-                    <input type="number" class="recipe-step-time" value="@Model.Time" min="0">
+                    <input type="number" class="form-control recipe-step-time" value="@Model.Time" min="0">
                 </div>
             </div>
             <div class="form-group">
@@ -78,6 +78,29 @@
                         HttpMethod = "POST",
                         OnSuccess = "OnAddIngredient(data)"
                     }, new { @class = "btn btn-xs btn-primary pull-right add-ingredient" })
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    Инструменты
+                </div>
+                <div class="panel-body">
+                    <div class="instruments form-horizontal" id="ingredients">
+                        @if (Model.StepInstruments != null)
+                        {
+                            foreach (var instrument in Model.StepInstruments)
+                            {
+                                @Html.Partial("_InstrumentCreate", instrument);
+                            }
+                        }
+                    </div>
+                </div>
+                <div class="panel-footer clearfix">
+                    @Ajax.ActionLink("Добавить", "Instrument", null, new AjaxOptions()
+                    {
+                        HttpMethod = "POST",
+                        OnSuccess = "OnAddInstrument(data)"
+                    }, new { @class = "btn btn-xs btn-primary pull-right add-instrument" })
                 </div>
             </div>
         </div>

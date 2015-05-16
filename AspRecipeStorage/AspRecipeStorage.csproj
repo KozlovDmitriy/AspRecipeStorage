@@ -212,9 +212,6 @@
     <Compile Include="Models\Instrument.cs">
       <DependentUpon>EfModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\InstrumentRecipeStep.cs">
-      <DependentUpon>EfModel.tt</DependentUpon>
-    </Compile>
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\MeasureConversion.cs">
       <DependentUpon>EfModel.tt</DependentUpon>
@@ -233,6 +230,9 @@
       <DependentUpon>EfModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\RolePartial.cs" />
+    <Compile Include="Models\StepInstrument.cs">
+      <DependentUpon>EfModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\User.cs">
       <DependentUpon>EfModel.tt</DependentUpon>
     </Compile>
@@ -447,6 +447,7 @@
     <Content Include="Views\Instruments\Details.cshtml" />
     <Content Include="Views\Instruments\Edit.cshtml" />
     <Content Include="Views\Instruments\Index.cshtml" />
+    <Content Include="Views\Recipes\_InstrumentCreate.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

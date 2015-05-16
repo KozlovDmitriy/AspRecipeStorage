@@ -1,0 +1,17 @@
+﻿@using AspRecipeStorage.Models
+@model StepInstrument
+
+<div class="form-group instrument">
+    <input type="hidden" class="instrument-id" value="@Model.Id" />
+    <div class="col-xs-7">
+        <input class="form-control empty instrument-name" value="@Model.Instrument.Name" type="text" data-hint="" placeholder="Ключевые слова..." />
+    </div>
+    <div class="col-xs-4">
+        <input type="number" min="1" placeholder="Количество ..." class="instrument-amount form-control input-sm" value="@Model.InstrumentCount" />
+    </div>
+    <div class="col-xs-1">
+        <a href="javascript:void(0)" class="btn btn-xs btn-default instrument-delete pull-right">
+            <i class="glyphicon glyphicon-remove"></i>
+        </a>
+    </div>
+</div><!-- /btn-group -->

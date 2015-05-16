@@ -16,13 +16,13 @@ namespace AspRecipeStorage.Models
     {
         public Instrument()
         {
-            this.InstrumentRecipeSteps = new HashSet<InstrumentRecipeStep>();
+            this.StepInstruments = new HashSet<StepInstrument>();
         }
     
         public int Id { get; set; }
         public string Name { get; set; }
         public bool ForAllUsers { get; set; }
     
-        public virtual ICollection<InstrumentRecipeStep> InstrumentRecipeSteps { get; set; }
+        public virtual ICollection<StepInstrument> StepInstruments { get; set; }
     }
 }

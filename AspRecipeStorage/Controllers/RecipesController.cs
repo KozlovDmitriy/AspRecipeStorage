@@ -188,11 +188,26 @@ namespace AspRecipeStorage.Controllers
             }
         }
 
+        private void AttachInstrumentToDB(Instrument instrument)
+        {
+            string name = instrument.Name;
+            if (db.Instruments.Where(i => i.Name == name).Count() > 0)
+            {
+                instrument.Id = db.Instruments.AsNoTracking().Where(i => i.Name == name).FirstOrDefault().Id;
+                db.Instruments.Attach(instrument);
+            }
+            else
+            {
+                instrument.ForAllUsers = false;
+                db.Instruments.Add(instrument);
+            }
+        }
+
         private void AttachRecipeStepToDB(RecipeStep recipeStep)
         {
+            int rsid = recipeStep.Id;
             List<Ingredient> ingredients = recipeStep.Ingredients.ToList<Ingredient>();
             List<int> ids = ingredients.Select(i => i.Id).ToList();
-            int rsid = recipeStep.Id;
             db.Ingredient.RemoveRange(db.Ingredient.Where(i => i.RecipeStepId == rsid && !ids.Contains(i.Id)));
             for (int j = 0; j < ingredients.Count; ++j)
             {
@@ -204,9 +219,27 @@ namespace AspRecipeStorage.Controllers
                 {
                     db.Ingredient.Add(ingredients[j]);
                 }
-                else 
+                else
                 {
                     db.Entry(ingredients[j]).State = EntityState.Modified;
+                }
+            }
+
+            List<StepInstrument> instruments = recipeStep.StepInstruments.ToList<StepInstrument>();
+            List<int> ids2 = instruments.Select(i => i.Id).ToList();
+            db.StepInstruments.RemoveRange(db.StepInstruments.Where(i => i.RecipeStep_Id == rsid && !ids2.Contains(i.Id)));
+            for (int j = 0; j < instruments.Count; ++j)
+            {
+                this.AttachInstrumentToDB(instruments[j].Instrument);
+                instruments[j].Instrument_Id = instruments[j].Instrument.Id;
+                instruments[j].RecipeStep_Id = recipeStep.Id;
+                if (instruments[j].Id == 0)
+                {
+                    db.StepInstruments.Add(instruments[j]);
+                }
+                else
+                {
+                    db.Entry(instruments[j]).State = EntityState.Modified;
                 }
             }
         }
@@ -261,6 +294,11 @@ namespace AspRecipeStorage.Controllers
             return PartialView("_IngredientCreate", new Ingredient { IngredientType = new IngredientType(), MeasureType = new MeasureType() });
         }
 
+        public ActionResult Instrument()
+        {
+            return PartialView("_InstrumentCreate", new StepInstrument { Instrument = new Instrument() });
+        }
+
         public ActionResult IngredientFilteritem(string ingredientName)
         {
             SelectList measureTypes = null;
@@ -295,6 +333,7 @@ namespace AspRecipeStorage.Controllers
                 .Include(r => r.DishType)
                 .Include(r => r.User)
                 .Include(r => r.RecipeSteps.Select(i => i.Pictures))
+                .Include(r => r.RecipeSteps.Select(i => i.StepInstruments.Select(g => g.Instrument)))
                 .Include(r => r.RecipeSteps.Select(i => i.Ingredients.Select(g => g.MeasureType)))
                 .Include(r => r.RecipeSteps.Select(i => i.Ingredients.Select(g => g.IngredientType)))
                 .SingleOrDefaultAsync(r => r.Id == id.Value);
@@ -408,6 +447,14 @@ namespace AspRecipeStorage.Controllers
         {
             var result = (from r in db.IngredientTypes
                           where r.Name.ToLower().Contains(term.ToLower())
+                          select new { r.Id, r.Name }).Distinct();
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult AutoCompleteInstrument(string term)
+        {
+            var result = (from r in db.Instruments
+                          where r.Name.ToLower().Contains(term.ToLower()) && r.ForAllUsers
                           select new { r.Id, r.Name }).Distinct();
             return Json(result, JsonRequestBehavior.AllowGet);
         }

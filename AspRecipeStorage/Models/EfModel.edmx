@@ -37,15 +37,6 @@
           <Property Name="Name" Type="nvarchar(max)" Nullable="false" />
           <Property Name="ForAllUsers" Type="bit" Nullable="false" />
         </EntityType>
-        <EntityType Name="InstrumentRecipeStep">
-          <Key>
-            <PropertyRef Name="Instrument_Id" />
-            <PropertyRef Name="RecipeStep_Id" />
-          </Key>
-          <Property Name="Instrument_Id" Type="int" Nullable="false" />
-          <Property Name="RecipeStep_Id" Type="int" Nullable="false" />
-          <Property Name="InstrumentCount" Type="int" Nullable="false" />
-        </EntityType>
         <EntityType Name="MeasureConversions">
           <Key>
             <PropertyRef Name="Id" />
@@ -99,6 +90,15 @@
           <Property Name="Time" Type="int" Nullable="false" />
           <Property Name="StepNumber" Type="int" Nullable="false" />
           <Property Name="RecipeId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="StepInstrument">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Instrument_Id" Type="int" Nullable="false" />
+          <Property Name="RecipeStep_Id" Type="int" Nullable="false" />
+          <Property Name="InstrumentCount" Type="int" Nullable="false" />
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
         </EntityType>
         <EntityType Name="UserClaims">
           <Key>
@@ -216,34 +216,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_InstrumentRecipeStep_Instrument">
-          <End Role="Instrument" Type="Self.Instrument" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Role="InstrumentRecipeStep" Type="Self.InstrumentRecipeStep" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Instrument">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="InstrumentRecipeStep">
-              <PropertyRef Name="Instrument_Id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_InstrumentRecipeStep_RecipeStep">
-          <End Role="RecipeStep" Type="Self.RecipeStep" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Role="InstrumentRecipeStep" Type="Self.InstrumentRecipeStep" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="RecipeStep">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="InstrumentRecipeStep">
-              <PropertyRef Name="RecipeStep_Id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_MeasureConversionMeasureTypeFirst">
           <End Role="MeasureTypes" Type="Self.MeasureTypes" Multiplicity="1" />
           <End Role="MeasureConversions" Type="Self.MeasureConversions" Multiplicity="*" />
@@ -320,6 +292,34 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_StepInstrument_Instrument">
+          <End Role="Instrument" Type="Self.Instrument" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="StepInstrument" Type="Self.StepInstrument" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Instrument">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="StepInstrument">
+              <PropertyRef Name="Instrument_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_StepInstrument_RecipeStep">
+          <End Role="RecipeStep" Type="Self.RecipeStep" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="StepInstrument" Type="Self.StepInstrument" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RecipeStep">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="StepInstrument">
+              <PropertyRef Name="RecipeStep_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_UserClaim_User">
           <End Role="Users" Type="Self.Users" Multiplicity="1">
             <OnDelete Action="Cascade" />
@@ -389,13 +389,13 @@
           <EntitySet Name="Ingredient" EntityType="Self.Ingredient" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="IngredientTypes" EntityType="Self.IngredientTypes" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Instrument" EntityType="Self.Instrument" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="InstrumentRecipeStep" EntityType="Self.InstrumentRecipeStep" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="MeasureConversions" EntityType="Self.MeasureConversions" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="MeasureTypes" EntityType="Self.MeasureTypes" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PictureRecipeStep" EntityType="Self.PictureRecipeStep" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Pictures" EntityType="Self.Pictures" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Recipe" EntityType="Self.Recipe" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="RecipeStep" EntityType="Self.RecipeStep" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="StepInstrument" EntityType="Self.StepInstrument" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserClaims" EntityType="Self.UserClaims" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserLogins" EntityType="Self.UserLogins" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserRoles" EntityType="Self.UserRoles" Schema="dbo" store:Type="Tables" />
@@ -421,14 +421,6 @@
             <End Role="IngredientTypes" EntitySet="IngredientTypes" />
             <End Role="MeasureConversions" EntitySet="MeasureConversions" />
           </AssociationSet>
-          <AssociationSet Name="FK_InstrumentRecipeStep_Instrument" Association="Self.FK_InstrumentRecipeStep_Instrument">
-            <End Role="Instrument" EntitySet="Instrument" />
-            <End Role="InstrumentRecipeStep" EntitySet="InstrumentRecipeStep" />
-          </AssociationSet>
-          <AssociationSet Name="FK_InstrumentRecipeStep_RecipeStep" Association="Self.FK_InstrumentRecipeStep_RecipeStep">
-            <End Role="RecipeStep" EntitySet="RecipeStep" />
-            <End Role="InstrumentRecipeStep" EntitySet="InstrumentRecipeStep" />
-          </AssociationSet>
           <AssociationSet Name="FK_MeasureConversionMeasureTypeFirst" Association="Self.FK_MeasureConversionMeasureTypeFirst">
             <End Role="MeasureTypes" EntitySet="MeasureTypes" />
             <End Role="MeasureConversions" EntitySet="MeasureConversions" />
@@ -452,6 +444,14 @@
           <AssociationSet Name="FK_RecipeRecipeStep" Association="Self.FK_RecipeRecipeStep">
             <End Role="Recipe" EntitySet="Recipe" />
             <End Role="RecipeStep" EntitySet="RecipeStep" />
+          </AssociationSet>
+          <AssociationSet Name="FK_StepInstrument_Instrument" Association="Self.FK_StepInstrument_Instrument">
+            <End Role="Instrument" EntitySet="Instrument" />
+            <End Role="StepInstrument" EntitySet="StepInstrument" />
+          </AssociationSet>
+          <AssociationSet Name="FK_StepInstrument_RecipeStep" Association="Self.FK_StepInstrument_RecipeStep">
+            <End Role="RecipeStep" EntitySet="RecipeStep" />
+            <End Role="StepInstrument" EntitySet="StepInstrument" />
           </AssociationSet>
           <AssociationSet Name="FK_UserClaim_User" Association="Self.FK_UserClaim_User">
             <End Role="Users" EntitySet="Users" />
@@ -535,19 +535,10 @@
             <End Role="MeasureConversion" EntitySet="MeasureConversions" />
           </AssociationSet>
           <EntitySet Name="Instruments" EntityType="Model.Instrument" />
-          <EntitySet Name="InstrumentRecipeSteps" EntityType="Model.InstrumentRecipeStep" />
           <EntitySet Name="RecipeSteps" EntityType="Model.RecipeStep" />
           <AssociationSet Name="FK_IngredientRecipeStep" Association="Model.FK_IngredientRecipeStep">
             <End Role="RecipeStep" EntitySet="RecipeSteps" />
             <End Role="Ingredient" EntitySet="Ingredient" />
-          </AssociationSet>
-          <AssociationSet Name="FK_InstrumentRecipeStep_Instrument" Association="Model.FK_InstrumentRecipeStep_Instrument">
-            <End Role="Instrument" EntitySet="Instruments" />
-            <End Role="InstrumentRecipeStep" EntitySet="InstrumentRecipeSteps" />
-          </AssociationSet>
-          <AssociationSet Name="FK_InstrumentRecipeStep_RecipeStep" Association="Model.FK_InstrumentRecipeStep_RecipeStep">
-            <End Role="RecipeStep" EntitySet="RecipeSteps" />
-            <End Role="InstrumentRecipeStep" EntitySet="InstrumentRecipeSteps" />
           </AssociationSet>
           <AssociationSet Name="FK_RecipeRecipeStep" Association="Model.FK_RecipeRecipeStep">
             <End Role="Recipe" EntitySet="Recipe" />
@@ -556,6 +547,15 @@
           <AssociationSet Name="PictureRecipeStep" Association="Model.PictureRecipeStep">
             <End Role="Picture" EntitySet="Pictures" />
             <End Role="RecipeStep" EntitySet="RecipeSteps" />
+          </AssociationSet>
+          <EntitySet Name="StepInstruments" EntityType="Model.StepInstrument" />
+          <AssociationSet Name="FK_StepInstrument_Instrument" Association="Model.FK_StepInstrument_Instrument">
+            <End Role="Instrument" EntitySet="Instruments" />
+            <End Role="StepInstrument" EntitySet="StepInstruments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_StepInstrument_RecipeStep" Association="Model.FK_StepInstrument_RecipeStep">
+            <End Role="RecipeStep" EntitySet="RecipeSteps" />
+            <End Role="StepInstrument" EntitySet="StepInstruments" />
           </AssociationSet>
           </EntityContainer>
         <EntityType Name="User">
@@ -830,18 +830,7 @@
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Name" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="ForAllUsers" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="InstrumentRecipeSteps" Relationship="Model.FK_InstrumentRecipeStep_Instrument" FromRole="Instrument" ToRole="InstrumentRecipeStep" />
-        </EntityType>
-        <EntityType Name="InstrumentRecipeStep">
-          <Key>
-            <PropertyRef Name="Instrument_Id" />
-            <PropertyRef Name="RecipeStep_Id" />
-          </Key>
-          <Property Name="Instrument_Id" Type="Int32" Nullable="false" />
-          <Property Name="RecipeStep_Id" Type="Int32" Nullable="false" />
-          <Property Name="InstrumentCount" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Instrument" Relationship="Model.FK_InstrumentRecipeStep_Instrument" FromRole="InstrumentRecipeStep" ToRole="Instrument" />
-          <NavigationProperty Name="RecipeStep" Relationship="Model.FK_InstrumentRecipeStep_RecipeStep" FromRole="InstrumentRecipeStep" ToRole="RecipeStep" />
+          <NavigationProperty Name="StepInstruments" Relationship="Model.FK_StepInstrument_Instrument" FromRole="Instrument" ToRole="StepInstrument" />
         </EntityType>
         <EntityType Name="RecipeStep">
           <Key>
@@ -853,9 +842,9 @@
           <Property Name="StepNumber" Type="Int32" Nullable="false" />
           <Property Name="RecipeId" Type="Int32" Nullable="false" />
           <NavigationProperty Name="Ingredients" Relationship="Model.FK_IngredientRecipeStep" FromRole="RecipeStep" ToRole="Ingredient" />
-          <NavigationProperty Name="InstrumentRecipeSteps" Relationship="Model.FK_InstrumentRecipeStep_RecipeStep" FromRole="RecipeStep" ToRole="InstrumentRecipeStep" />
           <NavigationProperty Name="Recipe" Relationship="Model.FK_RecipeRecipeStep" FromRole="RecipeStep" ToRole="Recipe" />
           <NavigationProperty Name="Pictures" Relationship="Model.PictureRecipeStep" FromRole="RecipeStep" ToRole="Picture" />
+          <NavigationProperty Name="StepInstruments" Relationship="Model.FK_StepInstrument_RecipeStep" FromRole="RecipeStep" ToRole="StepInstrument" />
         </EntityType>
         <Association Name="FK_IngredientRecipeStep">
           <End Type="Model.RecipeStep" Role="RecipeStep" Multiplicity="1">
@@ -868,34 +857,6 @@
             </Principal>
             <Dependent Role="Ingredient">
               <PropertyRef Name="RecipeStepId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_InstrumentRecipeStep_Instrument">
-          <End Type="Model.Instrument" Role="Instrument" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Type="Model.InstrumentRecipeStep" Role="InstrumentRecipeStep" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Instrument">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="InstrumentRecipeStep">
-              <PropertyRef Name="Instrument_Id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_InstrumentRecipeStep_RecipeStep">
-          <End Type="Model.RecipeStep" Role="RecipeStep" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Type="Model.InstrumentRecipeStep" Role="InstrumentRecipeStep" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="RecipeStep">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="InstrumentRecipeStep">
-              <PropertyRef Name="RecipeStep_Id" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -916,6 +877,45 @@
         <Association Name="PictureRecipeStep">
           <End Type="Model.Picture" Role="Picture" Multiplicity="*" />
           <End Type="Model.RecipeStep" Role="RecipeStep" Multiplicity="*" />
+        </Association>
+        <EntityType Name="StepInstrument">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Instrument_Id" Type="Int32" Nullable="false" />
+          <Property Name="RecipeStep_Id" Type="Int32" Nullable="false" />
+          <Property Name="InstrumentCount" Type="Int32" Nullable="false" />
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="Instrument" Relationship="Model.FK_StepInstrument_Instrument" FromRole="StepInstrument" ToRole="Instrument" />
+          <NavigationProperty Name="RecipeStep" Relationship="Model.FK_StepInstrument_RecipeStep" FromRole="StepInstrument" ToRole="RecipeStep" />
+        </EntityType>
+        <Association Name="FK_StepInstrument_Instrument">
+          <End Type="Model.Instrument" Role="Instrument" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="Model.StepInstrument" Role="StepInstrument" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Instrument">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="StepInstrument">
+              <PropertyRef Name="Instrument_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_StepInstrument_RecipeStep">
+          <End Type="Model.RecipeStep" Role="RecipeStep" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="Model.StepInstrument" Role="StepInstrument" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RecipeStep">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="StepInstrument">
+              <PropertyRef Name="RecipeStep_Id" />
+            </Dependent>
+          </ReferentialConstraint>
         </Association>
         </Schema>
     </edmx:ConceptualModels>
@@ -1053,15 +1053,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="InstrumentRecipeSteps">
-            <EntityTypeMapping TypeName="Model.InstrumentRecipeStep">
-              <MappingFragment StoreEntitySet="InstrumentRecipeStep">
-                <ScalarProperty Name="InstrumentCount" ColumnName="InstrumentCount" />
-                <ScalarProperty Name="RecipeStep_Id" ColumnName="RecipeStep_Id" />
-                <ScalarProperty Name="Instrument_Id" ColumnName="Instrument_Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="RecipeSteps">
             <EntityTypeMapping TypeName="Model.RecipeStep">
               <MappingFragment StoreEntitySet="RecipeStep">
@@ -1081,6 +1072,16 @@
               <ScalarProperty Name="Id" ColumnName="Pictures_Id" />
             </EndProperty>
           </AssociationSetMapping>
+          <EntitySetMapping Name="StepInstruments">
+            <EntityTypeMapping TypeName="Model.StepInstrument">
+              <MappingFragment StoreEntitySet="StepInstrument">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="InstrumentCount" ColumnName="InstrumentCount" />
+                <ScalarProperty Name="RecipeStep_Id" ColumnName="RecipeStep_Id" />
+                <ScalarProperty Name="Instrument_Id" ColumnName="Instrument_Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
   </EntityContainerMapping>
 </Mapping></edmx:Mappings>
   </edmx:Runtime>

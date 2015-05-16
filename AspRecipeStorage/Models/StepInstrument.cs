@@ -12,11 +12,12 @@ namespace AspRecipeStorage.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class InstrumentRecipeStep
+    public partial class StepInstrument
     {
         public int Instrument_Id { get; set; }
         public int RecipeStep_Id { get; set; }
         public int InstrumentCount { get; set; }
+        public int Id { get; set; }
     
         public virtual Instrument Instrument { get; set; }
         public virtual RecipeStep RecipeStep { get; set; }

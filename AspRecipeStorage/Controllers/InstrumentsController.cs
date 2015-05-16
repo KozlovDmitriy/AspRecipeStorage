@@ -15,10 +15,19 @@ namespace AspRecipeStorage.Controllers
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 
+        public ActionResult ChangeVisibilityStatus(int id)
+        {
+            Instrument instr = db.Instruments.FirstOrDefault(i => i.Id == id);
+            instr.ForAllUsers = !instr.ForAllUsers;
+            db.Entry(instr).State = EntityState.Modified;
+            db.SaveChanges();
+            return RedirectToAction("Index");
+        }
+
         // GET: Instruments
         public async Task<ActionResult> Index()
         {
-            return View(await db.Instruments.ToListAsync());
+            return View(await db.Instruments.OrderByDescending(i => i.ForAllUsers).ToListAsync());
         }
 
         // GET: Instruments/Details/5

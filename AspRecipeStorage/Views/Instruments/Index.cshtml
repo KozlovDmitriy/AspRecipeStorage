@@ -20,18 +20,26 @@
 
             @foreach (var item in Model)
             {
-                <tr>
+                string trClass = item.ForAllUsers ? "" : "warning";
+                <tr class="@trClass">
                     <td>
                         @Html.DisplayFor(modelItem => item.Name)
                     </td>
                     <td>
+                        @if (item.ForAllUsers)
+                        {
+                            @Html.ActionLink("Скрыть", "ChangeVisibilityStatus", new { id = item.Id })
+                        }
+                        else
+                        {
+                            @Html.ActionLink("Для всех", "ChangeVisibilityStatus", new { id = item.Id })
+                        } |
                         @Html.ActionLink("Редактировать", "Edit", new { id = item.Id }) |
                         @*@Html.ActionLink("Details", "Details", new { id = item.Id }) |*@
                         @Html.ActionLink("Удалить", "Delete", new { id = item.Id })
                     </td>
                 </tr>
             }
-
         </table>
     </div>
 </div>

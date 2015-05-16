@@ -4,37 +4,37 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="7c6a232b1e96470485467a9332485582" Name="Diagram" ZoomLevel="64">
-        <EntityTypeShape EntityType="Model.User" Width="1.5" PointX="0.75" PointY="2.625" />
-        <EntityTypeShape EntityType="Model.UserClaim" Width="1.5" PointX="3" PointY="3.5" />
-        <EntityTypeShape EntityType="Model.UserLogin" Width="1.5" PointX="3" PointY="1.125" />
-        <EntityTypeShape EntityType="Model.UserRole" Width="1.5" PointX="3" PointY="6" />
+      <Diagram DiagramId="7c6a232b1e96470485467a9332485582" Name="Diagram" ZoomLevel="125">
+        <EntityTypeShape EntityType="Model.User" Width="1.5" PointX="0.75" PointY="2.625" FillColor="Black" />
+        <EntityTypeShape EntityType="Model.UserClaim" Width="1.5" PointX="3" PointY="3.5" FillColor="Black" />
+        <EntityTypeShape EntityType="Model.UserLogin" Width="1.5" PointX="3" PointY="1.125" FillColor="Black" />
+        <EntityTypeShape EntityType="Model.UserRole" Width="1.5" PointX="3" PointY="6" FillColor="Black" />
         <AssociationConnector Association="Model.FK_UserClaim_User" />
         <AssociationConnector Association="Model.FK_UserLogin_User" />
         <AssociationConnector Association="Model.UserUserRole" />
         <EntityTypeShape EntityType="Model.Recipe" Width="1.5" PointX="5.5" PointY="2.75" />
-        <EntityTypeShape EntityType="Model.DishType" Width="1.5" PointX="5.5" PointY="0.625" />
-        <EntityTypeShape EntityType="Model.Ingredient" Width="1.5" PointX="7.875" PointY="6" />
+        <EntityTypeShape EntityType="Model.DishType" Width="1.5" PointX="5.5" PointY="0.625" FillColor="Navy" />
+        <EntityTypeShape EntityType="Model.Ingredient" Width="1.5" PointX="10.625" PointY="3.375" FillColor="Maroon" />
         <AssociationConnector Association="Model.DishTypeRecipe" />
         <AssociationConnector Association="Model.UserRecipe" />
-        <EntityTypeShape EntityType="Model.MeasureType" Width="2.125" PointX="10.5" PointY="4.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="Model.IngredientType" Width="2.125" PointX="10.5" PointY="7.125" />
+        <EntityTypeShape EntityType="Model.MeasureType" Width="2.125" PointX="12.625" PointY="3.75" IsExpanded="true" FillColor="Green" />
+        <EntityTypeShape EntityType="Model.IngredientType" Width="2.125" PointX="10.375" PointY="6.5" FillColor="Maroon" />
         <AssociationConnector Association="Model.IngredientMeasureType" />
         <AssociationConnector Association="Model.IngredientIngredientType" />
-        <EntityTypeShape EntityType="Model.Picture" Width="1.5" PointX="7.875" PointY="0.5" />
+        <EntityTypeShape EntityType="Model.Picture" Width="1.5" PointX="8.125" PointY="0.5" FillColor="Gold" />
         <AssociationConnector Association="Model.PictureRecipe" />
-        <EntityTypeShape EntityType="Model.MeasureConversion" Width="2.25" PointX="13.875" PointY="4.75" />
+        <EntityTypeShape EntityType="Model.MeasureConversion" Width="2.25" PointX="15.25" PointY="3.5" FillColor="Green" />
         <AssociationConnector Association="Model.MeasureConversionMeasureTypeSecond" />
         <AssociationConnector Association="Model.MeasureConversionMeasureTypeFirst" />
         <AssociationConnector Association="Model.IngredientTypeMeasureConversion" />
-        <EntityTypeShape EntityType="Model.Instrument" Width="1.5" PointX="10.125" PointY="10.25" />
-        <EntityTypeShape EntityType="Model.InstrumentRecipeStep" Width="1.5" PointX="12.375" PointY="1.25" />
-        <EntityTypeShape EntityType="Model.RecipeStep" Width="1.5" PointX="10.125" PointY="0.875" />
+        <EntityTypeShape EntityType="Model.Instrument" Width="1.5" PointX="12.75" PointY="0.875" FillColor="Purple" />
+        <EntityTypeShape EntityType="Model.RecipeStep" Width="1.5" PointX="8.125" PointY="2.875" />
         <AssociationConnector Association="Model.FK_IngredientRecipeStep" />
-        <AssociationConnector Association="Model.FK_InstrumentRecipeStep_Instrument" />
-        <AssociationConnector Association="Model.FK_InstrumentRecipeStep_RecipeStep" />
         <AssociationConnector Association="Model.FK_RecipeRecipeStep" />
         <AssociationConnector Association="Model.PictureRecipeStep" />
+        <EntityTypeShape EntityType="Model.StepInstrument" Width="1.5" PointX="10.625" PointY="0.625" FillColor="Purple" />
+        <AssociationConnector Association="Model.FK_StepInstrument_Instrument" />
+        <AssociationConnector Association="Model.FK_StepInstrument_RecipeStep" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
