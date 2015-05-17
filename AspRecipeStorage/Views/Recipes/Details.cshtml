@@ -1,17 +1,20 @@
 ﻿@model AspRecipeStorage.Models.Recipe
 
 @{
-    ViewBag.Title = "Рецепт " + Model.Name;
+    ViewBag.Title = "Рецепт \"" + Model.Name + "\"";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    int count = Model.RecipeSteps.Count;
 }
 
 <div class="panel panel-default">
-    <div class="panel-heading">@Model.Name</div>
+    <div class="panel-heading">
+        <h4>@Model.Name</h4>
+    </div>
     <div class="panel-body">
         <div class="media">
             <div class="media-body">
                 @*<h4 class="media-heading">@Model.Name</h4>*@
-                @Model.Description
+                <h4>Описание рецепта: @Model.Description</h4>
             </div>
             <div class="media-right">
                 @Base64imgPrerender(Model.Picture == null ? null : Model.Picture.Data, "gridimage media-object")
@@ -19,7 +22,7 @@
         </div>
     </div>
 </div>
-@if (Model.RecipeStep == null || Model.RecipeStep.Count <= 0)
+@if (Model.RecipeSteps == null || Model.RecipeSteps.Count <= 0)
 {
     <div class="panel panel-default">
         <div class="panel-body">Для этого рецепта еще нет шагов</div>
@@ -30,12 +33,11 @@ else
     <div class="panel panel-default">
         <div class="panel-body">
             <div class="list-group">
-                @foreach (var step in Model.RecipeStep.OrderBy(r => r.StepNumber))
+                @foreach (var step in Model.RecipeSteps.OrderBy(r => r.StepNumber))
                 {
                     <div class="list-group-item">
                         <div class="row-content">
                             <text class="list-group-item-heading">Шаг @step.StepNumber</text>
-                            <div class="least-content">@step.Time мин.</div>
                         </div>
                         <div class="row-picture">
                             <table>
@@ -62,7 +64,12 @@ else
                         </div>
                         <div class="row-content">                         
                             <div class="list-group-item-text">
-                                @step.Discription
+                                <h4 class="list-group-item-text">
+                                    Время шага: @step.Time мин.
+                                </h4>
+                                <h4 class="list-group-item-text">
+                                     Описание шага: @step.Discription
+                                </h4>
                                 @if (step.Ingredients.Count > 0) { 
                                     <h4>Ингридиенты</h4>
                                     <div class="list-group">
@@ -78,14 +85,35 @@ else
                                                     <p class="list-group-item-text">@ingredient.Amount @ingredient.MeasureType.Name</p>
                                                 </div>
                                             </div>
-                                            <div class="list-group-separator"></div>
                                         }
                                     </div>                                    
+                                }
+                                @if (step.StepInstruments.Count > 0)
+                                {
+                                    <h4>Инструменты</h4>
+                                    <div class="list-group">
+                                        @foreach (var instrument in step.StepInstruments)
+                                        {
+                                            @*<li class="list-group-item list-group-item-success">@ingredient.IngredientType.Name @ingredient.Amount @ingredient.MeasureType.Name</li>*@
+                                            <div class="list-group-item">
+                                                <div class="row-action-primary">
+                                                    <i class="mdi-notification-adb"></i>
+                                                </div>
+                                                <div class="row-content">
+                                                    <h4 class="list-group-item-heading">@instrument.Instrument.Name</h4>
+                                                    <p class="list-group-item-text">@instrument.InstrumentCount шт.</p>
+                                                </div>
+                                            </div>
+                                        }
+                                    </div>
                                 }
                             </div>
                         </div>
                     </div>
-                    <div class="list-group-separator"></div>
+                    if (step.StepNumber < count)
+                    { 
+                        <div class="list-group-separator"></div>
+                    }
                 }
             </div>
         </div>

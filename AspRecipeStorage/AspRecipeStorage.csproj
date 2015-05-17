@@ -295,6 +295,7 @@
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="Material\css\bootstrap-elements.css" />
+    <Content Include="Material\css\ghpages-materialize.css" />
     <Content Include="Material\css\material-fullpalette.css" />
     <Content Include="Material\css\material-fullpalette.min.css" />
     <Content Include="Material\css\material.css" />

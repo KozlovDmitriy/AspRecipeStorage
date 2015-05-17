@@ -54,7 +54,8 @@ namespace AspRecipeStorage.Controllers
                     i.Description.Contains(word) ||
                     i.RecipeSteps.Any(j =>
                         j.Discription.Contains(word) ||
-                        j.Ingredients.Any(k => k.IngredientType.Name.Contains(word))
+                        j.Ingredients.Any(k => k.IngredientType.Name.Contains(word)) ||
+                        j.StepInstruments.Any(k => k.Instrument.Name.Contains(word))
                     )
                 );
         }

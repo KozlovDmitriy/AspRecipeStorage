@@ -1,23 +1,23 @@
 ﻿var addingIngredientStep = null;
-var addingInstrumeentStep = null;
+var addingInstrumentStep = null;
 
 function UpdateStepsAttributes() {
     $('.recipe-step').each(function (i, element) {
         $('.recipe-step-caption', element).text('Шаг ' + (i + 1));
-        $('.recipe-step-discription', element).attr('name', 'RecipeStep[' + i + '].Discription');
-        $('.recipe-step-time', element).attr('name', 'RecipeStep[' + i + '].Time');
-        $('.recipe-step-id', element).attr('name', 'RecipeStep[' + i + '].Id');
+        $('.recipe-step-discription', element).attr('name', 'RecipeSteps[' + i + '].Discription');
+        $('.recipe-step-time', element).attr('name', 'RecipeSteps[' + i + '].Time');
+        $('.recipe-step-id', element).attr('name', 'RecipeSteps[' + i + '].Id');
         $('.recipe-step-images', element).attr('name', 'stepPictures[' + i + ']');
         $('.ingredient', element).each(function (j, ingredient) {
-            $('.ingredient-name', ingredient).attr('name', 'RecipeStep[' + i + '].Ingredients[' + j + '].IngredientType.Name');
-            $('.ingredient-measure', ingredient).attr('name', 'RecipeStep[' + i + '].Ingredients[' + j + '].MeasureTypeId');
-            $('.ingredient-amount', ingredient).attr('name', 'RecipeStep[' + i + '].Ingredients[' + j + '].Amount');
-            $('.ingredient-id', ingredient).attr('name', 'RecipeStep[' + i + '].Ingredients[' + j + '].Id');
+            $('.ingredient-name', ingredient).attr('name', 'RecipeSteps[' + i + '].Ingredients[' + j + '].IngredientType.Name');
+            $('.ingredient-measure', ingredient).attr('name', 'RecipeSteps[' + i + '].Ingredients[' + j + '].MeasureTypeId');
+            $('.ingredient-amount', ingredient).attr('name', 'RecipeSteps[' + i + '].Ingredients[' + j + '].Amount');
+            $('.ingredient-id', ingredient).attr('name', 'RecipeSteps[' + i + '].Ingredients[' + j + '].Id');
         });
-        $('.ingstrument', element).each(function (j, ingstrument) {
-            $('.ingstrument-name', ingstrument).attr('name', 'RecipeStep[' + i + '].StepInstruments[' + j + '].Instrument.Name');
-            $('.ingstrument-amount', ingstrument).attr('name', 'RecipeStep[' + i + '].StepInstruments[' + j + '].InstrumentCount');
-            $('.ingstrument-id', ingstrument).attr('name', 'RecipeStep[' + i + '].StepInstruments[' + j + '].Id');
+        $('.instrument', element).each(function (j, instrument) {
+            $('.instrument-name', instrument).attr('name', 'RecipeSteps[' + i + '].StepInstruments[' + j + '].Instrument.Name');
+            $('.instrument-amount', instrument).attr('name', 'RecipeSteps[' + i + '].StepInstruments[' + j + '].InstrumentCount');
+            $('.instrument-id', instrument).attr('name', 'RecipeSteps[' + i + '].StepInstruments[' + j + '].Id');
         });
     });
 }
@@ -29,9 +29,9 @@ function OnAddRecipeStep() {
 }
 
 function OnAddInstrument(data) {
-    $('.instruments', $(addingInstrumeentStep)).append(data);
-    $('.instrument-delete').click(DeleteIngredient);
-    addingInstrumeentStep = null;
+    $('.instruments', $(addingInstrumentStep)).append(data);
+    $('.instrument-delete').click(DeleteInstrument);
+    addingInstrumentStep = null;
     $('.instrument-name').autocomplete({
         source: function (request, response) {
             $.ajax({
@@ -80,7 +80,7 @@ function SaveAddingIngredientStep(e) {
 }
 
 function SaveAddingInstrumentStep(e) {
-    addingInstrumeentStep = $(this).parents('.recipe-step');
+    addingInstrumentStep = $(this).parents('.recipe-step');
 }
 
 $(document).ready(function () {
@@ -88,6 +88,6 @@ $(document).ready(function () {
     $('.add-ingredient').click(SaveAddingIngredientStep);
     $('.recipe-step-delete').click(DeleteRecipeStep);
     $('.ingredient-delete').click(DeleteIngredient);
-    $('.instrument-delete').click(DeleteIngredient);
+    $('.instrument-delete').click(DeleteInstrument);
     UpdateStepsAttributes();
 })

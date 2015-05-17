@@ -32,6 +32,7 @@ namespace AspRecipeStorage
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.min.css",
                       "~/Content/Gridmvc.css",
+                      "~/Material/css/ghpages-materialize.css",
                       "~/Material/css/roboto.min.css",
                       "~/Material/css/material-fullpalette.min.css",
                       "~/Material/css/ripples.min.css",
