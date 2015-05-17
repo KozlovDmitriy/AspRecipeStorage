@@ -28,7 +28,7 @@
                 data: { ingredientName: ingredient_name },
                 success: function (data) {
                     if (data !== null && data !== "") {
-                        $('.ingridients').append('<li class="list-group-item clearfix ingridient-item">' + data + '</li>');
+                        $('.ingridients').append(data);
                         $('.ingredient-delete').click(DeleteIngredient);
                     }
                 }

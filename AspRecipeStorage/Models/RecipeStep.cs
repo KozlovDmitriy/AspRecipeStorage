@@ -17,8 +17,8 @@ namespace AspRecipeStorage.Models
         public RecipeStep()
         {
             this.Ingredients = new HashSet<Ingredient>();
-            this.Pictures = new HashSet<Picture>();
             this.StepInstruments = new HashSet<StepInstrument>();
+            this.Pictures = new HashSet<Picture>();
         }
     
         public int Id { get; set; }
@@ -26,10 +26,12 @@ namespace AspRecipeStorage.Models
         public int Time { get; set; }
         public int StepNumber { get; set; }
         public int RecipeId { get; set; }
+        public Nullable<int> ChildRecipeId { get; set; }
     
         public virtual ICollection<Ingredient> Ingredients { get; set; }
+        public virtual Recipe ChildRecipe { get; set; }
         public virtual Recipe Recipe { get; set; }
-        public virtual ICollection<Picture> Pictures { get; set; }
         public virtual ICollection<StepInstrument> StepInstruments { get; set; }
+        public virtual ICollection<Picture> Pictures { get; set; }
     }
 }

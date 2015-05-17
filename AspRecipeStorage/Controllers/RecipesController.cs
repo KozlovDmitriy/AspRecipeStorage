@@ -25,6 +25,7 @@ namespace AspRecipeStorage.Controllers
                 Name = i.Name,
                 Selected = true
             }).ToList();
+            ViewBag.Amounts = new List<int?>();
         }
 
         // GET: Recipes
@@ -58,6 +59,20 @@ namespace AspRecipeStorage.Controllers
                         j.StepInstruments.Any(k => k.Instrument.Name.Contains(word))
                     )
                 );
+        }
+
+        private List<int> FindAllRecipeSteps(int id)
+        {
+            List<RecipeStep> steps = db.RecipeSteps.Where(i => i.RecipeId == id).ToList();
+            List<int> result = steps.Select(i => i.Id).ToList();
+            foreach( RecipeStep step in steps )
+            {
+                if (step.ChildRecipeId != null)
+                {
+                    result.AddRange(this.FindAllRecipeSteps(step.ChildRecipeId.Value));
+                }
+            }
+            return result;
         }
 
         public ActionResult FilterIndex(
@@ -109,8 +124,19 @@ namespace AspRecipeStorage.Controllers
                     ).Select(i => i.Id);
                     ingredientsIds = ingredientsIds.Concat(ids);
                 }
-                IQueryable<int> recipeStepsIds = db.RecipeSteps.Where(i => i.Ingredients.All(j => ingredientsIds.Contains(j.Id))).Select(i => i.Id);
+                IQueryable<int> recipeStepsIds = db.RecipeSteps.Where(i => i.Ingredients.All(j => ingredientsIds.Contains(j.Id)) || i.ChildRecipeId != null).Select(i => i.Id);
                 recipes = recipes.Where(i => i.RecipeSteps.All(j => recipeStepsIds.Contains(j.Id)));
+                List<Recipe> recipesList = recipes.ToList();
+                List<Recipe> recurseRecipes = new List<Recipe>();
+                foreach (Recipe r in recipesList)
+                {
+                    List<int> allSteps = FindAllRecipeSteps(r.Id);
+                    if (allSteps.All(i => recipeStepsIds.Contains(i)))
+                    {
+                        recurseRecipes.Add(r);
+                    }
+                }
+                recipes = recurseRecipes.AsQueryable();
             }
             if (userId != null)
             {
@@ -122,6 +148,10 @@ namespace AspRecipeStorage.Controllers
                 ViewBag.UserId = userId;
             }
             List<int> dtFilter = dishTypeFilter == null ? new List<int>() : dishTypeFilter;
+            ViewBag.IngredientNames = ingredientNames != null ? ingredientNames : new List<string>();
+            ViewBag.Measures = measures != null ? measures : new List<int>();
+            ViewBag.Amounts = amounts != null ? amounts : new List<int?>();
+            ViewBag.Keywords = keywords != null ? keywords : "";
             ViewBag.DishTypes = db.DishType.Select(i => new CheckBoxItem
             {
                 Id = i.Id,
@@ -263,6 +293,11 @@ namespace AspRecipeStorage.Controllers
                 List<RecipeStep> steps = recipe.RecipeSteps.ToList<RecipeStep>();
                 for (int i = 0; i < steps.Count; ++i)
                 {
+                    if (steps[i].ChildRecipeId != null)
+                    {
+                        int childId = steps[i].ChildRecipeId.Value;
+                        steps[i].Time = db.Recipe.AsNoTracking().FirstOrDefault(j => j.Id == childId).Time;
+                    }
                     time += steps[i].Time;
                     steps[i].StepNumber = i + 1;
                     stepPictures[i].ForEach(j =>
@@ -285,6 +320,51 @@ namespace AspRecipeStorage.Controllers
             return View(recipe);
         }
 
+        private bool CheckId(int curId, int? id)
+        {
+            if (id != null)
+            {
+                if (curId == id)
+                {
+                    return false;
+                }
+                else
+                {
+                    Recipe recipe = db.Recipe.Include(i => i.RecipeSteps).FirstOrDefault(i => i.Id == curId);
+                    foreach (RecipeStep rs in recipe.RecipeSteps)
+                    {
+                        if (rs.ChildRecipeId != null && !CheckId(rs.ChildRecipeId.Value, id))
+                        {
+                            return false;
+                        }
+
+                    }
+                }
+            }
+            return true;
+        }
+
+        private List<int> GetHierarchyRecipeList(int? id)
+        {
+            List<int> list = db.Recipe.Select(i => i.Id).ToList();
+            List<int> result = new List<int>();
+            for (int i = 0; i < list.Count; ++i)
+            {
+                if (CheckId(list[i], id))
+                {
+                    result.Add(list[i]);
+                }
+            }
+            return result;
+        }
+
+        public ActionResult RecipeStepHierarchy(int? id)
+        {
+            List<int> list = this.GetHierarchyRecipeList(id);
+            ViewBag.Recipes = new SelectList(db.Recipe.Where(i => list.Contains(i.Id)),"Id", "Name");
+            return PartialView("_RecipeStepHierarchy", new RecipeStep());
+        }
+
         public ActionResult RecipeStep()
         {
             return PartialView("_RecipeStepCreate", new RecipeStep());
@@ -300,9 +380,8 @@ namespace AspRecipeStorage.Controllers
             return PartialView("_InstrumentCreate", new StepInstrument { Instrument = new Instrument() });
         }
 
-        public ActionResult IngredientFilteritem(string ingredientName)
+        public SelectList GetMeasureTypes(string ingredientName) 
         {
-            SelectList measureTypes = null;
             List<MeasureType> mt = null;
             if (ingredientName != null)
             {
@@ -316,7 +395,12 @@ namespace AspRecipeStorage.Controllers
             {
                 ViewBag.IsEmpty = true;
             }
-            measureTypes = new SelectList(mt, "Id", "Name");
+            return new SelectList(mt, "Id", "Name");
+        }
+
+        public ActionResult IngredientFilteritem(string ingredientName)
+        {
+            SelectList measureTypes = this.GetMeasureTypes(ingredientName);
             ViewBag.IngredientName = ingredientName == null ? "" : ingredientName;
             return PartialView("_IngredientFilteritem", measureTypes);
         }
@@ -333,6 +417,7 @@ namespace AspRecipeStorage.Controllers
                 .Include(r => r.Picture)
                 .Include(r => r.DishType)
                 .Include(r => r.User)
+                .Include(r => r.RecipeSteps.Select(i => i.ChildRecipe))
                 .Include(r => r.RecipeSteps.Select(i => i.Pictures))
                 .Include(r => r.RecipeSteps.Select(i => i.StepInstruments.Select(g => g.Instrument)))
                 .Include(r => r.RecipeSteps.Select(i => i.Ingredients.Select(g => g.MeasureType)))
@@ -342,6 +427,8 @@ namespace AspRecipeStorage.Controllers
             {
                 return HttpNotFound();
             }
+            List<int> list = this.GetHierarchyRecipeList(id);
+            ViewBag.Recipes = list.Count > 0 ? new SelectList(db.Recipe.Where(i => list.Contains(i.Id)), "Id", "Name") : null;
             ViewBag.MeasureTypes = new SelectList(db.MeasureTypes, "Id", "Name");
             ViewBag.DishTypeId = new SelectList(db.DishType, "Id", "Name");
             ViewBag.AuthorId = new SelectList(db.Users, "Id", "UserName");
@@ -400,7 +487,12 @@ namespace AspRecipeStorage.Controllers
                         db.Pictures.Add(img);
                         steps.ElementAt(i).Pictures.Add(img);
                     }
-                });
+                }); 
+                if (steps.ElementAt(i).ChildRecipeId != null)
+                {
+                    int childId = steps.ElementAt(i).ChildRecipeId.Value;
+                    steps.ElementAt(i).Time = db.Recipe.AsNoTracking().FirstOrDefault(j => j.Id == childId).Time;
+                }
                 time += steps.ElementAt(i).Time;
                 var entry = db.Entry(steps.ElementAt(i));
                 db.Entry(steps.ElementAt(i)).State = rsid == 0 ? EntityState.Added : EntityState.Modified;
@@ -427,6 +519,28 @@ namespace AspRecipeStorage.Controllers
             return View(recipe);
         }
 
+        private void DeleteParentSteps(int id)
+        {
+            List<Recipe> recipes = db.Recipe.Include(i => i.RecipeSteps).Where(i => i.RecipeSteps.Any(j => j.ChildRecipeId == id)).ToList();
+            int number = 1;
+            foreach (Recipe recipe in recipes)
+            {
+                for (int i = 0; i < recipe.RecipeSteps.Count; ++i)
+                {
+                    if (recipe.RecipeSteps.ElementAt(i).ChildRecipeId == id)
+                    {
+                        db.RecipeSteps.Remove(recipe.RecipeSteps.ElementAt(i));
+                    }
+                    else
+                    {
+                        recipe.RecipeSteps.ElementAt(i).StepNumber = number;
+                        db.Entry(recipe.RecipeSteps.ElementAt(i)).State = EntityState.Modified;
+                        ++number;
+                    }
+                }
+            }
+        }
+
         // POST: Recipes/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
@@ -439,6 +553,7 @@ namespace AspRecipeStorage.Controllers
                 .Include(r => r.RecipeSteps.Select(i => i.Ingredients.Select(g => g.MeasureType)))
                 .Include(r => r.RecipeSteps.Select(i => i.Ingredients.Select(g => g.IngredientType)))
                 .SingleOrDefaultAsync(r => r.Id == id);
+            this.DeleteParentSteps(recipe.Id);
             db.Recipe.Remove(recipe);
             await db.SaveChangesAsync();
             return RedirectToAction("Index");

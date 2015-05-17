@@ -67,45 +67,54 @@ else
                                 <h4 class="list-group-item-text">
                                     Время шага: @step.Time мин.
                                 </h4>
-                                <h4 class="list-group-item-text">
-                                     Описание шага: @step.Discription
-                                </h4>
-                                @if (step.Ingredients.Count > 0) { 
-                                    <h4>Ингридиенты</h4>
-                                    <div class="list-group">
-                                        @foreach (var ingredient in step.Ingredients)
-                                        {
-                                            @*<li class="list-group-item list-group-item-success">@ingredient.IngredientType.Name @ingredient.Amount @ingredient.MeasureType.Name</li>*@
-                                            <div class="list-group-item">
-                                                <div class="row-action-primary">
-                                                    <i class="mdi-action-shopping-cart"></i>
-                                                </div>
-                                                <div class="row-content">
-                                                    <h4 class="list-group-item-heading">@ingredient.IngredientType.Name</h4>
-                                                    <p class="list-group-item-text">@ingredient.Amount @ingredient.MeasureType.Name</p>
-                                                </div>
-                                            </div>
-                                        }
-                                    </div>                                    
-                                }
-                                @if (step.StepInstruments.Count > 0)
+                                @if (step.ChildRecipeId != null)
                                 {
-                                    <h4>Инструменты</h4>
-                                    <div class="list-group">
-                                        @foreach (var instrument in step.StepInstruments)
-                                        {
-                                            @*<li class="list-group-item list-group-item-success">@ingredient.IngredientType.Name @ingredient.Amount @ingredient.MeasureType.Name</li>*@
-                                            <div class="list-group-item">
-                                                <div class="row-action-primary">
-                                                    <i class="mdi-notification-adb"></i>
+                                    <h4 class="list-group-item-text">
+                                        Рецепт: @Html.ActionLink(step.ChildRecipe.Name, "Details", "Recipes", new { id = step.ChildRecipeId }, null)
+                                    </h4>
+                                }
+                                else
+                                {
+                                    <h4 class="list-group-item-text">
+                                         Описание шага: @step.Discription
+                                    </h4>
+                                    if (step.Ingredients.Count > 0) { 
+                                        <h4>Ингридиенты</h4>
+                                        <div class="list-group">
+                                            @foreach (var ingredient in step.Ingredients)
+                                            {
+                                                @*<li class="list-group-item list-group-item-success">@ingredient.IngredientType.Name @ingredient.Amount @ingredient.MeasureType.Name</li>*@
+                                                <div class="list-group-item">
+                                                    <div class="row-action-primary">
+                                                        <i class="mdi-action-shopping-cart"></i>
+                                                    </div>
+                                                    <div class="row-content">
+                                                        <h4 class="list-group-item-heading">@ingredient.IngredientType.Name</h4>
+                                                        <p class="list-group-item-text">@ingredient.Amount @ingredient.MeasureType.Name</p>
+                                                    </div>
                                                 </div>
-                                                <div class="row-content">
-                                                    <h4 class="list-group-item-heading">@instrument.Instrument.Name</h4>
-                                                    <p class="list-group-item-text">@instrument.InstrumentCount шт.</p>
+                                            }
+                                        </div>                                    
+                                    }
+                                    if (step.StepInstruments.Count > 0)
+                                    {
+                                        <h4>Инструменты</h4>
+                                        <div class="list-group">
+                                            @foreach (var instrument in step.StepInstruments)
+                                            {
+                                                @*<li class="list-group-item list-group-item-success">@ingredient.IngredientType.Name @ingredient.Amount @ingredient.MeasureType.Name</li>*@
+                                                <div class="list-group-item">
+                                                    <div class="row-action-primary">
+                                                        <i class="mdi-notification-adb"></i>
+                                                    </div>
+                                                    <div class="row-content">
+                                                        <h4 class="list-group-item-heading">@instrument.Instrument.Name</h4>
+                                                        <p class="list-group-item-text">@instrument.InstrumentCount шт.</p>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        }
-                                    </div>
+                                            }
+                                        </div>
+                                    }
                                 }
                             </div>
                         </div>

@@ -449,6 +449,7 @@
     <Content Include="Views\Instruments\Edit.cshtml" />
     <Content Include="Views\Instruments\Index.cshtml" />
     <Content Include="Views\Recipes\_InstrumentCreate.cshtml" />
+    <Content Include="Views\Recipes\_RecipeStepHierarchy.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

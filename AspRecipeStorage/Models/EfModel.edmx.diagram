@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="7c6a232b1e96470485467a9332485582" Name="Diagram" ZoomLevel="125">
+      <Diagram DiagramId="7c6a232b1e96470485467a9332485582" Name="Diagram" ZoomLevel="69">
         <EntityTypeShape EntityType="Model.User" Width="1.5" PointX="0.75" PointY="2.625" FillColor="Black" />
         <EntityTypeShape EntityType="Model.UserClaim" Width="1.5" PointX="3" PointY="3.5" FillColor="Black" />
         <EntityTypeShape EntityType="Model.UserLogin" Width="1.5" PointX="3" PointY="1.125" FillColor="Black" />
@@ -28,13 +28,14 @@
         <AssociationConnector Association="Model.MeasureConversionMeasureTypeFirst" />
         <AssociationConnector Association="Model.IngredientTypeMeasureConversion" />
         <EntityTypeShape EntityType="Model.Instrument" Width="1.5" PointX="12.75" PointY="0.875" FillColor="Purple" />
-        <EntityTypeShape EntityType="Model.RecipeStep" Width="1.5" PointX="8.125" PointY="2.875" />
-        <AssociationConnector Association="Model.FK_IngredientRecipeStep" />
-        <AssociationConnector Association="Model.FK_RecipeRecipeStep" />
-        <AssociationConnector Association="Model.PictureRecipeStep" />
         <EntityTypeShape EntityType="Model.StepInstrument" Width="1.5" PointX="10.625" PointY="0.625" FillColor="Purple" />
         <AssociationConnector Association="Model.FK_StepInstrument_Instrument" />
+        <EntityTypeShape EntityType="Model.RecipeStep" Width="1.5" PointX="8.125" PointY="2.875" />
+        <AssociationConnector Association="Model.FK_IngredientRecipeStep" />
+        <AssociationConnector Association="Model.FK_ChildRecipeRecipeStep" />
+        <AssociationConnector Association="Model.FK_RecipeRecipeStep" />
         <AssociationConnector Association="Model.FK_StepInstrument_RecipeStep" />
+        <AssociationConnector Association="Model.PictureRecipeStep" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

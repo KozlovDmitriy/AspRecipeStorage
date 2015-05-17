@@ -1,0 +1,31 @@
+﻿@model RecipeStep
+@if (ViewBag.Recipes != null)
+{
+    <div class="panel panel-primary recipe-step">
+        <div class="panel-heading recipe-step-head clearfix">
+            <div class="pull-right">
+                <a href="javascript:void(0)" class="btn btn-xs btn-primary recipe-step-delete">Удалить</a>
+            </div>
+            <div class="recipe-step-caption">Шаг</div>
+        </div>
+        <div class="panel-body">
+            Рецепт
+            <input type="hidden" class="recipe-step-id" value="@Model.Id">
+            <input type="number" name="pictureStepStatuses" class="hidden" value="@Model.Pictures.Count" />
+            <input type="file" class="recipe-step-images hidden" id="stepPicture" accept="image/*" multiple />
+            <select class="form-control child-recipe">
+                @foreach (var item in ViewBag.Recipes)
+                {
+                    if (item.Value == Model.ChildRecipeId.ToString())
+                    {
+                        <option selected="selected" value="@item.Value">@item.Text</option>
+                    }
+                    else
+                    {
+                        <option value="@item.Value">@item.Text</option>
+                    }
+                }
+            </select>
+        </div>
+    </div>
+}

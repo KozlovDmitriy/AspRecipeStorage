@@ -63,9 +63,16 @@
                 </div>
 
                 <div class="recipe-steps" id="recipeSteps">
-                    @foreach(var step in Model.RecipeSteps)
+                    @foreach (var step in Model.RecipeSteps)
                     {
-                        @Html.Partial("_RecipeStepCreate", step)
+                        if (step.ChildRecipeId != null)
+                        {
+                            @Html.Partial("_RecipeStepHierarchy", step)
+                        }
+                        else
+                        {
+                            @Html.Partial("_RecipeStepCreate", step)
+                        }
                     }
                 </div>
 
@@ -78,7 +85,14 @@
                                 UpdateTargetId = "recipeSteps",
                                 InsertionMode = InsertionMode.InsertAfter,
                                 OnSuccess = "OnAddRecipeStep(data)"
-                            }, new { @class = "btn btn-primary" })
+                            }, new { @class = "btn btn-default" })
+                            @Ajax.ActionLink("Добавить существующий рецепт как шаг", "RecipeStepHierarchy", null, new AjaxOptions()
+                            {
+                                HttpMethod = "POST",
+                                UpdateTargetId = "recipeSteps",
+                                InsertionMode = InsertionMode.InsertAfter,
+                                OnSuccess = "OnAddRecipeStepHierarchy(data)"
+                            }, new { @class = "btn btn-default" })
                             <input type="submit" value="Сохранить" class="btn btn-info" />
                         </div>
                     </div>

@@ -4,6 +4,7 @@ var addingInstrumentStep = null;
 function UpdateStepsAttributes() {
     $('.recipe-step').each(function (i, element) {
         $('.recipe-step-caption', element).text('Шаг ' + (i + 1));
+        $('.child-recipe', element).attr('name', 'RecipeSteps[' + i + '].ChildRecipeId');
         $('.recipe-step-discription', element).attr('name', 'RecipeSteps[' + i + '].Discription');
         $('.recipe-step-time', element).attr('name', 'RecipeSteps[' + i + '].Time');
         $('.recipe-step-id', element).attr('name', 'RecipeSteps[' + i + '].Id');
@@ -21,10 +22,15 @@ function UpdateStepsAttributes() {
         });
     });
 }
+function OnAddRecipeStepHierarchy() {
+    $('.recipe-step-delete').click(DeleteRecipeStep);
+    UpdateStepsAttributes();
+}
 
 function OnAddRecipeStep() {
     $('.recipe-step-delete').click(DeleteRecipeStep);
     $('.add-ingredient').click(SaveAddingIngredientStep);
+    $('.add-instrument').click(SaveAddingInstrumentStep);
     UpdateStepsAttributes();
 }
 

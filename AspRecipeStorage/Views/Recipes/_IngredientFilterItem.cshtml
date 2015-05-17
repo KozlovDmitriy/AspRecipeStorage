@@ -2,24 +2,33 @@
 
 @if (!ViewBag.IsEmpty)
 {
-    <div class="form-group ingredient">
-        <input type="text" class="hidden ingredient-name" value="@ViewBag.IngredientName" name="ingredientNames">
-        <div class="col-xs-5">@ViewBag.IngredientName</div>
-        <div class="col-xs-2">
+    <tr class="ingredient">
+        <td>
+            <input type="text" class="hidden ingredient-name" value="@ViewBag.IngredientName" name="ingredientNames">
+        </td>
+        <td>@ViewBag.IngredientName</td>
+        <td>
             <select class="form-control input-sm ingredient-measure" name="measures">
                 @foreach (var item in Model)
                 {
-                    <option value="@item.Value">@item.Text</option>
+                    if (ViewBag.Measure != null && item.Value == ViewBag.Measure.ToString())
+                    {
+                        <option value="@item.Value" selected>@item.Text</option>
+                    }
+                    else
+                    {
+                        <option value="@item.Value">@item.Text</option>
+                    }
                 }
             </select>
-        </div>
-        <div class="col-xs-4">
-            <input type="number" min="1" placeholder="Количество ..." class="ingredient-amount form-control input-sm" name="amounts">
-        </div>
-        <div class="col-xs-1">
+        </td>
+        <td>
+            <input type="number" min="1" placeholder="Количество ..." value="@ViewBag.Amount" class="ingredient-amount form-control input-sm" name="amounts">
+        </td>
+        <td>
             <a href="javascript:void(0)" class="btn btn-xs btn-default ingredient-delete pull-right">
-                <i class="glyphicon glyphicon-remove"/>
+                <i class="glyphicon glyphicon-remove"></i>
             </a>
-        </div>
-    </div><!-- /btn-group -->
+        </td>
+    </tr><!-- /btn-group -->
 }

@@ -1,4 +1,5 @@
-﻿@using GridMvc.Html
+﻿@using AspRecipeStorage.Controllers
+@using GridMvc.Html
 @using AspRecipeStorage.Models
 @model IOrderedQueryable<AspRecipeStorage.Models.Recipe>
 
@@ -60,8 +61,24 @@
                         columns.Add(i => i.Time).Titled("Время приготовления").Sanitized(false).Encoded(false).Sortable(true).Filterable(true);
                     }).WithPaging(10)
                 </div>
+                <table class="table">
+                    <tbody class="ingridients">
+                        @for (int i = 0; i < ViewBag.Amounts.Count; ++i)
+                        {
+                            string iName = ViewBag.IngredientNames[i] as string;
+                            ViewBag.iIndex = i;
+                            ViewBag.IngredientName = iName;
+                            ViewBag.Amount = ViewBag.Amounts[i];
+                            ViewBag.Measure = ViewBag.Measures[i];
+                            ViewBag.IsEmpty = false;
+                            @Html.Partial(
+                            "_IngredientFilterItem",
+                            (ViewContext.Controller as RecipesController).GetMeasureTypes(iName)
+                        )
+                        }
+                    </tbody>
+                </table>
                 <div class="panel-body">
-                    <ul class="list-group ingridients"></ul>
                     <div class="input-group input-group-sm">
                         <div class="form-control-wrapper">
                             <input class="form-control empty ingredients-search floating-label" id="focusedInput" type="text" data-hint="" placeholder="Введите название ингредиента...">
@@ -75,10 +92,7 @@
                             </button>
                         </span>
                         <div class="form-control-wrapper">
-                            <input class="form-control empty floating-label" id="focusedInput" name="keywords" type="text" data-hint="" placeholder="Ключевые слова...">
-                            <div class="hint"></div>
-                            <div class="floating-label">Ключевые слова...</div>
-                            <span class="material-input"></span>
+                            <input class="form-control empty" value="@ViewBag.Keywords" id="focusedInput" name="keywords" type="text" placeholder="Ключевые слова...">
                         </div>
                         <span class="input-group-btn">
                             <button class="btn btn-success start-search" type="submit">Поиск</button>

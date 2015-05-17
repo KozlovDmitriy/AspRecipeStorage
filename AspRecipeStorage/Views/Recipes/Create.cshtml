@@ -61,7 +61,14 @@
                             UpdateTargetId = "recipeSteps",
                             InsertionMode = InsertionMode.InsertAfter,
                             OnSuccess = "OnAddRecipeStep(data)"
-                        }, new { @class = "btn btn-primary" })
+                        }, new { @class = "btn btn-default" })
+                        @Ajax.ActionLink("Добавить существующий рецепт как шаг", "RecipeStepHierarchy", null, new AjaxOptions()
+                        {
+                            HttpMethod = "POST",
+                            UpdateTargetId = "recipeSteps",
+                            InsertionMode = InsertionMode.InsertAfter,
+                            OnSuccess = "OnAddRecipeStepHierarchy(data)"
+                        }, new { @class = "btn btn-default" })
                         <input type="submit" value="Добавить новый рецепт в базу" class="btn btn-info" />
                     </div>
                 </div>
