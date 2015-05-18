@@ -104,15 +104,8 @@ namespace AspRecipeStorage.Controllers
             recipes.Distinct();
             if (ingredientNames != null)
             {
-                string name = ingredientNames[0].Clone() as string;
-                int measureId = measures[0];
-                int amount = amounts[0] == null ? 0 : amounts[0].Value;
-                IQueryable<int> ingredientsIds = db.Ingredient.Include(i => i.IngredientType).Where(i =>
-                    name == i.IngredientType.Name &&
-                    measureId == i.MeasureTypeId &&
-                    amount >= i.Amount
-                ).Select(i => i.Id);
-                for (int m = 1; m < ingredientNames.Count; ++m)
+                IQueryable<int> ingredientsIds = null;
+                for (int m = 0; m < ingredientNames.Count; ++m)
                 {
                     string name2 = ingredientNames[m].Clone() as string;
                     int measureId2 = measures[m];
@@ -122,7 +115,29 @@ namespace AspRecipeStorage.Controllers
                         measureId2 == i.MeasureTypeId &&
                         amount2 >= i.Amount
                     ).Select(i => i.Id);
-                    ingredientsIds = ingredientsIds.Concat(ids);
+                    ingredientsIds = ingredientsIds != null ? ingredientsIds.Concat(ids) : ids;
+                    IQueryable<MeasureConversion> fmc = db.MeasureConversions
+                        .Include(i => i.IngredientType.Ingredients)
+                        .Where(i =>
+                            i.IngredientType.Name == name2 &&
+                            i.MeasureTypeFirstId == measureId2
+                        );
+                    IQueryable<int> ids2 = db.Ingredient.Include(i => i.IngredientType).Where(i =>
+                       name2 == i.IngredientType.Name &&
+                       fmc.Any(j => j.MeasureTypeSecondId == i.MeasureTypeId && amount2*j.Ratio >= i.Amount)
+                    ).Select(i => i.Id);
+                    ingredientsIds = ingredientsIds.Concat(ids2);
+                    IQueryable<MeasureConversion> smc = db.MeasureConversions
+                        .Include(i => i.IngredientType.Ingredients)
+                        .Where(i =>
+                            i.IngredientType.Name == name2 &&
+                            i.MeasureTypeSecondId == measureId2
+                        );
+                    IQueryable<int> ids3 = db.Ingredient.Include(i => i.IngredientType).Where(i =>
+                       name2 == i.IngredientType.Name &&
+                       smc.Any(j => j.MeasureTypeFirstId == i.MeasureTypeId && amount2/j.Ratio >= i.Amount)
+                    ).Select(i => i.Id);
+                    ingredientsIds = ingredientsIds.Concat(ids3).Distinct();
                 }
                 IQueryable<int> recipeStepsIds = db.RecipeSteps.Where(i => i.Ingredients.All(j => ingredientsIds.Contains(j.Id)) || i.ChildRecipeId != null).Select(i => i.Id);
                 recipes = recipes.Where(i => i.RecipeSteps.All(j => recipeStepsIds.Contains(j.Id)));
@@ -385,11 +400,22 @@ namespace AspRecipeStorage.Controllers
             List<MeasureType> mt = null;
             if (ingredientName != null)
             {
-                mt = db.MeasureTypes.Where(i => i.Ingredients
-                    .Select(j => j.IngredientType.Name)
-                    .Contains(ingredientName)
-                ).Distinct().ToList();
                 ViewBag.IsEmpty = !db.IngredientTypes.Select(i => i.Name).Contains(ingredientName);
+                if (!ViewBag.IsEmpty)
+                { 
+                    mt = db.MeasureTypes.Where(i => 
+                        i.Ingredients.Select(j => j.IngredientType.Name).Contains(ingredientName)
+                    ).Distinct().ToList();
+                    List<int> mtIds = mt.Select(i => i.Id).ToList();
+                    IQueryable<MeasureConversion> mcs = db.MeasureConversions
+                        .Include(i => i.IngredientType)
+                        .Include(i => i.MeasureFirstType)
+                        .Include(i => i.MeasureSecondType)
+                        .Where(i => i.IngredientType.Name == ingredientName && (mtIds.Contains(i.MeasureTypeFirstId) || mtIds.Contains(i.MeasureTypeSecondId)));
+                    mt.AddRange(mcs.Select(i => i.MeasureFirstType).ToList());
+                    mt.AddRange(mcs.Select(i => i.MeasureSecondType).ToList());
+                    mt = mt.Distinct().ToList();
+                }
             }
             else
             {
