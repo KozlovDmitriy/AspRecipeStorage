@@ -39,5 +39,7 @@ namespace AspRecipeStorage.Models
         public virtual DbSet<Instrument> Instruments { get; set; }
         public virtual DbSet<StepInstrument> StepInstruments { get; set; }
         public virtual DbSet<RecipeStep> RecipeSteps { get; set; }
+        public virtual DbSet<IngredientsSet> IngredientsSets { get; set; }
+        public virtual DbSet<IngredientsSetRow> IngredientsSetRows { get; set; }
     }
 }

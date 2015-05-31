@@ -36,6 +36,12 @@
         <AssociationConnector Association="Model.FK_RecipeRecipeStep" />
         <AssociationConnector Association="Model.FK_StepInstrument_RecipeStep" />
         <AssociationConnector Association="Model.PictureRecipeStep" />
+        <EntityTypeShape EntityType="Model.IngredientsSet" Width="1.5" PointX="8.125" PointY="9.375" FillColor="Olive" />
+        <EntityTypeShape EntityType="Model.IngredientsSetRow" Width="2.125" PointX="10.375" PointY="9.125" FillColor="Olive" />
+        <AssociationConnector Association="Model.FK_IngredientsSet_Users" />
+        <AssociationConnector Association="Model.FK_IngredientsSetRow_IngredientsSet" />
+        <AssociationConnector Association="Model.FK_IngredientsSetRow_IngredientTypes" />
+        <AssociationConnector Association="Model.FK_IngredientsSetRow_MeasureTypes" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

@@ -12,20 +12,19 @@ namespace AspRecipeStorage.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class IngredientType
+    public partial class IngredientsSet
     {
-        public IngredientType()
+        public IngredientsSet()
         {
-            this.Ingredients = new HashSet<Ingredient>();
-            this.MeasureConversions = new HashSet<MeasureConversion>();
             this.IngredientsSetRows = new HashSet<IngredientsSetRow>();
         }
     
         public int Id { get; set; }
+        public int UserId { get; set; }
         public string Name { get; set; }
+        public System.DateTimeOffset DateCreate { get; set; }
     
-        public virtual ICollection<Ingredient> Ingredients { get; set; }
-        public virtual ICollection<MeasureConversion> MeasureConversions { get; set; }
+        public virtual User User { get; set; }
         public virtual ICollection<IngredientsSetRow> IngredientsSetRows { get; set; }
     }
 }

@@ -19,6 +19,7 @@ namespace AspRecipeStorage.Models
             this.Ingredients = new HashSet<Ingredient>();
             this.MeasureSecondConversions = new HashSet<MeasureConversion>();
             this.MeasureFirstConversions = new HashSet<MeasureConversion>();
+            this.IngredientsSetRows = new HashSet<IngredientsSetRow>();
         }
     
         public int Id { get; set; }
@@ -27,5 +28,6 @@ namespace AspRecipeStorage.Models
         public virtual ICollection<Ingredient> Ingredients { get; set; }
         public virtual ICollection<MeasureConversion> MeasureSecondConversions { get; set; }
         public virtual ICollection<MeasureConversion> MeasureFirstConversions { get; set; }
+        public virtual ICollection<IngredientsSetRow> IngredientsSetRows { get; set; }
     }
 }

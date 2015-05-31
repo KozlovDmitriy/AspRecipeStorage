@@ -206,6 +206,12 @@
     <Compile Include="Models\Ingredient.cs">
       <DependentUpon>EfModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\IngredientsSet.cs">
+      <DependentUpon>EfModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\IngredientsSetRow.cs">
+      <DependentUpon>EfModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\IngredientType.cs">
       <DependentUpon>EfModel.tt</DependentUpon>
     </Compile>

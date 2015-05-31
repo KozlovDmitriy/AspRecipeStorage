@@ -75,6 +75,52 @@ namespace AspRecipeStorage.Controllers
             return result;
         }
 
+        private void AddIngredientsSetToAdd(List<string> ingredientNames, List<int> measures, List<int?> amounts) 
+        {
+            if (
+                ingredientNames != null &&
+                ingredientNames.Count > 0 &&
+                measures != null &&
+                measures.Count > 0 &&
+                amounts != null &&
+                amounts.Count > 0 &&
+                User != null && 
+                User.Identity != null
+            ) 
+            {
+                int userId = User.Identity.GetUserId<int>();
+                if (userId != 0)
+                {
+                    IngredientsSet set = new IngredientsSet { 
+                        UserId = userId,
+                        DateCreate = DateTime.Now,
+                        IngredientsSetRows = new List<IngredientsSetRow> ()
+                    };
+                    for (int i = 0; i < amounts.Count; ++i)
+                    {
+                        string ingredient = ingredientNames[i];
+                        IngredientType itype = db.IngredientTypes.FirstOrDefault(j => j.Name == ingredient);
+                        if (itype != null)
+                        {
+                            IngredientsSetRow row = new IngredientsSetRow
+                            {
+                                IngredientsSetId = set.Id,
+                                Amount = amounts[i],
+                                IngredientTypeId = itype.Id,
+                                MeasureTypeId = measures[i]
+                            };
+                            set.IngredientsSetRows.Add(row);
+                        }
+                    }
+                    if (set.IngredientsSetRows.Count > 0)
+                    {
+                        db.IngredientsSets.Add(set);
+                        db.SaveChanges();
+                    }
+                }
+            }
+        }
+
         public ActionResult FilterIndex(
             string keywords = "", 
             List<string> ingredientNames = null,
@@ -104,6 +150,7 @@ namespace AspRecipeStorage.Controllers
             recipes.Distinct();
             if (ingredientNames != null)
             {
+                this.AddIngredientsSetToAdd(ingredientNames, measures, amounts);
                 IQueryable<int> ingredientsIds = null;
                 for (int m = 0; m < ingredientNames.Count; ++m)
                 {

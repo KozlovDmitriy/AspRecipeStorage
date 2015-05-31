@@ -22,6 +22,25 @@
           <Property Name="Amount" Type="int" Nullable="false" />
           <Property Name="RecipeStepId" Type="int" Nullable="false" />
         </EntityType>
+        <EntityType Name="IngredientsSet">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="Name" Type="text" />
+          <Property Name="DateCreate" Type="datetimeoffset" Precision="7" Nullable="false" />
+        </EntityType>
+        <EntityType Name="IngredientsSetRow">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IngredientTypeId" Type="int" Nullable="false" />
+          <Property Name="Amount" Type="int" />
+          <Property Name="MeasureTypeId" Type="int" Nullable="false" />
+          <Property Name="IngredientsSetId" Type="int" Nullable="false" />
+        </EntityType>
         <EntityType Name="IngredientTypes">
           <Key>
             <PropertyRef Name="Id" />
@@ -217,6 +236,62 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_IngredientsSet_Users">
+          <End Role="Users" Type="Self.Users" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="IngredientsSet" Type="Self.IngredientsSet" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="IngredientsSet">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_IngredientsSetRow_IngredientsSet">
+          <End Role="IngredientsSet" Type="Self.IngredientsSet" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="IngredientsSetRow" Type="Self.IngredientsSetRow" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="IngredientsSet">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="IngredientsSetRow">
+              <PropertyRef Name="IngredientsSetId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_IngredientsSetRow_IngredientTypes">
+          <End Role="IngredientTypes" Type="Self.IngredientTypes" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="IngredientsSetRow" Type="Self.IngredientsSetRow" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="IngredientTypes">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="IngredientsSetRow">
+              <PropertyRef Name="IngredientTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_IngredientsSetRow_MeasureTypes">
+          <End Role="MeasureTypes" Type="Self.MeasureTypes" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="IngredientsSetRow" Type="Self.IngredientsSetRow" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MeasureTypes">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="IngredientsSetRow">
+              <PropertyRef Name="MeasureTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_IngredientTypeMeasureConversion">
           <End Role="IngredientTypes" Type="Self.IngredientTypes" Multiplicity="1" />
           <End Role="MeasureConversions" Type="Self.MeasureConversions" Multiplicity="*" />
@@ -400,6 +475,8 @@
         <EntityContainer Name="ModelStoreContainer">
           <EntitySet Name="DishType" EntityType="Self.DishType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Ingredient" EntityType="Self.Ingredient" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="IngredientsSet" EntityType="Self.IngredientsSet" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="IngredientsSetRow" EntityType="Self.IngredientsSetRow" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="IngredientTypes" EntityType="Self.IngredientTypes" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Instrument" EntityType="Self.Instrument" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="MeasureConversions" EntityType="Self.MeasureConversions" Schema="dbo" store:Type="Tables" />
@@ -433,6 +510,22 @@
           <AssociationSet Name="FK_IngredientRecipeStep" Association="Self.FK_IngredientRecipeStep">
             <End Role="RecipeStep" EntitySet="RecipeStep" />
             <End Role="Ingredient" EntitySet="Ingredient" />
+          </AssociationSet>
+          <AssociationSet Name="FK_IngredientsSet_Users" Association="Self.FK_IngredientsSet_Users">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="IngredientsSet" EntitySet="IngredientsSet" />
+          </AssociationSet>
+          <AssociationSet Name="FK_IngredientsSetRow_IngredientsSet" Association="Self.FK_IngredientsSetRow_IngredientsSet">
+            <End Role="IngredientsSet" EntitySet="IngredientsSet" />
+            <End Role="IngredientsSetRow" EntitySet="IngredientsSetRow" />
+          </AssociationSet>
+          <AssociationSet Name="FK_IngredientsSetRow_IngredientTypes" Association="Self.FK_IngredientsSetRow_IngredientTypes">
+            <End Role="IngredientTypes" EntitySet="IngredientTypes" />
+            <End Role="IngredientsSetRow" EntitySet="IngredientsSetRow" />
+          </AssociationSet>
+          <AssociationSet Name="FK_IngredientsSetRow_MeasureTypes" Association="Self.FK_IngredientsSetRow_MeasureTypes">
+            <End Role="MeasureTypes" EntitySet="MeasureTypes" />
+            <End Role="IngredientsSetRow" EntitySet="IngredientsSetRow" />
           </AssociationSet>
           <AssociationSet Name="FK_IngredientTypeMeasureConversion" Association="Self.FK_IngredientTypeMeasureConversion">
             <End Role="IngredientTypes" EntitySet="IngredientTypes" />
@@ -578,6 +671,24 @@
             <End Role="Picture" EntitySet="Pictures" />
             <End Role="RecipeStep" EntitySet="RecipeSteps" />
           </AssociationSet>
+          <EntitySet Name="IngredientsSets" EntityType="Model.IngredientsSet" />
+          <EntitySet Name="IngredientsSetRows" EntityType="Model.IngredientsSetRow" />
+          <AssociationSet Name="FK_IngredientsSet_Users" Association="Model.FK_IngredientsSet_Users">
+            <End Role="User" EntitySet="Users" />
+            <End Role="IngredientsSet" EntitySet="IngredientsSets" />
+          </AssociationSet>
+          <AssociationSet Name="FK_IngredientsSetRow_IngredientsSet" Association="Model.FK_IngredientsSetRow_IngredientsSet">
+            <End Role="IngredientsSet" EntitySet="IngredientsSets" />
+            <End Role="IngredientsSetRow" EntitySet="IngredientsSetRows" />
+          </AssociationSet>
+          <AssociationSet Name="FK_IngredientsSetRow_IngredientTypes" Association="Model.FK_IngredientsSetRow_IngredientTypes">
+            <End Role="IngredientType" EntitySet="IngredientTypes" />
+            <End Role="IngredientsSetRow" EntitySet="IngredientsSetRows" />
+          </AssociationSet>
+          <AssociationSet Name="FK_IngredientsSetRow_MeasureTypes" Association="Model.FK_IngredientsSetRow_MeasureTypes">
+            <End Role="MeasureType" EntitySet="MeasureTypes" />
+            <End Role="IngredientsSetRow" EntitySet="IngredientsSetRows" />
+          </AssociationSet>
           </EntityContainer>
         <EntityType Name="User">
           <Key>
@@ -600,6 +711,7 @@
           <NavigationProperty Name="Roles" Relationship="Model.UserUserRole" FromRole="User" ToRole="UserRole" />
           <NavigationProperty Name="Recipes" Relationship="Model.UserRecipe" FromRole="User" ToRole="Recipe" />
           <Property Name="RestorePwToket" Type="String" Nullable="true" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <NavigationProperty Name="IngredientsSets" Relationship="Model.FK_IngredientsSet_Users" FromRole="User" ToRole="IngredientsSet" />
         </EntityType>
         <EntityType Name="UserClaim">
           <Key>
@@ -735,6 +847,7 @@
           <NavigationProperty Name="Ingredients" Relationship="Model.IngredientMeasureType" FromRole="MeasureType" ToRole="Ingredient" />
           <NavigationProperty Name="MeasureSecondConversions" Relationship="Model.MeasureConversionMeasureTypeSecond" FromRole="MeasureType" ToRole="MeasureConversion" />
           <NavigationProperty Name="MeasureFirstConversions" Relationship="Model.MeasureConversionMeasureTypeFirst" FromRole="MeasureType" ToRole="MeasureConversion" />
+          <NavigationProperty Name="IngredientsSetRows" Relationship="Model.FK_IngredientsSetRow_MeasureTypes" FromRole="MeasureType" ToRole="IngredientsSetRow" />
         </EntityType>
         <EntityType Name="IngredientType">
           <Key>
@@ -744,6 +857,7 @@
           <Property Name="Name" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
           <NavigationProperty Name="Ingredients" Relationship="Model.IngredientIngredientType" FromRole="IngredientType" ToRole="Ingredient" />
           <NavigationProperty Name="MeasureConversions" Relationship="Model.IngredientTypeMeasureConversion" FromRole="IngredientType" ToRole="MeasureConversion" />
+          <NavigationProperty Name="IngredientsSetRows" Relationship="Model.FK_IngredientsSetRow_IngredientTypes" FromRole="IngredientType" ToRole="IngredientsSetRow" />
         </EntityType>
         <Association Name="IngredientMeasureType">
           <End Type="Model.Ingredient" Role="Ingredient" Multiplicity="*" />
@@ -953,6 +1067,86 @@
           <End Type="Model.Picture" Role="Picture" Multiplicity="*" />
           <End Type="Model.RecipeStep" Role="RecipeStep" Multiplicity="*" />
         </Association>
+        <EntityType Name="IngredientsSet">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserId" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="DateCreate" Type="DateTimeOffset" Nullable="false" Precision="7" />
+          <NavigationProperty Name="User" Relationship="Model.FK_IngredientsSet_Users" FromRole="IngredientsSet" ToRole="User" />
+          <NavigationProperty Name="IngredientsSetRows" Relationship="Model.FK_IngredientsSetRow_IngredientsSet" FromRole="IngredientsSet" ToRole="IngredientsSetRow" />
+        </EntityType>
+        <EntityType Name="IngredientsSetRow">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IngredientTypeId" Type="Int32" Nullable="false" />
+          <Property Name="Amount" Type="Int32" />
+          <Property Name="MeasureTypeId" Type="Int32" Nullable="false" />
+          <Property Name="IngredientsSetId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="IngredientsSet" Relationship="Model.FK_IngredientsSetRow_IngredientsSet" FromRole="IngredientsSetRow" ToRole="IngredientsSet" />
+          <NavigationProperty Name="IngredientType" Relationship="Model.FK_IngredientsSetRow_IngredientTypes" FromRole="IngredientsSetRow" ToRole="IngredientType" />
+          <NavigationProperty Name="MeasureType" Relationship="Model.FK_IngredientsSetRow_MeasureTypes" FromRole="IngredientsSetRow" ToRole="MeasureType" />
+        </EntityType>
+        <Association Name="FK_IngredientsSet_Users">
+          <End Type="Model.User" Role="User" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="Model.IngredientsSet" Role="IngredientsSet" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="IngredientsSet">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_IngredientsSetRow_IngredientsSet">
+          <End Type="Model.IngredientsSet" Role="IngredientsSet" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="Model.IngredientsSetRow" Role="IngredientsSetRow" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="IngredientsSet">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="IngredientsSetRow">
+              <PropertyRef Name="IngredientsSetId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_IngredientsSetRow_IngredientTypes">
+          <End Type="Model.IngredientType" Role="IngredientType" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="Model.IngredientsSetRow" Role="IngredientsSetRow" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="IngredientType">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="IngredientsSetRow">
+              <PropertyRef Name="IngredientTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_IngredientsSetRow_MeasureTypes">
+          <End Type="Model.MeasureType" Role="MeasureType" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="Model.IngredientsSetRow" Role="IngredientsSetRow" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MeasureType">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="IngredientsSetRow">
+              <PropertyRef Name="MeasureTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1119,6 +1313,27 @@
               <ScalarProperty Name="Id" ColumnName="Pictures_Id" />
             </EndProperty>
           </AssociationSetMapping>
+          <EntitySetMapping Name="IngredientsSets">
+            <EntityTypeMapping TypeName="Model.IngredientsSet">
+              <MappingFragment StoreEntitySet="IngredientsSet">
+                <ScalarProperty Name="DateCreate" ColumnName="DateCreate" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="IngredientsSetRows">
+            <EntityTypeMapping TypeName="Model.IngredientsSetRow">
+              <MappingFragment StoreEntitySet="IngredientsSetRow">
+                <ScalarProperty Name="IngredientsSetId" ColumnName="IngredientsSetId" />
+                <ScalarProperty Name="MeasureTypeId" ColumnName="MeasureTypeId" />
+                <ScalarProperty Name="Amount" ColumnName="Amount" />
+                <ScalarProperty Name="IngredientTypeId" ColumnName="IngredientTypeId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           </EntityContainerMapping>
 </Mapping></edmx:Mappings>
   </edmx:Runtime>
