@@ -72,9 +72,9 @@
                             ViewBag.Measure = ViewBag.Measures[i];
                             ViewBag.IsEmpty = false;
                             @Html.Partial(
-                            "_IngredientFilterItem",
-                            (ViewContext.Controller as RecipesController).GetMeasureTypes(iName)
-                        )
+                                "_IngredientFilterItem",
+                                (ViewContext.Controller as RecipesController).GetMeasureTypes(iName)
+                            )
                         }
                     </tbody>
                 </table>

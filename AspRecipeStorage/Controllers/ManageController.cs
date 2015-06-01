@@ -7,6 +7,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using AspRecipeStorage.Models;
+using System.Data.Entity;
 
 namespace AspRecipeStorage.Controllers
 {
@@ -15,6 +16,7 @@ namespace AspRecipeStorage.Controllers
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _ApplicationUserManager;
+        public ApplicationDbContext db = new ApplicationDbContext();
 
         public ManageController()
         {
@@ -64,6 +66,11 @@ namespace AspRecipeStorage.Controllers
                 : "";
 
             var userId = User.Identity.GetUserId<int>();
+            IQueryable<IngredientsSet> sets = db.IngredientsSets
+                .Include(i => i.IngredientsSetRows.Select(j => j.IngredientType))
+                .Include(i => i.IngredientsSetRows.Select(j => j.MeasureType))
+                .Where(i => i.UserId == userId).OrderByDescending(i => i.Id);
+            ViewBag.IngredientsUserSets = sets;
             var model = new IndexViewModel
             {
                 HasPassword = HasPassword(),

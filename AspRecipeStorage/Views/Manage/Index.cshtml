@@ -1,4 +1,5 @@
-﻿@model AspRecipeStorage.Models.IndexViewModel
+﻿@using GridMvc.Html
+@model AspRecipeStorage.Models.IndexViewModel
 @{
     ViewBag.Title = "Личный кабинет";
 }
@@ -24,17 +25,17 @@
                     ]
                 </dd>
                 @*<dt>External Logins:</dt>
-                <dd>
-                    @Model.Logins.Count [
-                    @Html.AuthorizeActionLink("Manage", "ManageLogins") ]
-                </dd>
+                    <dd>
+                        @Model.Logins.Count [
+                        @Html.AuthorizeActionLink("Manage", "ManageLogins") ]
+                    </dd>
 
-                    Phone Numbers can used as a second factor of verification in a two-factor authentication system.
+                        Phone Numbers can used as a second factor of verification in a two-factor authentication system.
 
-                     See <a href="http://go.microsoft.com/fwlink/?LinkId=403804">this article</a>
-                        for details on setting up this ASP.NET application to support two-factor authentication using SMS.
+                         See <a href="http://go.microsoft.com/fwlink/?LinkId=403804">this article</a>
+                            for details on setting up this ASP.NET application to support two-factor authentication using SMS.
 
-                     Uncomment the following block after you have set up two-factor authentication
+                         Uncomment the following block after you have set up two-factor authentication
                 *@
                 @*
                     <dt>Phone Number:</dt>
@@ -54,33 +55,64 @@
                     </dd>
                 *@
                 @*<dt>Two-Factor Authentication:</dt>
-                <dd>
-                    <p>
-                        There are no two-factor authentication providers configured. See <a href="http://go.microsoft.com/fwlink/?LinkId=403804">this article</a>
-                        for details on setting up this ASP.NET application to support two-factor authentication.
-                    </p>
-                    @if (Model.TwoFactor)
-                        {
-                            using (Html.BeginForm("DisableTwoFactorAuthentication", "Manage", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                    <dd>
+                        <p>
+                            There are no two-factor authentication providers configured. See <a href="http://go.microsoft.com/fwlink/?LinkId=403804">this article</a>
+                            for details on setting up this ASP.NET application to support two-factor authentication.
+                        </p>
+                        @if (Model.TwoFactor)
                             {
-                                @Html.AntiForgeryToken()
-                                <text>Enabled
-                                <input type="submit" value="Disable" class="btn btn-link" />
-                                </text>
+                                using (Html.BeginForm("DisableTwoFactorAuthentication", "Manage", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                                {
+                                    @Html.AntiForgeryToken()
+                                    <text>Enabled
+                                    <input type="submit" value="Disable" class="btn btn-link" />
+                                    </text>
+                                }
                             }
-                        }
-                        else
-                        {
-                            using (Html.BeginForm("EnableTwoFactorAuthentication", "Manage", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                            else
                             {
-                                @Html.AntiForgeryToken()
-                                <text>Disabled
-                                <input type="submit" value="Enable" class="btn btn-link" />
-                                </text>
+                                using (Html.BeginForm("EnableTwoFactorAuthentication", "Manage", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                                {
+                                    @Html.AntiForgeryToken()
+                                    <text>Disabled
+                                    <input type="submit" value="Enable" class="btn btn-link" />
+                                    </text>
+                                }
                             }
-                        }
-                </dd>*@
+                    </dd>*@
             </dl>
         </div>
+        <h4>Наборы</h4>
+        <hr/>
+        @Html.Grid(ViewBag.IngredientsUserSets as IQueryable<IngredientsSet>, new GridRenderOptions("grid", "_Grid")).Columns(columns =>
+        {
+            columns.Add(i => i.Name).Titled("Название").Sortable(true).Filterable(true);
+            columns.Add(i => i.DateCreate).Titled("Дата создания").Sortable(true).Filterable(true);
+            columns.Add().Titled("Детали").Sanitized(false).Encoded(false).RenderValueAs(set => IngredientsSetDetails(set));
+            columns.Add(i => i.Id).Titled("").Sanitized(false).Encoded(false).RenderValueAs(set => IngredientsSetActions(set));
+        }).WithPaging(10).Selectable(false)
     </div>
 </div>
+@helper DisplayRows(IngredientsSet set)
+{
+   foreach (IngredientsSetRow row in set.IngredientsSetRows)
+   {
+        string rowstr = row.IngredientType.Name + " ( " + (row.Amount.HasValue ? row.Amount.Value.ToString() : "") + " " + @row.MeasureType.Name + " )";
+        <tr><td>@rowstr</td></tr>
+   }
+}
+
+@helper IngredientsSetDetails(IngredientsSet set)
+{
+    <table>
+        <tbody>@DisplayRows(set)</tbody>
+    </table>
+}
+
+@helper IngredientsSetActions(IngredientsSet set)
+{
+    @Html.ActionLink("Искать", "SetSearch", new { id = set.Id }, new { @class = "btn btn-sm btn-info" })
+    @Html.ActionLink("Переименовать", "SetRename", new { id = set.Id }, new { @class = "btn btn-sm btn-info" })
+    @Html.ActionLink("Удалить", "SetDetails", new { id = set.Id }, new {@class = "btn btn-sm btn-warning"} )
+}

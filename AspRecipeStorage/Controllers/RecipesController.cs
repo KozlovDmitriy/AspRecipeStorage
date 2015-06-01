@@ -91,9 +91,11 @@ namespace AspRecipeStorage.Controllers
                 int userId = User.Identity.GetUserId<int>();
                 if (userId != 0)
                 {
+                    DateTime dt = DateTime.Now;
                     IngredientsSet set = new IngredientsSet { 
                         UserId = userId,
-                        DateCreate = DateTime.Now,
+                        DateCreate = dt,
+                        Name = "Набор " + dt.ToString("dd.MM.yy HH:mm"),
                         IngredientsSetRows = new List<IngredientsSetRow> ()
                     };
                     for (int i = 0; i < amounts.Count; ++i)
