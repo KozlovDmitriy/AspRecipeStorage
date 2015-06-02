@@ -45,7 +45,12 @@ namespace AspRecipeStorage.Controllers
             {
                 userId = User.Identity.GetUserId<int>();
             }
-            string code = db.Users.Find(userId).ActivateCode;
+            string code = null;
+            User user = db.Users.Find(userId);
+            if (user != null)
+            {
+                code = user.ActivateCode;
+            }
             if (code != null)
             {
                 var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = userId, code = code }, protocol: Request.Url.Scheme);

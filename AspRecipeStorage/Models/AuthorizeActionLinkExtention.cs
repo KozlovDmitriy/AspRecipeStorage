@@ -17,7 +17,12 @@ namespace AspRecipeStorage.Models
         {
             ApplicationDbContext db = new ApplicationDbContext();
             int userId = user.Identity.GetUserId<int>();
-            return db.Users.Find(userId).ActivateCode != null;
+            User dbuser = db.Users.Find(userId);
+            if (dbuser != null)
+            {
+                return db.Users.Find(userId).ActivateCode != null;
+            }
+            return true;
         }
 
         public static MvcHtmlString AuthorizeActionLink(this HtmlHelper helper, string linkText, string actionName, string controllerName, object routeValues)
