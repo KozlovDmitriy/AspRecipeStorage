@@ -9,6 +9,8 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using AspRecipeStorage.Models;
+using System.Net.Mail;
+using System.Net.Mime;
 
 namespace AspRecipeStorage.Controllers
 {
@@ -83,7 +85,7 @@ namespace AspRecipeStorage.Controllers
 
             // This doesn't count login failures towards account lockout
             // To enable password failures to trigger account lockout, change to shouldLockout: true
-            var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
+            var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: true);
             switch (result)
             {
                 case SignInStatus.Success:
@@ -150,6 +152,30 @@ namespace AspRecipeStorage.Controllers
             return View();
         }
 
+
+        private void sendMail(string activateurl, string destination)
+        {
+            #region formatter
+            string text = string.Format("Please click on this link to activate your account: {0}", activateurl);
+            string html = "Please confirm your account by clicking this link: <a href=\"" + activateurl + "\">link</a><br/>";
+
+            html += HttpUtility.HtmlEncode(@"Or click on the copy the following link on the browser:" + activateurl);
+            #endregion
+
+            MailMessage msg = new MailMessage();
+            msg.From = new MailAddress("mrdiko4@gmail.com");
+            msg.To.Add(new MailAddress(destination));
+            msg.Subject = "Activate your account";
+            msg.AlternateViews.Add(AlternateView.CreateAlternateViewFromString(text, null, MediaTypeNames.Text.Plain));
+            msg.AlternateViews.Add(AlternateView.CreateAlternateViewFromString(html, null, MediaTypeNames.Text.Html));
+
+            SmtpClient smtpClient = new SmtpClient("smtp.gmail.com", Convert.ToInt32(587));
+            System.Net.NetworkCredential credentials = new System.Net.NetworkCredential("mrdiko4@gmail.com", "computer92");
+            smtpClient.Credentials = credentials;
+            smtpClient.EnableSsl = true;
+            smtpClient.Send(msg);
+        }
+
         //
         // POST: /Account/Register
         [HttpPost]
@@ -169,10 +195,12 @@ namespace AspRecipeStorage.Controllers
                     
                     // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=320771
                     // Send an email with this link
-                    // string code = await ApplicationUserManager.GenerateEmailConfirmationTokenAsync(user.Id);
-                    // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
-                    // await ApplicationUserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
-
+                    string code = await ApplicationUserManager.GenerateEmailConfirmationTokenAsync(user.Id);
+                    var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
+                    //this.sendMail(callbackUrl, model.Email);
+                    //await ApplicationUserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
+                    db.Users.Find(user.Id).ActivateCode = code;
+                    db.SaveChanges();
                     return Redirect(Url.Content("~/"));
                 }
                 AddErrors(result);
@@ -187,11 +215,16 @@ namespace AspRecipeStorage.Controllers
         [AllowAnonymous]
         public async Task<ActionResult> ConfirmEmail(int userId, string code)
         {
-            if (userId == null || code == null)
+            if (code == null)
             {
                 return View("Error");
             }
             var result = await ApplicationUserManager.ConfirmEmailAsync(userId, code);
+            if (result.Succeeded)
+            {
+                db.Users.Find(userId).ActivateCode = null;
+                db.SaveChanges();
+            }
             return View(result.Succeeded ? "ConfirmEmail" : "Error");
         }
 

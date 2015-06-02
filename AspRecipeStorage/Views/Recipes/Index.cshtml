@@ -7,7 +7,7 @@
     ViewBag.Title = "База рецептов";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-@if (User.IsInRole("User") || User.IsInRole("Admin"))
+@if (!User.IsLockout() && (User.IsInRole("User") || User.IsInRole("Admin")))
 {
     <div class="fixed-action-btn">
         <a class="btn-floating btn-large red" href="@Url.Action("Create","Recipes")" title="Добавить рецепт">

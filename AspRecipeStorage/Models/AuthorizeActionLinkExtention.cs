@@ -2,15 +2,24 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Security.Principal;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Mvc.Html;
 using System.Web.Routing;
+using Microsoft.AspNet.Identity;
 
 namespace AspRecipeStorage.Models
 {
     public static class AuthorizeAuthorizeActionLinkExtention
     {
+        public static bool IsLockout(this IPrincipal user)
+        {
+            ApplicationDbContext db = new ApplicationDbContext();
+            int userId = user.Identity.GetUserId<int>();
+            return db.Users.Find(userId).ActivateCode != null;
+        }
+
         public static MvcHtmlString AuthorizeActionLink(this HtmlHelper helper, string linkText, string actionName, string controllerName, object routeValues)
         {
             return helper.AuthorizeActionLink(linkText, actionName, controllerName, new RouteValueDictionary(routeValues), new RouteValueDictionary());

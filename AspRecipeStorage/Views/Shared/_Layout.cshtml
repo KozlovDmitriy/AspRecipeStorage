@@ -34,25 +34,28 @@
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     <li>@Html.AuthorizeActionLink("Рецепты", "Index", "Recipes")</li>
-                    @if (User.IsInRole("User") || User.IsInRole("Admin"))
+                    @if (!User.IsLockout())
                     {
-                        <li>@Html.AuthorizeActionLink("Мои рецепты", "Index", "Recipes", new { userId = -1 }, null)</li>
-                    }
-                    @if (User.IsInRole("User") || User.IsInRole("Admin"))
-                    {
-                        <li title="Добавить новый рецепт">@Html.Raw(Html.AuthorizeActionLink("glyph-i", "Create", "Recipes", null, null).ToString().Replace("glyph-i", "<i class=\"glyphicon glyphicon-plus\"></i>"))</li>
-                    }
-                    @if (User.IsInRole("Admin"))
-                    {
-                        <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="glyphicon glyphicon-cog"></i> Администрирование <span class="caret"></span></a>
-                            <ul class="dropdown-menu" role="menu">
-                                <li>@Html.AuthorizeActionLink("Типы блюд", "Index", "DishTypes")</li>
-                                <li>@Html.AuthorizeActionLink("Инструменты", "Index", "Instruments")</li>
-                                <li><a href="@Url.Action("Index", "MeasureTypes")">Список мер</a></li>
-                                <li><a href="@Url.Action("Index", "MeasureConversions")">Соотношения мер</a></li>
-                            </ul>
-                        </li>
+                        if (User.IsInRole("User") || User.IsInRole("Admin"))
+                        {
+                            <li>@Html.AuthorizeActionLink("Мои рецепты", "Index", "Recipes", new { userId = -1 }, null)</li>
+                        }
+                        if (User.IsInRole("User") || User.IsInRole("Admin"))
+                        {
+                            <li title="Добавить новый рецепт">@Html.Raw(Html.AuthorizeActionLink("glyph-i", "Create", "Recipes", null, null).ToString().Replace("glyph-i", "<i class=\"glyphicon glyphicon-plus\"></i>"))</li>
+                        }
+                        if (User.IsInRole("Admin"))
+                        {
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="glyphicon glyphicon-cog"></i> Администрирование <span class="caret"></span></a>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li>@Html.AuthorizeActionLink("Типы блюд", "Index", "DishTypes")</li>
+                                    <li>@Html.AuthorizeActionLink("Инструменты", "Index", "Instruments")</li>
+                                    <li><a href="@Url.Action("Index", "MeasureTypes")">Список мер</a></li>
+                                    <li><a href="@Url.Action("Index", "MeasureConversions")">Соотношения мер</a></li>
+                                </ul>
+                            </li>
+                        }
                     }
                 </ul>
                 @Html.Partial("_LoginPartial")
@@ -65,7 +68,7 @@
         { 
             <div class="alert alert-warning alert-dismissible" role="alert">
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                @ViewBag.WarningMessage
+                @Html.Raw(ViewBag.WarningMessage)
             </div>
         }
         @RenderBody()

@@ -37,9 +37,19 @@ namespace AspRecipeStorage.Controllers
                 if (userId == -1) 
                 {
                     userId = User.Identity.GetUserId<int>();
-                }
+                }                
                 recipeSet = recipeSet.Where(i => i.User.Id == userId);
                 ViewBag.UserId = userId;
+            }
+            if (userId == null)
+            {
+                userId = User.Identity.GetUserId<int>();
+            }
+            string code = db.Users.Find(userId).ActivateCode;
+            if (code != null)
+            {
+                var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = userId, code = code }, protocol: Request.Url.Scheme);
+                ViewBag.WarningMessage = "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">this link</a>";
             }
             this.IndexViewBagSetter();
             return View(recipeSet.OrderByDescending(i => i.Id));

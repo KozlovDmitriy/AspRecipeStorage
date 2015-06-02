@@ -163,6 +163,7 @@
           <Property Name="LockoutEnabled" Type="bit" Nullable="false" />
           <Property Name="AccessFailedCount" Type="int" Nullable="false" />
           <Property Name="RestorePwToket" Type="nvarchar(max)" />
+          <Property Name="ActivateCode" Type="nvarchar(max)" />
         </EntityType>
         <EntityType Name="UserUserRole">
           <Key>
@@ -355,7 +356,9 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_PictureRecipeStep_RecipeStep">
-          <End Role="RecipeStep" Type="Self.RecipeStep" Multiplicity="1" />
+          <End Role="RecipeStep" Type="Self.RecipeStep" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
           <End Role="PictureRecipeStep" Type="Self.PictureRecipeStep" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="RecipeStep">
@@ -712,6 +715,7 @@
           <NavigationProperty Name="Recipes" Relationship="Model.UserRecipe" FromRole="User" ToRole="Recipe" />
           <Property Name="RestorePwToket" Type="String" Nullable="true" MaxLength="Max" Unicode="true" FixedLength="false" />
           <NavigationProperty Name="IngredientsSets" Relationship="Model.FK_IngredientsSet_Users" FromRole="User" ToRole="IngredientsSet" />
+          <Property Name="ActivateCode" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="UserClaim">
           <Key>
@@ -1154,7 +1158,8 @@
     <EntitySetMapping Name="Users">
       <EntityTypeMapping TypeName="IsTypeOf(Model.User)">
         <MappingFragment StoreEntitySet="Users">
-          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="ActivateCode" ColumnName="ActivateCode" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="UserName" ColumnName="UserName" />
           <ScalarProperty Name="Email" ColumnName="Email" />
           <ScalarProperty Name="EmailConfirmed" ColumnName="EmailConfirmed" />
