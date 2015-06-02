@@ -42,7 +42,7 @@ namespace AspRecipeStorage.Controllers
                 ViewBag.UserId = userId;
             }
             this.IndexViewBagSetter();
-            return View(recipeSet.OrderBy(i => i.Id));
+            return View(recipeSet.OrderByDescending(i => i.Id));
         }
 
         private IQueryable<Recipe> SearchRecipesBykeyword(string word)
@@ -240,7 +240,7 @@ namespace AspRecipeStorage.Controllers
                 Selected = dtFilter.Contains(i.Id)
             }).ToList();
             recipes = recipes.Where(i => dtFilter.Contains(i.DishTypeId));
-            return View("Index", recipes.OrderBy(i => i.Id));
+            return View("Index", recipes.OrderByDescending(i => i.Id));
         }
 
         // GET: Recipes/Details/5
@@ -273,17 +273,18 @@ namespace AspRecipeStorage.Controllers
             return View();
         }
 
-        private byte[] ReadFile(HttpPostedFileBase picture) 
+        private string ReadFile(HttpPostedFileBase picture) 
         {
-            byte[] result = null;
-            if (picture != null && picture.ContentLength > 0)
+            int userId = User.Identity.GetUserId<int>();
+            string name = userId.ToString() + DateTime.Now.Ticks.ToString();
+            if (picture != null && userId != 0)
             {
-                using (var reader = new System.IO.BinaryReader(picture.InputStream))
-                {
-                    result = reader.ReadBytes(picture.ContentLength);
-                }
+                name = name + picture.FileName;
+                string path = System.IO.Path.Combine(Server.MapPath("~/Images"), name);
+                // file is uploaded
+                picture.SaveAs(path);
             }
-            return result;
+            return name;
         }
 
         private void AttachIngredientTypeToDB(IngredientType ingredientType) 
@@ -364,11 +365,11 @@ namespace AspRecipeStorage.Controllers
         [Authorize(Roles = "Admin, User")]
         public async Task<ActionResult> Create(Recipe recipe, HttpPostedFileBase recipePicture, List<List<HttpPostedFileBase>> stepPictures)
         {
-            if (ModelState.IsValid)
+            if (ModelState.IsValid && recipe.Description != null)
             {
                 recipe.AuthorId = User.Identity.GetUserId<int>();
                 if (recipePicture != null) { 
-                    recipe.Picture = new Picture { Data = this.ReadFile(recipePicture) };
+                    recipe.Picture = new Picture { Name = this.ReadFile(recipePicture) };
                 }
                 int time = 0;
                 List<RecipeStep> steps = recipe.RecipeSteps.ToList<RecipeStep>();
@@ -385,7 +386,7 @@ namespace AspRecipeStorage.Controllers
                     {
                         if (j != null)
                         {
-                            steps[i].Pictures.Add(new Picture { Data = this.ReadFile(j) });
+                            steps[i].Pictures.Add(new Picture { Name = this.ReadFile(j) });
                         }
                     });
                     this.AttachRecipeStepToDB(steps[i]);
@@ -395,6 +396,7 @@ namespace AspRecipeStorage.Controllers
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
+            ViewBag.WarningMessage = "Операция отклонена, т.к. не все необходимые поля были заполнены!";
             ViewBag.MeasureTypes = new SelectList(db.MeasureTypes, "Id", "Name");
             ViewBag.DishTypeId = new SelectList(db.DishType, "Id", "Name", recipe.DishTypeId);
             ViewBag.AuthorId = new SelectList(db.Users, "Id", "UserName", recipe.AuthorId);
@@ -527,6 +529,11 @@ namespace AspRecipeStorage.Controllers
             return View(recipe);
         }
 
+        private void DeleteImageFile(string name)
+        {
+            System.IO.File.Delete(System.IO.Path.Combine(Server.MapPath("~/Images"), name));
+        }
+
         // POST: Recipes/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -540,59 +547,79 @@ namespace AspRecipeStorage.Controllers
             List<int> pictureStepStatuses
         )
         {
-            int rid = recipe.Id;
-            int time = 0;
-            var steps = recipe.RecipeSteps;
-            List<int> rsids = recipe.RecipeSteps.Select(i => i.Id).ToList();
-            db.RecipeSteps.RemoveRange(db.RecipeSteps.Where(i => i.RecipeId == rid && !rsids.Contains(i.Id)));
-            if (recipePicture != null && recipePicture.ContentLength > 0)
+            if (ModelState.IsValid)
             {
-                db.Pictures.Remove(db.Pictures.AsNoTracking().FirstOrDefault(i => i.Id == recipe.PictureId));
-                recipe.Picture = new Picture {Data = this.ReadFile(recipePicture)};
-            }
-            else
-            {
-                recipe.Picture = null;
-            }
-            for (int i = 0; i < steps.Count; ++i)
-            {
-                int stepNumber = i + 1;
-                int rsid = steps.ElementAt(i).Id ;
-                AttachRecipeStepToDB(steps.ElementAt(i));
-                steps.ElementAt(i).RecipeId = rid;
-                steps.ElementAt(i).StepNumber = stepNumber;
-                if (pictureStepStatuses[i] > 0 && stepPictures[i][0] == null)
+                int rid = recipe.Id;
+                int time = 0;
+                var steps = recipe.RecipeSteps;
+                List<int> rsids = recipe.RecipeSteps.Select(i => i.Id).ToList();
+                db.RecipeSteps.RemoveRange(db.RecipeSteps.Where(i => i.RecipeId == rid && !rsids.Contains(i.Id)));
+                if (recipePicture != null && recipePicture.ContentLength > 0)
                 {
-                    steps.ElementAt(i).Pictures = null;
+                    Picture picture = db.Pictures.FirstOrDefault(i => i.Id == recipe.PictureId);
+                    if (picture != null)
+                    {
+                        this.DeleteImageFile(picture.Name);
+                        db.Pictures.Remove(picture);
+                        recipe.PictureId = null;
+                    }
+                    Picture newpicture = new Picture { Name = this.ReadFile(recipePicture) };
+                    db.Pictures.Add(newpicture);
+                    recipe.Picture = newpicture;
                 }
                 else
                 {
-                    db.Pictures.RemoveRange(
-                        db.Pictures.Where(j => j.RecipeSteps.Any(l => l.RecipeId == rid && l.StepNumber == stepNumber))
-                    );
+                    recipe.Picture = null;
                 }
-                stepPictures[i].ForEach(j =>
+                for (int i = 0; i < steps.Count; ++i)
                 {
-                    if (j != null)
+                    int stepNumber = i + 1;
+                    int rsid = steps.ElementAt(i).Id;
+                    AttachRecipeStepToDB(steps.ElementAt(i));
+                    steps.ElementAt(i).RecipeId = rid;
+                    steps.ElementAt(i).StepNumber = stepNumber;
+                    if (pictureStepStatuses[i] > 0 && stepPictures[i][0] == null)
                     {
-                        Picture img = new Picture { Data = this.ReadFile(j) };
-                        db.Pictures.Add(img);
-                        steps.ElementAt(i).Pictures.Add(img);
+                        steps.ElementAt(i).Pictures = null;
                     }
-                }); 
-                if (steps.ElementAt(i).ChildRecipeId != null)
-                {
-                    int childId = steps.ElementAt(i).ChildRecipeId.Value;
-                    steps.ElementAt(i).Time = db.Recipe.AsNoTracking().FirstOrDefault(j => j.Id == childId).Time;
+                    else
+                    {
+                        db.Pictures.AsNoTracking()
+                            .Where(j => j.RecipeSteps.Any(l => l.RecipeId == rid && l.StepNumber == stepNumber))
+                            .ToList().ForEach(j => this.DeleteImageFile(j.Name));
+                        db.Pictures.RemoveRange(
+                            db.Pictures.Where(j => j.RecipeSteps.Any(l => l.RecipeId == rid && l.StepNumber == stepNumber))
+                        );
+                    }
+                    stepPictures[i].ForEach(j =>
+                    {
+                        if (j != null)
+                        {
+                            Picture img = new Picture { Name = this.ReadFile(j) };
+                            db.Pictures.Add(img);
+                            steps.ElementAt(i).Pictures.Add(img);
+                        }
+                    });
+                    if (steps.ElementAt(i).ChildRecipeId != null)
+                    {
+                        int childId = steps.ElementAt(i).ChildRecipeId.Value;
+                        steps.ElementAt(i).Time = db.Recipe.AsNoTracking().FirstOrDefault(j => j.Id == childId).Time;
+                    }
+                    time += steps.ElementAt(i).Time;
+                    var entry = db.Entry(steps.ElementAt(i));
+                    db.Entry(steps.ElementAt(i)).State = rsid == 0 ? EntityState.Added : EntityState.Modified;
                 }
-                time += steps.ElementAt(i).Time;
-                var entry = db.Entry(steps.ElementAt(i));
-                db.Entry(steps.ElementAt(i)).State = rsid == 0 ? EntityState.Added : EntityState.Modified;
+                recipe.Time = time;
+                db.Entry(recipe).State = EntityState.Modified;
+                await db.SaveChangesAsync();
+                return RedirectToAction("Index");
             }
-            recipe.Time = time;
-            db.Entry(recipe).State = EntityState.Modified;
-            await db.SaveChangesAsync();
-            return RedirectToAction("Index");
+            List<int> list = this.GetHierarchyRecipeList(recipe.Id);
+            ViewBag.Recipes = list.Count > 0 ? new SelectList(db.Recipe.Where(i => list.Contains(i.Id)), "Id", "Name") : null;
+            ViewBag.MeasureTypes = new SelectList(db.MeasureTypes, "Id", "Name");
+            ViewBag.DishTypeId = new SelectList(db.DishType, "Id", "Name");
+            ViewBag.AuthorId = new SelectList(db.Users, "Id", "UserName");
+            return View(recipe);
         }
 
         // GET: Recipes/Delete/5
@@ -645,6 +672,9 @@ namespace AspRecipeStorage.Controllers
                 .Include(r => r.RecipeSteps.Select(i => i.Ingredients.Select(g => g.MeasureType)))
                 .Include(r => r.RecipeSteps.Select(i => i.Ingredients.Select(g => g.IngredientType)))
                 .SingleOrDefaultAsync(r => r.Id == id);
+            db.Pictures.AsNoTracking()
+                .Where(i => i.Recipes.Any(j => j.Id == id) || i.RecipeSteps.Any(j => j.RecipeId == id))
+                .ToList().ForEach(i => this.DeleteImageFile(i.Name));
             this.DeleteParentSteps(recipe.Id);
             db.Recipe.Remove(recipe);
             await db.SaveChangesAsync();

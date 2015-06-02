@@ -17,7 +17,7 @@
                 <h4>Описание рецепта: @Model.Description</h4>
             </div>
             <div class="media-right">
-                @Base64imgPrerender(Model.Picture == null ? null : Model.Picture.Data, "gridimage media-object")
+                @Base64imgPrerender(Model.Picture == null ? null : Model.Picture.Name, "gridimage media-object")
             </div>
         </div>
     </div>
@@ -54,7 +54,7 @@ else
                                             foreach (var img in step.Pictures)
                                             {
                                                 <td>
-                                                    @Base64imgPrerender(img.Data, "circle")
+                                                    @Base64imgPrerender(img.Name, "circle")
                                                 </td>
                                             }
                                         }
@@ -134,14 +134,12 @@ else
     @Html.AuthorizeActionLink("Редактировать", "Edit", new { id = Model.Id })
 </p>
 
-@helper Base64imgPrerender(byte[] imageByteData, string imgclass)
+@helper Base64imgPrerender(string imageName, string imgclass)
 {
     string imageDataURL;
-    if (imageByteData != null)
+    if (imageName != null)
     {
-        string imageBase64Data = Convert.ToBase64String(imageByteData);
-        imageDataURL = string.Format("data:image/png;base64,{0}", imageBase64Data);
-
+        imageDataURL = @Url.Content("~/Images/" + imageName);
     }
     else
     {

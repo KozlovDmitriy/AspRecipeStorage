@@ -21,7 +21,7 @@ namespace AspRecipeStorage.Models
         }
     
         public int Id { get; set; }
-        public byte[] Data { get; set; }
+        public string Name { get; set; }
     
         public virtual ICollection<Recipe> Recipes { get; set; }
         public virtual ICollection<RecipeStep> RecipeSteps { get; set; }

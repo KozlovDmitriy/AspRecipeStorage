@@ -30,8 +30,8 @@ namespace AspRecipeStorage.Models
     
         public virtual DishType DishType { get; set; }
         public virtual User User { get; set; }
-        public virtual Picture Picture { get; set; }
         public virtual ICollection<RecipeStep> ParentSteps { get; set; }
         public virtual ICollection<RecipeStep> RecipeSteps { get; set; }
+        public virtual Picture Picture { get; set; }
     }
 }

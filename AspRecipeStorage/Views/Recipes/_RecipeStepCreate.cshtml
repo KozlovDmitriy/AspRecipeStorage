@@ -36,10 +36,10 @@
                                     <table style="overflow-x:scroll">
                                         <tbody>
                                             <tr>
-                                                @foreach (var img in Model.Pictures)
+                                                @foreach (Picture img in Model.Pictures)
                                                 {
                                                     <td>
-                                                        @Base64imgPrerender(img.Data, "circle")
+                                                        <img class="circle" width="50" src="@Url.Content("~/Images/" + img.Name)" alt="step">
                                                     </td>
                                                 }
                                             </tr>

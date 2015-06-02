@@ -132,7 +132,7 @@
                     <p>@recipe.Description</p>
                 </div>
                 <div class="col-md-4">
-                    @Base64imgPrerender(recipe.Picture == null ? null : recipe.Picture.Data)
+                    @Base64imgPrerender(recipe.Picture == null ? null : recipe.Picture.Name)
                 </div>
             </div>
             <hr class="hr-recipe" />
@@ -149,14 +149,12 @@
     </div>
 }
 
-@helper Base64imgPrerender(byte[] imageByteData)
+@helper Base64imgPrerender(string imageName)
 {
     string imageDataURL;
-    if (imageByteData != null)
+    if (imageName != null)
     {
-        string imageBase64Data = Convert.ToBase64String(imageByteData);
-        imageDataURL = string.Format("data:image/png;base64,{0}", imageBase64Data);
-
+        imageDataURL = @Url.Content("~/Images/" + imageName);
     }
     else
     {

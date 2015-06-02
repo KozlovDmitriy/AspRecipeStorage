@@ -43,7 +43,7 @@
                             <div class="list-group">
                                 <div class=" list-group-item">
                                     <div class="row-picture">
-                                        @Base64imgPrerender(Model.Picture == null ? null : Model.Picture.Data, "circle")
+                                        <img class="circle" width="50" src="@Url.Content("~/Images/" + Model.Picture.Name)" alt="step">
                                     </div>
                                 </div>
                             </div>
