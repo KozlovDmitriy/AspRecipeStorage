@@ -28,7 +28,7 @@
           </Key>
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="UserId" Type="int" Nullable="false" />
-          <Property Name="Name" Type="text" />
+          <Property Name="Name" Type="nvarchar(max)" />
           <Property Name="DateCreate" Type="datetimeoffset" Precision="7" Nullable="false" />
         </EntityType>
         <EntityType Name="IngredientsSetRow">
@@ -1073,7 +1073,7 @@
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="UserId" Type="Int32" Nullable="false" />
-          <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="DateCreate" Type="DateTimeOffset" Nullable="false" Precision="7" />
           <NavigationProperty Name="User" Relationship="Model.FK_IngredientsSet_Users" FromRole="IngredientsSet" ToRole="User" />
           <NavigationProperty Name="IngredientsSetRows" Relationship="Model.FK_IngredientsSetRow_IngredientsSet" FromRole="IngredientsSet" ToRole="IngredientsSetRow" />

@@ -8,6 +8,7 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using AspRecipeStorage.Models;
 using System.Data.Entity;
+using System.Collections.Generic;
 
 namespace AspRecipeStorage.Controllers
 {
@@ -51,6 +52,35 @@ namespace AspRecipeStorage.Controllers
                 _ApplicationUserManager = value;
             }
         }
+
+    #region Sets
+
+        public ActionResult SetRename(int id)
+        {
+            return View(db.IngredientsSets.Find(id));
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult SetRename(int id, string name)
+        {
+            db.IngredientsSets.Find(id).Name = name;
+            db.SaveChanges();
+            return RedirectToAction("Index");
+        }
+
+        public ActionResult SetRemove(int id)
+        {
+            IngredientsSet set = db.IngredientsSets.Find(id);
+            if (set != null)
+            {
+                db.IngredientsSets.Remove(set);
+                db.SaveChanges();
+            }
+            return RedirectToAction("Index");
+        }
+
+    #endregion
 
         //
         // GET: /Manage/Index

@@ -95,7 +95,7 @@ namespace AspRecipeStorage.Controllers
                     IngredientsSet set = new IngredientsSet { 
                         UserId = userId,
                         DateCreate = dt,
-                        Name = "Набор " + dt.ToString("dd.MM.yy HH:mm"),
+                        Name = "Набор от " + dt.ToString("dd.MM.yy HH:mm"),
                         IngredientsSetRows = new List<IngredientsSetRow> ()
                     };
                     for (int i = 0; i < amounts.Count; ++i)
@@ -129,9 +129,23 @@ namespace AspRecipeStorage.Controllers
             List<int> measures = null, 
             List<int?> amounts = null,
             List<int> dishTypeFilter = null, 
-            int? userId = null
+            int? userId = null,
+            int? setId = null
         )
         {
+            if (setId != null)
+            {
+                IngredientsSet set = db.IngredientsSets
+                    .Include(i => i.IngredientsSetRows.Select(j => j.IngredientType))
+                    .Include(i => i.IngredientsSetRows.Select(j => j.MeasureType))
+                    .FirstOrDefault(i => i.Id == setId);
+                if (set != null)
+                {
+                    amounts = set.IngredientsSetRows.Select(i => i.Amount).ToList();
+                    measures = set.IngredientsSetRows.Select(i => i.MeasureTypeId).ToList();
+                    ingredientNames = set.IngredientsSetRows.Select(i => i.IngredientType.Name).ToList();
+                }
+            }
             List<string> keywordsList = keywords.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToList();
             IQueryable<Recipe> recipes = null;
             if (keywordsList.Count == 0)
@@ -152,7 +166,10 @@ namespace AspRecipeStorage.Controllers
             recipes.Distinct();
             if (ingredientNames != null)
             {
-                this.AddIngredientsSetToAdd(ingredientNames, measures, amounts);
+                if (setId == null)
+                {
+                    this.AddIngredientsSetToAdd(ingredientNames, measures, amounts);
+                }
                 IQueryable<int> ingredientsIds = null;
                 for (int m = 0; m < ingredientNames.Count; ++m)
                 {

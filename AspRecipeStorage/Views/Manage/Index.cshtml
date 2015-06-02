@@ -112,7 +112,7 @@
 
 @helper IngredientsSetActions(IngredientsSet set)
 {
-    @Html.ActionLink("Искать", "SetSearch", new { id = set.Id }, new { @class = "btn btn-sm btn-info" })
+    @Html.ActionLink("Искать", "FilterIndex", "Recipes", new { setId = set.Id }, new { @class = "btn btn-sm btn-info" })
     @Html.ActionLink("Переименовать", "SetRename", new { id = set.Id }, new { @class = "btn btn-sm btn-info" })
-    @Html.ActionLink("Удалить", "SetDetails", new { id = set.Id }, new {@class = "btn btn-sm btn-warning"} )
+    @Html.ActionLink("Удалить", "SetRemove", new { id = set.Id }, new {@class = "btn btn-sm btn-warning"} )
 }
